@@ -1,0 +1,38 @@
+/* src/styles/partials/_base.scss */
+
+nav {
+  margin: 0;
+}
+
+/* Autres styles globaux */
+
+body {
+  height: 100%;
+  margin: 0;
+  background-color: $background;
+  color: $foreground;
+  
+}
+
+p {
+  margin: 0%;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Si vous avez des styles pour le root */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}

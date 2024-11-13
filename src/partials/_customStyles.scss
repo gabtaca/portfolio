@@ -1,0 +1,464 @@
+//custom styles à la tailwind
+@import 'variables';
+
+
+/* Classes utilitaires pour les polices */
+.font-italiana {
+  font-family: 'Italiana', serif;
+}
+
+.font-geist {
+  font-family: 'Geist', sans-serif;
+}
+
+.font-geist-mono {
+  font-family: 'Geist Mono', monospace;
+}
+
+//display
+.display-flex { display: flex; }
+.display-grid { display: grid; }
+.display-block { display: block; }
+.display-inline { display: inline; }
+.display-inline-block { display: inline-block; }
+.display-none { display: none; }
+
+// flex direction
+.flex-row { flex-direction: row; }
+.flex-row-reverse { flex-direction: row-reverse; }
+.flex-col { flex-direction: column; }
+.flex-col-reverse { flex-direction: column-reverse; }
+
+//align item
+.align-start { align-items: flex-start; }
+.align-end { align-items: flex-end; }
+.align-center { align-items: center; }
+.align-baseline { align-items: baseline; }
+.align-stretch { align-items: stretch; }
+
+//justify content
+.justify-start { justify-content: flex-start; }
+.justify-end { justify-content: flex-end; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.justify-around { justify-content: space-around; }
+.justify-evenly { justify-content: space-evenly; }
+
+// Overflow Control
+.overflow-visible { overflow: visible; }
+.overflow-hidden { overflow: hidden; }
+.overflow-scroll { overflow: scroll; }
+.overflow-auto { overflow: auto; }
+
+// Overflow for X and Y axes
+.overflow-x-visible { overflow-x: visible; }
+.overflow-x-hidden { overflow-x: hidden; }
+.overflow-x-scroll { overflow-x: scroll; }
+.overflow-x-auto { overflow-x: auto; }
+
+.overflow-y-visible { overflow-y: visible; }
+.overflow-y-hidden { overflow-y: hidden; }
+.overflow-y-scroll { overflow-y: scroll; }
+.overflow-y-auto { overflow-y: auto; }
+
+// Position Types
+.position-static { position: static; }
+.position-relative { position: relative; }
+.position-absolute { position: absolute; }
+.position-fixed { position: fixed; }
+.position-sticky { position: sticky; }
+
+// Positioning (Top, Right, Bottom, Left)
+$spacing: 0, 1, 2, 4, 8, 16, 32, 64, 128, 256;
+
+@each $space in $spacing {
+  .top-#{$space} { top: #{$space}px; }
+  .right-#{$space} { right: #{$space}px; }
+  .bottom-#{$space} { bottom: #{$space}px; }
+  .left-#{$space} { left: #{$space}px; }
+}
+
+// Centering (Horizontal and Vertical)
+.center-horizontal {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.center-vertical {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+// Full Centering (Horizontal and Vertical)
+.center-both {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+// Full Width and Full Height
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+
+//visibility
+.visible { visibility: visible; }
+.invisible { visibility: hidden; }
+
+//grid-col et row
+.grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+.grid-cols-5 { grid-template-columns: repeat(5, 1fr); }
+.grid-rows-1 { grid-template-rows: repeat(1, 1fr); }
+.grid-rows-2 { grid-template-rows: repeat(2, 1fr); }
+.grid-rows-3 { grid-template-rows: repeat(3, 1fr); }
+.grid-rows-4 { grid-template-rows: repeat(4, 1fr); }
+.grid-rows-5 { grid-template-rows: repeat(5, 1fr); }
+
+
+@each $name, $color in $colors {
+  $opacityI: 10;
+
+  @while $opacityI <= 100 {
+    .text-#{$name}-#{$opacityI} {
+      color: rgba(red($color), green($color), blue($color), $opacityI / 100);
+    }
+    .bg-#{$name}-#{$opacityI} {
+      background-color: rgba(red($color), green($color), blue($color), $opacityI / 100);
+    }
+    $opacityI: $opacityI + 10;
+  }
+}
+
+//gap
+$gapI: 0;
+
+@while $gapI <= 50 {
+  .gap-#{$gapI} {
+    gap: #{$gapI}px;
+  }
+  $gapI: $gapI + 1;
+}
+
+//Padding
+$paddingI: 0;
+
+@while $paddingI < 101 {
+  .p-#{$paddingI} {
+    padding: #{$paddingI}px;
+  }
+
+  .pt-#{$paddingI} {
+    padding-top: #{$paddingI}px;
+  }
+
+  .pr-#{$paddingI} {
+    padding-right: #{$paddingI}px;
+  }
+
+  .pb-#{$paddingI} {
+    padding-bottom: #{$paddingI}px;
+  }
+
+  .pl-#{$paddingI} {
+    padding-left: #{$paddingI}px;
+  }
+
+  .px-#{$paddingI} {
+    padding-left: #{$paddingI}px;
+    padding-right: #{$paddingI}px;
+  }
+
+  .py-#{$paddingI} {
+    padding-top: #{$paddingI}px;
+    padding-bottom: #{$paddingI}px;
+  }
+
+  $paddingI: $paddingI + 1;
+}
+
+//Marges
+$marginI: 0;
+
+@while $marginI < 101 {
+  .m-#{$marginI} {
+    margin: #{$marginI}px;
+  }
+
+  .mt-#{$marginI} {
+    margin-top: #{$marginI}px;
+  }
+
+  .mr-#{$marginI} {
+    margin-right: #{$marginI}px;
+  }
+
+  .mb-#{$marginI} {
+    margin-bottom: #{$marginI}px;
+  }
+
+  .ml-#{$marginI} {
+    margin-left: #{$marginI}px;
+  }
+
+  .mx-#{$marginI} {
+    margin-left: #{$marginI}px;
+    margin-right: #{$marginI}px;
+  }
+
+  .my-#{$marginI} {
+    margin-top: #{$marginI}px;
+    margin-bottom: #{$marginI}px;
+  }
+
+  $marginI: $marginI + 1;
+}
+
+// Largeur
+$widthI: 0;
+
+@while $widthI <= 100 {
+  .w-#{$widthI} {
+    width: $widthI * 1%;
+  }
+
+  $widthI: $widthI + 1;
+}
+
+//Hauteur
+$heightI: 0;
+
+@while $heightI <= 100 {
+  .h-#{$heightI} {
+    height: $heightI * 1%;
+  }
+
+  $heightI: $heightI + 1;
+}
+
+//Taille de police
+$fontSizeI: 8;
+
+@while $fontSizeI <= 64 {
+  .text-#{$fontSizeI} {
+    font-size: #{$fontSizeI}px;
+  }
+
+  $fontSizeI: $fontSizeI + 1;
+}
+
+//Poids de la police
+$fontWeightList: 100, 200, 300, 400, 500, 600, 700, 800, 900;
+
+@each $weight in $fontWeightList {
+  .font-#{$weight} {
+    font-weight: $weight;
+  }
+}
+
+// Underline Styles
+.underline-solid {
+  text-decoration: underline;
+  text-decoration-style: solid;
+}
+
+.underline-dotted {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+.underline-dashed {
+  text-decoration: underline;
+  text-decoration-style: dashed;
+}
+
+.underline-double {
+  text-decoration: underline;
+  text-decoration-style: double;
+}
+
+.underline-wavy {
+  text-decoration: underline;
+  text-decoration-style: wavy;
+}
+
+// Hover Underline Styles
+.underline-solid-hover:hover {
+  text-decoration: underline;
+  text-decoration-style: solid;
+}
+
+.underline-dotted-hover:hover {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+.underline-dashed-hover:hover {
+  text-decoration: underline;
+  text-decoration-style: dashed;
+}
+
+.underline-double-hover:hover {
+  text-decoration: underline;
+  text-decoration-style: double;
+}
+
+.underline-wavy-hover:hover {
+  text-decoration: underline;
+  text-decoration-style: wavy;
+}
+
+// Underline Colors
+@each $name, $color in $colors {
+  .underline-#{$name} {
+    text-decoration-color: $color;
+  }
+
+  .underline-#{$name}-hover:hover {
+    text-decoration-color: $color;
+  }
+}
+
+// Underline Thickness
+.underline-thin {
+  text-decoration-thickness: 1px;
+}
+
+.underline-medium {
+  text-decoration-thickness: 2px;
+}
+
+.underline-thick {
+  text-decoration-thickness: 3px;
+}
+
+.underline-extra-thick {
+  text-decoration-thickness: 4px;
+}
+
+// Hover Underline Thickness
+.underline-thin-hover:hover {
+  text-decoration-thickness: 1px;
+}
+
+.underline-medium-hover:hover {
+  text-decoration-thickness: 2px;
+}
+
+.underline-thick-hover:hover {
+  text-decoration-thickness: 3px;
+}
+
+.underline-extra-thick-hover:hover {
+  text-decoration-thickness: 4px;
+}
+
+
+// Décalage de soulignement (text-underline-offset)
+$underlineOffsets: 1px, 2px, 3px, 4px, 5px, 6px, 8px, 10px, 12px, 15px, 20px;
+
+@each $offset in $underlineOffsets {
+  .underline-offset-#{$offset} {
+    text-underline-offset: #{$offset};
+  }
+}
+
+//Rayon de la bordure
+$borderRadiusI: 0;
+
+@while $borderRadiusI <= 50 {
+  .rounded-#{$borderRadiusI} {
+    border-radius: #{$borderRadiusI}px;
+  }
+
+  $borderRadiusI: $borderRadiusI + 1;
+}
+
+//Opacité
+$opacityI: 0;
+
+@while $opacityI <= 100 {
+  .opacity-#{$opacityI} {
+    opacity: $opacityI / 100;
+  }
+
+  $opacityI: $opacityI + 1;
+}
+
+//Espacement des lettres
+$letterSpacingI: -5;
+
+@while $letterSpacingI <= 5 {
+  .tracking-#{$letterSpacingI} {
+    letter-spacing: #{$letterSpacingI}px;
+  }
+
+  $letterSpacingI: $letterSpacingI + 1;
+}
+
+//Z-Index
+$zIndexI: 0;
+
+@while $zIndexI <= 50 {
+  .z-#{$zIndexI} {
+    z-index: $zIndexI;
+  }
+
+  $zIndexI: $zIndexI + 1;
+}
+
+//Flex Grow
+$flexGrowI: 0;
+
+@while $flexGrowI <= 5 {
+  .flex-grow-#{$flexGrowI} {
+    flex-grow: $flexGrowI;
+  }
+
+  $flexGrowI: $flexGrowI + 1;
+}
+
+//Flex Shrink
+$flexShrinkI: 0;
+
+@while $flexShrinkI <= 5 {
+  .flex-shrink-#{$flexShrinkI} {
+    flex-shrink: $flexShrinkI;
+  }
+
+  $flexShrinkI: $flexShrinkI + 1;
+}
+
+//Ordre Flex
+$orderI: 0;
+
+@while $orderI <= 12 {
+  .order-#{$orderI} {
+    order: $orderI;
+  }
+
+  $orderI: $orderI + 1;
+}
+
+//Opacité des couleurs de fond :
+$bgOpacityI: 0;
+
+@while $bgOpacityI <= 100 {
+  .bg-opacity-#{$bgOpacityI} {
+    background-color: rgba(0, 0, 0, $bgOpacityI / 100);
+  }
+
+  $bgOpacityI: $bgOpacityI + 10;
+}
+
+//Opacité des couleurs de texte :
+$textOpacityI: 0;
+
+@while $textOpacityI <= 100 {
+  .text-opacity-#{$textOpacityI} {
+    color: rgba(0, 0, 0, $textOpacityI / 100);
+  }
+
+  $textOpacityI: $textOpacityI + 10;
+}

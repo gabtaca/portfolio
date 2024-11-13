@@ -1,0 +1,145 @@
+[
+  {
+    "id": "1",
+    "name": "Projet 1",
+    "img": "/images/projects/project1.gif",
+    "imgAlt": "image du projet 1",
+    "description": "Ce projet vise à développer une application web moderne et intuitive permettant aux utilisateurs d'interagir facilement avec les dernieres technologies.",
+    "date": "2022",
+    "type": "SiteWeb",
+    "lien": {
+      "github": "https://https://main-dun-nine.vercel.app/"
+    },
+    "stack": ["html", "sass", "javascript", "npm"]
+  },
+  {
+    "id": "2",
+    "name": "Projet 2",
+    "img": "/images/projects/project2.gif",
+    "imgAlt": "image du projet 2",
+    "description": "Ce projet vise à développer une application web moderne et intuitive permettant aux utilisateurs d'interagir facilement avec les dernieres technologies.",
+    "date": "2022",
+    "type": "App",
+    "lien": {
+      "github": "https://https://main-dun-nine.vercel.app/"
+    },
+    "stack": ["html", "sass", "javascript", "npm"]
+  },
+  {
+    "id": "3",
+    "name": "Projet 3",
+    "img": "/images/projects/project3.gif",
+    "imgAlt": "image du projet 3",
+    "description": "Ce projet vise à développer une application web moderne et intuitive permettant aux utilisateurs d'interagir facilement avec les dernieres technologies.",
+    "date": "2023",
+    "type": "SiteWeb",
+    "lien": {
+      "github": "https://https://main-dun-nine.vercel.app/"
+    },
+    "stack": ["html", "sass", "javascript", "npm"]
+  },
+  {
+    "id": "4",
+    "name": "Projet 4",
+    "img": "/images/projects/project4.gif",
+    "imgAlt": "image du projet 4",
+    "description": "Ce projet vise à développer une application web moderne et intuitive permettant aux utilisateurs d'interagir facilement avec les dernieres technologies.",
+    "date": "2023",
+    "type": "Extension",
+    "lien": {
+      "github": "https://https://main-dun-nine.vercel.app/"
+    },
+    "stack": ["html", "sass", "javascript", "npm"]
+  },
+  {
+    "id": "5",
+    "name": "Projet 5",
+    "img": "/images/projects/project5.gif",
+    "imgAlt": "image du projet 5",
+    "description": "Ce projet vise à développer une application web moderne et intuitive permettant aux utilisateurs d'interagir facilement avec les dernieres technologies.",
+    "date": "2024",
+    "type": "SiteWeb",
+    "lien": {
+      "github": "https://https://main-dun-nine.vercel.app/"
+    },
+    "stack": ["html", "sass", "javascript", "npm"]
+  },
+  {
+    "id": "6",
+    "name": "Projet 6",
+    "img": "/images/projects/project6.gif",
+    "imgAlt": "image du projet 6",
+    "description": "Ce projet vise à développer une application web moderne et intuitive permettant aux utilisateurs d'interagir facilement avec les dernieres technologies.",
+    "date": "2024",
+    "type": "Librairie",
+    "lien": {
+      "github": "https://https://main-dun-nine.vercel.app/"
+    },
+    "stack": ["html", "sass", "javascript", "npm"]
+  },
+  {
+    "id": "7",
+    "name": "Projet 7",
+    "img": "/images/projects/project7.gif",
+    "imgAlt": "image du projet 7",
+    "description": "Ce projet vise à développer une application web moderne et intuitive permettant aux utilisateurs d'interagir facilement avec les dernieres technologies.",
+    "date": "2024",
+    "type": "SiteWeb",
+    "lien": {
+      "github": "https://https://main-dun-nine.vercel.app/"
+    },
+    "stack": ["html", "sass", "javascript", "npm"]
+  },
+  {
+    "id": "8",
+    "name": "Projet 8",
+    "img": "/images/projects/project8.gif",
+    "imgAlt": "image du projet 8",
+    "description": "Ce projet vise à développer une application web moderne et intuitive permettant aux utilisateurs d'interagir facilement avec les dernieres technologies.",
+    "date": "2024",
+    "type": "SiteWeb",
+    "lien": {
+      "github": "https://https://main-dun-nine.vercel.app/"
+    },
+    "stack": ["html", "sass", "javascript", "npm"]
+  },
+  {
+    "id": "9",
+    "name": "Projet 8",
+    "img": "/images/projects/project9.gif",
+    "imgAlt": "image du projet 9",
+    "description": "Ce projet vise à développer une application web moderne et intuitive permettant aux utilisateurs d'interagir facilement avec les dernieres technologies.",
+    "date": "2024",
+    "type": "SiteWeb",
+    "lien": {
+      "github": "https://https://main-dun-nine.vercel.app/"
+    },
+    "stack": ["html", "sass", "javascript", "npm"]
+  },
+  {
+    "id": "10",
+    "name": "Projet 8",
+    "img": "/images/projects/project10.gif",
+    "imgAlt": "image du projet 10",
+    "description": "Ce projet vise à développer une application web moderne et intuitive permettant aux utilisateurs d'interagir facilement avec les dernieres technologies.",
+    "date": "2025",
+    "type": "App",
+    "lien": {
+      "github": "https://https://main-dun-nine.vercel.app/"
+    },
+    "stack": ["html", "sass", "javascript", "npm"]
+  },
+  {
+    "id": "11",
+    "name": "Projet 11",
+    "img": "/images/projects/project11.gif",
+    "imgAlt": "image du projet 11",
+    "description": "Ce projet vise à développer une application web moderne et intuitive permettant aux utilisateurs d'interagir facilement avec les dernieres technologies.",
+    "date": "2025",
+    "type": "SiteWeb",
+    "lien": {
+      "github": "https://https://main-dun-nine.vercel.app/"
+    },
+    "stack": ["html", "sass", "javascript", "npm"]
+  }
+]
