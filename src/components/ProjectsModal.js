@@ -6,12 +6,15 @@ export default function ProjectsModal({
   onClose,
   onNext,
   onPrevious,
+  projectsData, // Transmettre projectsData ici pour éviter les erreurs
 }) {
   if (!project || project.type === "blank") return null;
 
   const [isInitialOpen, setIsInitialOpen] = useState(true);
   const [animationClass, setAnimationClass] = useState("");
   const [hasSwiped, setHasSwiped] = useState(false);
+
+  const bookendIds = ["blank-start", "blank-start2", "blank-end", "blank-end2"];
 
   useEffect(() => {
     if (isInitialOpen && !hasSwiped) {
@@ -20,11 +23,7 @@ export default function ProjectsModal({
   }, [project, isInitialOpen, hasSwiped]);
 
   const handleClose = () => {
-    if (hasSwiped) {
-      setAnimationClass("modal-close");
-    } else {
-      setAnimationClass("modal-close");
-    }
+    setAnimationClass("modal-close");
     setTimeout(() => {
       onClose();
       setIsInitialOpen(true);
@@ -32,23 +31,44 @@ export default function ProjectsModal({
     }, 500);
   };
 
+  const handleShake = () => {
+    setAnimationClass("modal-shake");
+    setTimeout(() => setAnimationClass(""), 500); // Réinitialiser l'animation de secousse après 500ms
+  };
+
   const handleSwipe = (direction) => {
     setHasSwiped(true);
 
+    const nextIndex = currentIndex + 1;
+    const prevIndex = currentIndex - 1;
+
     if (direction === "left") {
-      setAnimationClass("modal-swipe-out-left");
-      setTimeout(() => {
-        onNext();
-        setAnimationClass("modal-swipe-in-right");
-        setIsInitialOpen(false);
-      }, 500);
+      if (nextIndex < projectsData.length && !bookendIds.includes(projectsData[nextIndex].id)) {
+        setAnimationClass("modal-swipe-out-left");
+        setTimeout(() => {
+          onNext();
+          setAnimationClass("modal-swipe-in-right");
+          setIsInitialOpen(false);
+        }, 500);
+      } else {
+        handleShake(); // Activer l'animation de secousse si limite atteinte
+      }
     } else if (direction === "right") {
-      setAnimationClass("modal-swipe-out-right");
-      setTimeout(() => {
-        onPrevious();
-        setAnimationClass("modal-swipe-in-left");
-        setIsInitialOpen(false);
-      }, 500);
+      if (prevIndex >= 0 && !bookendIds.includes(projectsData[prevIndex].id)) {
+        setAnimationClass("modal-swipe-out-right");
+        setTimeout(() => {
+          onPrevious();
+          setAnimationClass("modal-swipe-in-left");
+          setIsInitialOpen(false);
+        }, 500);
+      } else {
+        handleShake(); // Activer l'animation de secousse si limite atteinte
+      }
+    } else if (direction === "up") {
+      window.open(project.lien.github, "_blank");
+      onClose();
+    } else if (direction === "down") {
+      handleClose();
     }
   };
 
@@ -88,16 +108,23 @@ export default function ProjectsModal({
         onClick={(e) => e.stopPropagation()}
         onTouchStart={(e) => {
           const startX = e.touches[0].clientX;
+          const startY = e.touches[0].clientY;
           e.target.startX = startX;
+          e.target.startY = startY;
         }}
         onTouchEnd={(e) => {
           const endX = e.changedTouches[0].clientX;
+          const endY = e.changedTouches[0].clientY;
           const swipeThreshold = 100;
 
           if (e.target.startX - endX > swipeThreshold) {
             handleSwipe("left");
           } else if (endX - e.target.startX > swipeThreshold) {
             handleSwipe("right");
+          } else if (e.target.startY - endY > swipeThreshold) {
+            handleSwipe("up");
+          } else if (endY - e.target.startY > swipeThreshold) {
+            handleSwipe("down");
           }
         }}
       >

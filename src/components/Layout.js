@@ -9,7 +9,7 @@ export default function Layout({ children }) {
       <LightningHeader />
 
       {/* Contenu spécifique à chaque page */}
-      <main className="flex flex-col gap-8 justify-center items-center h-full">
+      <main className="display-flex flex-col gap-8 justify-between items-center">
         {children}
       </main>
 

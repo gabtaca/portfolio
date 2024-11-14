@@ -6,23 +6,41 @@ export default function ProjectDatesFooter({
   projectsData,
   buttonPositions,
   highlightedIndex,
+  scrollToProjectIndex,
   arcWidth = 375,
   arcHeight = 80,
   yOffsetAdjustment = 150,
   visibilityThreshold = 400,
 }) {
   const [datePositions, setDatePositions] = useState([]);
+  const [responsiveArcWidth, setResponsiveArcWidth] = useState(arcWidth);
+  const [responsiveArcHeight, setResponsiveArcHeight] = useState(arcHeight);
+  const [responsiveYOffset, setResponsiveYOffset] = useState(yOffsetAdjustment);
+  
+
+  // Update arc dimensions based on window size
+  useEffect(() => {
+    const updateResponsiveValues = () => {
+      const width = window.innerWidth;
+
+      setResponsiveArcWidth(width * 1); 
+    };
+
+    updateResponsiveValues();
+    window.addEventListener("resize", updateResponsiveValues);
+    return () => window.removeEventListener("resize", updateResponsiveValues);
+  }, []);
 
   useEffect(() => {
     const calculatePositions = () => {
       const calculatedPositions = projectsData.map((_, index) => {
         const buttonPosX = buttonPositions[index]?.x || 0;
-        const xNormalized = (buttonPosX / window.innerWidth) * arcWidth;
+        const xNormalized = (buttonPosX / window.innerWidth) * responsiveArcWidth;
         const xPosition = xNormalized;
         const yPosition =
-          -arcHeight *
-            (1 - Math.pow((xNormalized - arcWidth / 2) / (arcWidth / 2), 2)) +
-          yOffsetAdjustment;
+          -responsiveArcHeight *
+            (1 - Math.pow((xNormalized - responsiveArcWidth / 2) / (responsiveArcWidth / 2), 2)) +
+          responsiveYOffset;
 
         return {
           x: xPosition,
@@ -38,11 +56,17 @@ export default function ProjectDatesFooter({
   }, [
     projectsData,
     buttonPositions,
-    yOffsetAdjustment,
-    arcWidth,
-    arcHeight,
+    responsiveArcWidth,
+    responsiveArcHeight,
+    responsiveYOffset,
     visibilityThreshold,
   ]);
+
+  const handleDateClick = (index) => {
+    if (scrollToProjectIndex) {
+      scrollToProjectIndex(index);
+    }
+  };
 
   return (
     <div
@@ -50,21 +74,24 @@ export default function ProjectDatesFooter({
       style={{
         overflow: "hidden",
         width: "100%",
+        padding: "10px 0",
       }}
     >
-      {/* Affichage du type de projet le plus centré */}
       {highlightedIndex != null && projectsData[highlightedIndex] && (
         <div
           style={{
             position: "absolute",
-            top: `${yOffsetAdjustment - arcHeight / 1.5}px`,
+            top: `${responsiveYOffset - responsiveArcHeight / 1.5}px`,
             textAlign: "center",
             color: "#555",
           }}
         >
           <motion.p
             className="project-type"
-            style={{ fontWeight: "bold", fontSize: "1em" }}
+            style={{ 
+              fontWeight: "bold",
+              fontSize: "24px",
+            }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -74,7 +101,7 @@ export default function ProjectDatesFooter({
           </motion.p>
           <motion.p
             className="project-name"
-            style={{ fontSize: "1.6em", marginTop: "5px" }}
+            style={{ fontSize: window.innerWidth > 768 ? "1.6em" : "32px" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -85,28 +112,32 @@ export default function ProjectDatesFooter({
         </div>
       )}
 
-      {/* Positionnement des dates en suivant l'arc concave */}
       {datePositions.map((pos, index) => {
         const project = projectsData[index];
 
         return (
           pos.isVisible && (
             <AnimatePresence key={project.id}>
-              <motion.div
-                className="date"
+              <motion.button
+                className="date-button"
                 style={{
                   position: "absolute",
                   left: `${pos.x}px`,
                   top: `${pos.y}px`,
                   transform: "translate(-50%, -50%)",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: window.innerWidth > 768 ? "1.7em" : "1.3em", 
                 }}
+                onClick={() => handleDateClick(index)}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
                 {project.date}
-              </motion.div>
+              </motion.button>
             </AnimatePresence>
           )
         );

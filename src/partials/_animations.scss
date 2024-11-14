@@ -120,7 +120,7 @@
 
 // Animation pour ouverture avec effet de spring
 .modal-initial-open {
-  animation: modalOpenAndSpring .5s ease-out forwards;
+  animation: modalOpenAndSpring .4s ease-out forwards;
 }
 
 @keyframes modalOpenAndSpring {
@@ -153,17 +153,25 @@
 
 // Animation pour fermeture
 .modal-close {
-  animation: modalClose 0.5s ease-in forwards;
+  animation: modalClose 0.4s ease-in forwards;
 }
 
 @keyframes modalClose {
-  from {
+  10% {
     opacity: 1;
     transform: scale(1);
   }
-  to {
+  60% {
+    opacity: 1;
+    transform: scale(.5) ;
+  }
+  80% {
+    opacity: 1;
+    transform: scale(.5) scaleX(0.5);
+  }
+  100% {
     opacity: 0;
-    transform: scale(0.5) translateY(300px);
+    transform: scale(0.5) scaleX(0.2) translateY(1000px);
   }
 }
 
@@ -173,11 +181,27 @@
 }
 
 @keyframes swipeOutLeft {
-  from {
-    transform: translateX(0);
+  0% {
+    transform: translateX(0) scale(1);
   }
-  to {
-    transform: translateX(-100%) scale(0.5);
+  20% {
+    transform:  scale(0.7) ;
+    opacity: 1;
+  }
+  30% {
+    transform: scale(0.3) ;
+    opacity: 1;
+  }
+  40% {
+    transform: scale(0.2) scaleX(2)  ;
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.1) scaleX(4)  ;
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-100%) scale(0.05) rotate(0.5turn);
     opacity: 0;
   }
 }
@@ -188,43 +212,91 @@
 }
 
 @keyframes swipeOutRight {
-  from {
-    transform: translateX(0);
+    0% {
+      transform: translateX(0) scale(1);
+    }
+    20% {
+      transform:  scale(0.7) ;
+      opacity: 1;
+    }
+    30% {
+      transform: scale(0.3) ;
+      opacity: 1;
+    }
+    40% {
+      transform: scale(0.2) scaleX(2)  ;
+      opacity: 1;
+    }
+    50% {
+      transform: scale(0.1) scaleX(4)  ;
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(100%) scale(0.05) rotate(-0.5turn);
+      opacity: 0;
+    }
   }
-  to {
-    transform: translateX(100%) scale(0.5);
-    opacity: 0;
-  }
-}
 
 // Animation pour swipe in depuis la gauche
 .modal-swipe-in-left {
-  animation: swipeInLeft 0.5s ease-out forwards;
+  animation: swipeInLeft .3s ease-out ;
 }
 
 @keyframes swipeInLeft {
-  from {
+  0% {
     transform: translateX(-100%) scale(0.5);
     opacity: 0;
   }
-  to {
-    transform: translateX(0) scale(1);
+  60% {
+    transform: translateX(0) skew(5deg, 0deg) scale(1);
+    opacity: 1;
+  }
+  80% {
+    transform:  skew(-2deg, 0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0) skew(0deg, 0deg) scale(1);
     opacity: 1;
   }
 }
 
 // Animation pour swipe in depuis la droite
 .modal-swipe-in-right {
-  animation: swipeInRight 0.5s ease-out forwards;
+  animation: swipeInRight 0.2s ease-out forwards;
 }
 
 @keyframes swipeInRight {
-  from {
+  0% {
     transform: translateX(100%) scale(0.5);
     opacity: 0;
   }
-  to {
-    transform: translateX(0) scale(1);
+  60% {
+    transform: translateX(0) skew(-5deg, 0deg) scale(1);
     opacity: 1;
   }
+  80% {
+    transform:  skew(2deg, 0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0) skew(0deg, 0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes modal-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+}
+
+.modal-shake {
+  animation: modal-shake 0.5s ease;
 }
