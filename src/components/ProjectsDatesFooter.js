@@ -16,14 +16,11 @@ export default function ProjectDatesFooter({
   const [responsiveArcWidth, setResponsiveArcWidth] = useState(arcWidth);
   const [responsiveArcHeight, setResponsiveArcHeight] = useState(arcHeight);
   const [responsiveYOffset, setResponsiveYOffset] = useState(yOffsetAdjustment);
-  
 
-  // Update arc dimensions based on window size
   useEffect(() => {
     const updateResponsiveValues = () => {
       const width = window.innerWidth;
-
-      setResponsiveArcWidth(width * 1); 
+      setResponsiveArcWidth(width * 1);
     };
 
     updateResponsiveValues();
@@ -35,11 +32,17 @@ export default function ProjectDatesFooter({
     const calculatePositions = () => {
       const calculatedPositions = projectsData.map((_, index) => {
         const buttonPosX = buttonPositions[index]?.x || 0;
-        const xNormalized = (buttonPosX / window.innerWidth) * responsiveArcWidth;
+        const xNormalized =
+          (buttonPosX / window.innerWidth) * responsiveArcWidth;
         const xPosition = xNormalized;
         const yPosition =
           -responsiveArcHeight *
-            (1 - Math.pow((xNormalized - responsiveArcWidth / 2) / (responsiveArcWidth / 2), 2)) +
+            (1 -
+              Math.pow(
+                (xNormalized - responsiveArcWidth / 2) /
+                  (responsiveArcWidth / 2),
+                2
+              )) +
           responsiveYOffset;
 
         return {
@@ -81,14 +84,14 @@ export default function ProjectDatesFooter({
         <div
           style={{
             position: "absolute",
-            top: `${responsiveYOffset - responsiveArcHeight / 1.5}px`,
+            top: responsiveYOffset - responsiveArcHeight / 1.5 + "px",
             textAlign: "center",
             color: "#555",
           }}
         >
           <motion.p
             className="project-type"
-            style={{ 
+            style={{
               fontWeight: "bold",
               fontSize: "24px",
             }}
@@ -122,13 +125,13 @@ export default function ProjectDatesFooter({
                 className="date-button"
                 style={{
                   position: "absolute",
-                  left: `${pos.x}px`,
-                  top: `${pos.y}px`,
+                  left: pos.x + "px",
+                  top: pos.y + "px",
                   transform: "translate(-50%, -50%)",
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  fontSize: window.innerWidth > 768 ? "1.7em" : "1.3em", 
+                  fontSize: window.innerWidth > 768 ? "1.7em" : "1.3em",
                 }}
                 onClick={() => handleDateClick(index)}
                 initial={{ opacity: 0 }}

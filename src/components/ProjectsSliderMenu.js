@@ -26,11 +26,11 @@ const ProjectsSliderMenu = forwardRef(
       const project = sliderRef.current.children[index];
       if (project) {
         const offset =
-          project.offsetLeft -
-          sliderRef.current.offsetWidth / 2 +
+          project.offsetLeft - sliderRef.current.offsetWidth / 2 +
           project.offsetWidth / 2;
         sliderRef.current.scrollTo({ left: offset, behavior: "smooth" });
-        setHighlightedIndexState(index);
+        setHighlightedIndexState(index); // Met à jour l'état local
+        setHighlightedIndex(index); // Met à jour dans le parent (le footer)
         lastCenteredIndexRef.current = index;
       }
     };
@@ -129,6 +129,7 @@ const ProjectsSliderMenu = forwardRef(
       });
 
       setHighlightedIndexState(closestIndex);
+      setHighlightedIndex(closestIndex); // Mise à jour du parent
       lastCenteredIndexRef.current = closestIndex;
     };
 
@@ -217,12 +218,7 @@ const ProjectsSliderMenu = forwardRef(
                     />
                   )}
                 </div>
-                {!isBookend && (
-                  <div className="footer">
-                    <p className="project-type">{project.type}</p>
-                    <p className="project-name">{project.name}</p>
-                  </div>
-                )}
+
                 {(index !== centerIndex || isBlankStart || isBlankEnd) && (
                   <div
                     className={`triangle ${
