@@ -242,6 +242,7 @@ body.single-toggle .drop:nth-child(10) {
 
 .projects-slider-menu {
   display: flex;
+  overscroll-behavior: none;
 }
 
 // Dates
