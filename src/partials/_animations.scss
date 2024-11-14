@@ -171,7 +171,7 @@
   }
   100% {
     opacity: 0;
-    transform: scale(0.5) scaleX(0.2) translateY(1000px);
+    transform: scale(0.5) scaleX(0.2) translateY(600px);
   }
 }
 
@@ -290,13 +290,13 @@
     transform: translateX(0);
   }
   25% {
-    transform: translateX(-10px);
+    transform: translateX(10px);
   }
   75% {
-    transform: translateX(10px);
+    transform: translateX(-10px);
   }
 }
 
 .modal-shake {
-  animation: modal-shake 0.5s ease;
+  animation: modal-shake 0.3s ease;
 }

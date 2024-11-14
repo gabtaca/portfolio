@@ -11,7 +11,6 @@ body {
   margin: 0;
   background-color: $background;
   color: $foreground;
-  
 }
 
 p {
@@ -28,6 +27,7 @@ button {
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
 }
 
 @media (prefers-color-scheme: dark) {
@@ -45,4 +45,19 @@ button {
 
 .div_body {
   touch-action: none;
+}
+
+
+
+.main_layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.main_home {
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }

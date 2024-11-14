@@ -13,6 +13,7 @@ export default function ProjectsModal({
   const [isInitialOpen, setIsInitialOpen] = useState(true);
   const [animationClass, setAnimationClass] = useState("");
   const [hasSwiped, setHasSwiped] = useState(false);
+  const [borderSide, setBorderSide] = useState("");
 
   const bookendIds = ["blank-start", "blank-start2", "blank-end", "blank-end2"];
 
@@ -35,10 +36,15 @@ export default function ProjectsModal({
     }, 500);
   };
 
-  const handleShake = () => {
-    // Force reapplication of shake animation by resetting the class
+  const handleShake = (direction) => {
+    setBorderSide(direction === "left" ? "left" : "right");
     setAnimationClass("");
-    setTimeout(() => setAnimationClass("modal-content-shake"), 10);
+    setTimeout(() => setAnimationClass("modal-shake"), 110);
+    
+    // Réinitialiser la bordure après 0.3s
+    setTimeout(() => {
+      setBorderSide("");
+    }, 300);
   };
 
   const handleSwipe = (direction) => {
@@ -50,24 +56,26 @@ export default function ProjectsModal({
     if (direction === "left") {
       if (nextIndex < projectsData.length && !bookendIds.includes(projectsData[nextIndex]?.id)) {
         setAnimationClass("modal-swipe-out-left");
+        setBorderSide("");
         setTimeout(() => {
           onNext();
           setAnimationClass("modal-swipe-in-right");
           setIsInitialOpen(false);
         }, 500);
       } else {
-        handleShake();
+        handleShake("right");
       }
     } else if (direction === "right") {
       if (prevIndex >= 0 && !bookendIds.includes(projectsData[prevIndex]?.id)) {
         setAnimationClass("modal-swipe-out-right");
+        setBorderSide("");
         setTimeout(() => {
           onPrevious();
           setAnimationClass("modal-swipe-in-left");
           setIsInitialOpen(false);
         }, 500);
       } else {
-        handleShake();
+        handleShake("left");
       }
     } else if (direction === "up") {
       window.open(project.lien.github, "_blank");
@@ -109,6 +117,8 @@ export default function ProjectsModal({
           position: "relative",
           color: "#677684",
           zIndex: 1001,
+          borderLeft: borderSide === "left" ? "4px solid rgba(255,0,0,0.51)" : "",
+          borderRight: borderSide === "right" ? "4px solid rgba(255,0,0,0.51)" : "",
         }}
         onClick={(e) => e.stopPropagation()}
         onTouchStart={(e) => {

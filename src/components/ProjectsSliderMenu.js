@@ -197,10 +197,9 @@ const ProjectsSliderMenu = forwardRef(
                   position: "relative",
                   transformOrigin: "bottom",
                   minWidth: "60px",
-                  height: "345px",
+                  height: "350px",
                   zIndex: buttonZIndex,
                   borderRadius: "2.5px",
-                  border: "0.5px solid #C9D5E1",
                 }}
                 className="project-column-container h-100"
                 onClick={() => !isBookend && setSelectedProjectIndex(index)}

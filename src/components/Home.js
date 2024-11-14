@@ -37,7 +37,7 @@ export default function Home() {
   };
 
   return (
-    <main className="home_main display-flex flex-col justify-between align-center">
+    <main className="main_home">
       <div className="ctrl_rain">
         <nav className="nav_main display-flex flex-col py-10 align-center justify-between w-full text-24 ">
           <button ref={btnIdeasRef} className="text-h2-100 text-24 hover-underline font-italiana">
