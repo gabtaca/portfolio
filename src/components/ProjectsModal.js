@@ -6,7 +6,7 @@ export default function ProjectsModal({
   onClose,
   onNext,
   onPrevious,
-  projectsData, // Transmettre projectsData ici pour éviter les erreurs
+  projectsData,
 }) {
   if (!project || project.type === "blank") return null;
 
@@ -20,6 +20,10 @@ export default function ProjectsModal({
     if (isInitialOpen && !hasSwiped) {
       setAnimationClass("modal-initial-open");
     }
+    document.body.classList.add("no-scroll");
+    return () => {
+      document.body.classList.remove("no-scroll");
+    };
   }, [project, isInitialOpen, hasSwiped]);
 
   const handleClose = () => {
@@ -32,8 +36,9 @@ export default function ProjectsModal({
   };
 
   const handleShake = () => {
-    setAnimationClass("modal-shake");
-    setTimeout(() => setAnimationClass(""), 500); // Réinitialiser l'animation de secousse après 500ms
+    // Force reapplication of shake animation by resetting the class
+    setAnimationClass("");
+    setTimeout(() => setAnimationClass("modal-content-shake"), 10);
   };
 
   const handleSwipe = (direction) => {
@@ -43,7 +48,7 @@ export default function ProjectsModal({
     const prevIndex = currentIndex - 1;
 
     if (direction === "left") {
-      if (nextIndex < projectsData.length && !bookendIds.includes(projectsData[nextIndex].id)) {
+      if (nextIndex < projectsData.length && !bookendIds.includes(projectsData[nextIndex]?.id)) {
         setAnimationClass("modal-swipe-out-left");
         setTimeout(() => {
           onNext();
@@ -51,10 +56,10 @@ export default function ProjectsModal({
           setIsInitialOpen(false);
         }, 500);
       } else {
-        handleShake(); // Activer l'animation de secousse si limite atteinte
+        handleShake();
       }
     } else if (direction === "right") {
-      if (prevIndex >= 0 && !bookendIds.includes(projectsData[prevIndex].id)) {
+      if (prevIndex >= 0 && !bookendIds.includes(projectsData[prevIndex]?.id)) {
         setAnimationClass("modal-swipe-out-right");
         setTimeout(() => {
           onPrevious();
@@ -62,7 +67,7 @@ export default function ProjectsModal({
           setIsInitialOpen(false);
         }, 500);
       } else {
-        handleShake(); // Activer l'animation de secousse si limite atteinte
+        handleShake();
       }
     } else if (direction === "up") {
       window.open(project.lien.github, "_blank");

@@ -36,3 +36,9 @@ button {
     --foreground: #ededed;
   }
 }
+
+.no-scroll {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
