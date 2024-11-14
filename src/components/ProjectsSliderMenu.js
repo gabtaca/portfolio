@@ -18,9 +18,8 @@ const ProjectsSliderMenu = forwardRef(
     const [highlightedIndex, setHighlightedIndexState] = useState(null);
     const [selectedProjectIndex, setSelectedProjectIndex] = useState(null);
     const inactivityTimeout = useRef(null);
-    const lastCenteredIndexRef = useRef(null); // Updated to store the last highlighted index
+    const lastCenteredIndexRef = useRef(null);
 
-    // Calculate the initial center project index
     const startProjectIndex = Math.floor(projectsData.length / 2);
 
     const scrollToProjectIndex = (index) => {
@@ -31,9 +30,8 @@ const ProjectsSliderMenu = forwardRef(
           sliderRef.current.offsetWidth / 2 +
           project.offsetWidth / 2;
         sliderRef.current.scrollTo({ left: offset, behavior: "smooth" });
-        setHighlightedIndex(index);
-        lastCenteredIndexRef.current = index; // Update last centered index here for real-time tracking
-        console.log("Scrolling to index:", index); // Debugging output
+        setHighlightedIndexState(index); // Update the highlighted index here
+        lastCenteredIndexRef.current = index;
       }
     };
 
@@ -41,12 +39,7 @@ const ProjectsSliderMenu = forwardRef(
       scrollToProjectIndex,
     }));
 
-    // Center the last highlighted project after inactivity
     const centerCurrentHighlightedProject = () => {
-      console.log(
-        "Centering last highlighted index:",
-        lastCenteredIndexRef.current
-      ); // Debugging output
       if (lastCenteredIndexRef.current !== null) {
         scrollToProjectIndex(lastCenteredIndexRef.current);
       }
@@ -61,7 +54,6 @@ const ProjectsSliderMenu = forwardRef(
     };
 
     useEffect(() => {
-      // Center on the middle project during the initial load
       scrollToProjectIndex(startProjectIndex);
       calculateInitialScales();
       updateButtonPositions();
@@ -136,9 +128,8 @@ const ProjectsSliderMenu = forwardRef(
         }
       });
 
-      setHighlightedIndex(closestIndex);
-      lastCenteredIndexRef.current = closestIndex; // Update last centered index here for accurate tracking
-      console.log("Highlighted index set to:", closestIndex); // Debugging output
+      setHighlightedIndexState(closestIndex); // Ensure state update
+      lastCenteredIndexRef.current = closestIndex;
     };
 
     const updateButtonPositions = () => {
@@ -168,18 +159,13 @@ const ProjectsSliderMenu = forwardRef(
           transition={{ duration: 0.3 }}
         >
           {projectsData.map((project, index) => {
+            const isHighlighted = highlightedIndex === index;
             const isBlankStart = project.id === "blank-start";
             const isBlankEnd = project.id === "blank-end";
             const isBlankStart2 = project.id === "blank-start2";
             const isBlankEnd2 = project.id === "blank-end2";
-            const distanceFromCenter = Math.abs(index - centerIndex);
+            const isBookend = isBlankStart || isBlankEnd || isBlankStart2 || isBlankEnd2;
             const buttonZIndex = centerIndex - Math.abs(index - centerIndex);
-            const isBookend = [
-              "blank-start",
-              "blank-end",
-              "blank-start2",
-              "blank-end2",
-            ].includes(project.id);
             const triangleZIndex = buttonZIndex - 1;
 
             return (
@@ -217,7 +203,17 @@ const ProjectsSliderMenu = forwardRef(
                       }}
                     />
                   ) : (
-                    <ProjectColumn project={project} />
+                    <img
+                      src={isHighlighted ? project.img : project.still}
+                      alt={project.imgAlt || "Project Image"}
+                      style={{
+                        height: "345px",
+                        width: "60px",
+                        border: "0.5px solid #C9D5E1",
+                        borderRadius: "2.5px",
+                        objectFit: "cover",
+                      }}
+                    />
                   )}
                 </div>
 
