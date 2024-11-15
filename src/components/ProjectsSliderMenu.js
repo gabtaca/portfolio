@@ -57,7 +57,7 @@ const ProjectsSliderMenu = forwardRef(
         clearTimeout(inactivityTimeout.current);
         inactivityTimeout.current = setTimeout(centerCurrentHighlightedProject, 2000);
       }
-    }, [centerCurrentHighlightedProject]);
+    },);
 
     useEffect(() => {
       scrollToProjectIndex(startProjectIndex);
