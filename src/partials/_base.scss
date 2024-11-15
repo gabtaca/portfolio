@@ -7,10 +7,12 @@ nav {
 /* Autres styles globaux */
 
 
-body {
+html, body {
   margin: 0;
   background-color: $background;
   color: $foreground;
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
 }
 
 p {

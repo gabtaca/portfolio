@@ -111,8 +111,6 @@ export default function ProjectsModal({
           background: "#D2DDE8",
           padding: "20px",
           borderRadius: "8px",
-          width: "70%",
-          maxWidth: "400px",
           textAlign: "center",
           position: "relative",
           color: "#677684",
@@ -166,7 +164,7 @@ export default function ProjectsModal({
         <img
           src={project.img}
           alt={project.imgAlt || "Project Image"}
-          style={{ width: "100%", borderRadius: "8px", marginBottom: "10px" }}
+          style={{ width: "100%",  marginBottom: "10px" }}
         />
         <p style={{ fontFamily: "Inter, sans-serif", color: "#677684" }}>{project.description}</p>
         <ul
