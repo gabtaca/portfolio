@@ -36,6 +36,7 @@ export default function Home() {
     btnCV.addEventListener('animationend', handleAnimationEnd);
   };
 
+
   return (
     <main className="main_home">
       <div className="ctrl_rain">

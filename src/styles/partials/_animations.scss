@@ -300,3 +300,25 @@
 .modal-shake {
   animation: modal-shake 0.3s ease;
 }
+
+.icon_swipe {
+  animation: swipeAttention 4s steps(1) infinite;
+}
+
+@keyframes swipeAttention {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(45deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(-45deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}

@@ -1,0 +1,46 @@
+/* src/styles/partials/_base.scss */
+
+nav {
+  margin: 0;
+}
+
+/* Autres styles globaux */
+
+
+html, body {
+  margin: 0;
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+p {
+  margin: 0%;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+
+
+
+.no-scroll {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
+
+.div_body {
+  touch-action: none;
+}
+
+.fullscreen-section {
+  height: 100vh; 
+  height: calc(var(--vh) * 100); 
+}
+

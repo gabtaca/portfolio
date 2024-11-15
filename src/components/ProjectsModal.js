@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 export default function ProjectsModal({
   project,
   currentIndex,
@@ -40,7 +39,7 @@ export default function ProjectsModal({
     setBorderSide(direction === "left" ? "left" : "right");
     setAnimationClass("");
     setTimeout(() => setAnimationClass("modal-shake"), 110);
-    
+
     // Réinitialiser la bordure après 0.3s
     setTimeout(() => {
       setBorderSide("");
@@ -54,7 +53,10 @@ export default function ProjectsModal({
     const prevIndex = currentIndex - 1;
 
     if (direction === "left") {
-      if (nextIndex < projectsData.length && !bookendIds.includes(projectsData[nextIndex]?.id)) {
+      if (
+        nextIndex < projectsData.length &&
+        !bookendIds.includes(projectsData[nextIndex]?.id)
+      ) {
         setAnimationClass("modal-swipe-out-left");
         setBorderSide("");
         setTimeout(() => {
@@ -103,115 +105,165 @@ export default function ProjectsModal({
       onClick={handleClose}
     >
       <div
-        className={`modal-content ${animationClass}`}
         style={{
           display: "flex",
-          flexDirection: "column",
+          justifyContent: "center",
           alignItems: "center",
-          background: "#D2DDE8",
-          padding: "20px",
-          borderRadius: "8px",
-          textAlign: "center",
           position: "relative",
-          color: "#677684",
-          zIndex: 1001,
-          borderLeft: borderSide === "left" ? "4px solid rgba(255,0,0,0.51)" : "",
-          borderRight: borderSide === "right" ? "4px solid rgba(255,0,0,0.51)" : "",
-        }}
-        onClick={(e) => e.stopPropagation()}
-        onTouchStart={(e) => {
-          const startX = e.touches[0].clientX;
-          const startY = e.touches[0].clientY;
-          e.target.startX = startX;
-          e.target.startY = startY;
-        }}
-        onTouchEnd={(e) => {
-          const endX = e.changedTouches[0].clientX;
-          const endY = e.changedTouches[0].clientY;
-          const swipeThreshold = 100;
-
-          if (e.target.startX - endX > swipeThreshold) {
-            handleSwipe("left");
-          } else if (endX - e.target.startX > swipeThreshold) {
-            handleSwipe("right");
-          } else if (e.target.startY - endY > swipeThreshold) {
-            handleSwipe("up");
-          } else if (endY - e.target.startY > swipeThreshold) {
-            handleSwipe("down");
-          }
+          width: "100%",
         }}
       >
-        <button
-          onClick={handleClose}
+        {/* Modal Content */}
+        <div
+          className={`modal-content ${animationClass}`}
           style={{
-            position: "absolute",
-            top: "10px",
-            right: "10px",
-            background: "transparent",
-            color: "#677684",
-            border: "none",
-            fontSize: "1.5rem",
-            cursor: "pointer",
-            backgroundImage: `url('/images/close.svg')`,
-            backgroundSize: "contain",
-            backgroundRepeat: "no-repeat",
-            width: "24px",
-            height: "24px",
-          }}
-          aria-label="Close button"
-        />
-        <h2 style={{ fontFamily: "Jockey One", fontWeight: "200" }}>{project.date}</h2>
-        <img
-          src={project.img}
-          alt={project.imgAlt || "Project Image"}
-          style={{ width: "100%",  marginBottom: "10px" }}
-        />
-        <p style={{ fontFamily: "Inter, sans-serif", color: "#677684" }}>{project.description}</p>
-        <ul
-          style={{
-            listStyleType: "none",
-            padding: 0,
-            gap: 6,
             display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            marginTop: "10px",
-            fontFamily: "Inter, sans-serif",
-            fontSize: "14px",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "space-evenly",
+            background: "var(--bgModal)",
+            paddingTop: "20px",
+            paddingBottom: "20px",
+            paddingLeft: "20px",
+            paddingRight: "20px",
+            borderRadius: "8px",
+            textAlign: "center",
+            position: "relative",
+            zIndex: 50,
+            borderLeft: borderSide === "left" ? `4px solid var(--errors)` : "",
+            borderRight:
+              borderSide === "right" ? `4px solid var(--errors)` : "",
+          }}
+          onClick={(e) => e.stopPropagation()}
+          onTouchStart={(e) => {
+            const startX = e.touches[0].clientX;
+            const startY = e.touches[0].clientY;
+            e.target.startX = startX;
+            e.target.startY = startY;
+          }}
+          onTouchEnd={(e) => {
+            const endX = e.changedTouches[0].clientX;
+            const endY = e.changedTouches[0].clientY;
+            const swipeThreshold = 100;
+
+            if (e.target.startX - endX > swipeThreshold) {
+              handleSwipe("left");
+            } else if (endX - e.target.startX > swipeThreshold) {
+              handleSwipe("right");
+            } else if (e.target.startY - endY > swipeThreshold) {
+              handleSwipe("up");
+            } else if (endY - e.target.startY > swipeThreshold) {
+              handleSwipe("down");
+            }
           }}
         >
-          {project.stack.map((tech, index) => (
-            <li key={index}>{tech}</li>
-          ))}
-        </ul>
-        <a
-          href={project.lien.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            display: "inline-block",
-            marginTop: "15px",
-            padding: "10px 20px",
-            backgroundColor: "#3490dc",
-            color: "#fff",
-            borderRadius: "4px",
-            textDecoration: "none",
-          }}
-        >
-          Visiter
-        </a>
-        <img
-          src="/images/swipe.svg"
-          alt="Swipe icon"
-          style={{
-            position: "absolute",
-            bottom: "10px",
-            left: "10px",
-            width: "24px",
-            height: "24px",
-            cursor: "pointer",
-          }}
-        />
+          {/* Date Modal - Positioned Behind Content */}
+          <div
+            className="date_modal"
+            style={{
+              position: "absolute",
+              top: "-38px",
+              zIndex: -10,
+              width: "70%",
+              display: "flex",
+              justifyContent: "center",
+              backgroundColor: "var(--btnBlankEnd)",
+              color: "var(--datesColor)",
+              textAlign: "center",
+              paddingTop: "5px",
+              borderRadius: "8px 8px 0 0",
+            }}
+          >
+            <img
+              className="icon_swipe"
+              src="/images/swipe.svg"
+              alt="Swipe icon"
+              style={{
+                position: "absolute",
+                top: "-10px",
+                left: "-50px",
+                width: "24px",
+                height: "24px",
+              }}
+            />
+            <button
+              onClick={handleClose}
+              style={{
+                position: "absolute",
+                top: "-10px",
+                right: "-50px",
+                background: "transparent",
+                color: "var(--h1Icons)",
+                border: "none",
+                paddingTop: "3px",
+                paddingBottom: "3px",
+                cursor: "pointer",
+                backgroundImage: `url("/images/close.svg")`,
+                backgroundSize: "contain",
+                backgroundRepeat: "no-repeat",
+                width: "24px",
+                height: "24px",
+              }}
+              aria-label="Bouton fermer le modal"
+            />
+            <p
+              style={{
+                fontFamily: "Jockey One",
+                fontSize: "24px",
+                fontWeight: "200",
+                margin: "0",
+              }}
+            >
+              {project.date}
+            </p>
+          </div>
+
+          <img
+            src={project.img}
+            alt={project.imgAlt || "Project Image"}
+            style={{ maxWidth: "100%", maxHeight: "40%" }}
+          />
+          <p
+            style={{
+              fontFamily: "Inter, sans-serif",
+              color: "var(--textColor)",
+            }}
+          >
+            {project.description}
+          </p>
+          <ul
+            style={{
+              listStyleType: "none",
+              padding: 0,
+              gap: 6,
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              marginTop: "10px",
+              fontFamily: "Inter, sans-serif",
+              fontSize: "14px",
+            }}
+          >
+            {project.stack.map((tech, index) => (
+              <li key={index}>{tech}</li>
+            ))}
+          </ul>
+          <a
+            href={project.lien.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "flex",
+              padding: "10px 20px",
+              backgroundColor: "#3490dc",
+              color: "#fff",
+              borderRadius: "4px",
+              textDecoration: "none",
+            }}
+          >
+            Visiter
+          </a>
+        </div>
       </div>
     </div>
   );

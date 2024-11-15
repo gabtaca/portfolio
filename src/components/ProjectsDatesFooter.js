@@ -131,7 +131,7 @@ export default function ProjectDatesFooter({
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  fontSize: window.innerWidth > 768 ? "1.7em" : "1.3em",
+                  fontSize: window.innerWidth > 768 ? "1.7em" : "24px",
                 }}
                 onClick={() => handleDateClick(index)}
                 initial={{ opacity: 0 }}

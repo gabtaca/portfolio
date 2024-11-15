@@ -1,0 +1,30 @@
+$colors: (
+  'background': #FBFDFF,
+  'foreground': #D2DDE8,
+  'mainTextColor': #000000,
+  'h2Color': #677684,
+  'h1Icons': #194967,
+  'textColor': #163F59,
+  'datesColor': #95A5AF,
+  'bgModal': #D2DDE8,
+  'btnBlank': #C9D5E1,
+  'btnBlankEnd': #EBF1F6,
+  'postItPink': #FFA9D0,
+  'postItYellow': #FFFFB2,
+  'postItBlue': #C5FEFF,
+  'postItGreen': #C8F06E,
+  'postItOrange': #FFC551,
+  'errors': #ff000082,
+);
+
+:root {
+  @each $name, $value in $colors {
+    --#{$name}: #{$value};
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+
+  }
+}

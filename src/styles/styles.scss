@@ -1,11 +1,11 @@
 /*Imports*/
-@import "../partials/variables";
-@import "../partials/mixins";
-@import "../partials/fonts";
-@import "../partials/base";
-@import "../partials/customStyles";
-@import "../partials/components";
-@import "../partials/animations";
+@use 'partials/variables' as vars;
+@use "partials/mixins";
+@use "partials/fonts";
+@use "partials/base";
+@use "partials/customStyles";
+@use "partials/components";
+@use "partials/animations";
 
 /* Déclaration de la police Italiana */
 @font-face {
