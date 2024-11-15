@@ -245,6 +245,18 @@ body.single-toggle .drop:nth-child(10) {
   overscroll-behavior: none;
 }
 
+.projects-slider-menu::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .projects-slider-menu {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: auto;
+    scroll-snap-type: none;
+  }
+}
+
 // Dates
 
 .project-dates-footer {

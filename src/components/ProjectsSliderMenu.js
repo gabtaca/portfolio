@@ -4,6 +4,7 @@ import React, {
   useState,
   forwardRef,
   useImperativeHandle,
+  useCallback,
 } from "react";
 import ProjectColumn from "./ProjectColumn";
 import ProjectsModal from "./ProjectsModal";
@@ -22,18 +23,22 @@ const ProjectsSliderMenu = forwardRef(
 
     const startProjectIndex = Math.floor(projectsData.length / 2);
 
-    const scrollToProjectIndex = (index) => {
+    const scrollToProjectIndex = useCallback((index) => {
       const project = sliderRef.current.children[index];
       if (project) {
-        const offset =
-          project.offsetLeft - sliderRef.current.offsetWidth / 2 +
-          project.offsetWidth / 2;
-        sliderRef.current.scrollTo({ left: offset, behavior: "smooth" });
-        setHighlightedIndexState(index); // Met à jour l'état local
-        setHighlightedIndex(index); // Met à jour dans le parent (le footer)
+        const isMobile = window.innerWidth <= 768;
+        const offset = project.offsetLeft - sliderRef.current.offsetWidth / 2 + project.offsetWidth / 2;
+        
+        sliderRef.current.scrollTo({ 
+          left: offset, 
+          behavior: isMobile ? "auto" : "smooth"
+        });
+        
+        setHighlightedIndexState(index);
+        setHighlightedIndex(index);
         lastCenteredIndexRef.current = index;
       }
-    };
+    }, [setHighlightedIndex]);
 
     useImperativeHandle(ref, () => ({
       scrollToProjectIndex,
@@ -45,13 +50,14 @@ const ProjectsSliderMenu = forwardRef(
       }
     };
 
-    const resetInactivityTimeout = () => {
-      clearTimeout(inactivityTimeout.current);
-      inactivityTimeout.current = setTimeout(
-        centerCurrentHighlightedProject,
-        2000
-      );
-    };
+    const resetInactivityTimeout = useCallback(() => {
+      const isMobile = window.innerWidth <= 768;
+      
+      if (!isMobile) {
+        clearTimeout(inactivityTimeout.current);
+        inactivityTimeout.current = setTimeout(centerCurrentHighlightedProject, 2000);
+      }
+    }, [centerCurrentHighlightedProject]);
 
     useEffect(() => {
       scrollToProjectIndex(startProjectIndex);
@@ -154,7 +160,13 @@ const ProjectsSliderMenu = forwardRef(
         <motion.div
           ref={sliderRef}
           className="projects-slider-menu flex flex-row gap-20 overflow-hidden overflow-scroll"
-          style={{ position: "relative" }}
+          style={{ 
+            position: "relative",
+            scrollSnapType: "none",
+            WebkitOverflowScrolling: "touch",
+            msOverflowStyle: "none",
+            scrollbarWidth: "none",
+          }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
