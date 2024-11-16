@@ -43,7 +43,7 @@ export default function ProjectsModal({
     // Réinitialiser la bordure après 0.3s
     setTimeout(() => {
       setBorderSide("");
-    }, 300);
+    }, 200);
   };
 
   const handleSwipe = (direction) => {
@@ -193,7 +193,7 @@ export default function ProjectsModal({
                 top: "-10px",
                 right: "-50px",
                 background: "transparent",
-                color: "var(--h1Icons)",
+                color: "var(--bgModal)",
                 border: "none",
                 paddingTop: "3px",
                 paddingBottom: "3px",
@@ -217,16 +217,31 @@ export default function ProjectsModal({
               {project.date}
             </p>
           </div>
-
-          <img
-            src={project.img}
-            alt={project.imgAlt || "Project Image"}
-            style={{ maxWidth: "100%", maxHeight: "40%" }}
-          />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              fontFamily: "Inter, sans-serif",
+              backgroundColor: "var(--bgImageModal)",
+              borderRadius: "10px",
+              padding: "5px",
+              width: "100%",
+              maxWidth: "100%", maxHeight: "40%" 
+            }}
+          >
+            <img
+              src={project.img}
+              alt={project.imgAlt || "Project Image"}
+              style={{ maxWidth: "100%", maxHeight: "100%", borderRadius: "10px", }}
+            />
+          </div>
           <p
             style={{
               fontFamily: "Inter, sans-serif",
               color: "var(--textColor)",
+              backgroundColor: "var(--bgTextModal)",
+              borderRadius: "10px",
+              padding: "10px",
             }}
           >
             {project.description}
@@ -242,6 +257,7 @@ export default function ProjectsModal({
               marginTop: "10px",
               fontFamily: "Inter, sans-serif",
               fontSize: "14px",
+              color: "var(--datesColor)",
             }}
           >
             {project.stack.map((tech, index) => (
