@@ -77,14 +77,14 @@ export default function ProjectDatesFooter({
       style={{
         overflow: "hidden",
         width: "100%",
-        padding: "10px 0",
+        padding: "0 0",
       }}
     >
       {highlightedIndex != null && projectsData[highlightedIndex] && (
         <div
           style={{
             position: "absolute",
-            top: responsiveYOffset - responsiveArcHeight / 1.5 + "px",
+            top: responsiveYOffset - responsiveArcHeight / 1 + "px",
             textAlign: "center",
             color: "#555",
           }}
@@ -127,7 +127,7 @@ export default function ProjectDatesFooter({
                   position: "absolute",
                   left: pos.x + "px",
                   top: pos.y + "px",
-                  transform: "translate(-50%, -50%)",
+                  transform: "translate(-50%, -120%)",
                   background: "none",
                   border: "none",
                   cursor: "pointer",

@@ -191,6 +191,30 @@ body.single-toggle .drop:nth-child(10) {
   animation: drip 15s ease-in-out infinite;
 }
 
+//home.js
+
+.main_home {
+  display: flex;
+  flex-direction: column;
+    justify-content: space-evenly;
+  height: 100%;
+
+}
+
+.body_layout {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between
+}
+
+.main_layout {
+  overflow-y: auto;
+  height: 100%;
+}
+
+
+
 
 //bouton projets
 

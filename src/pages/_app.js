@@ -6,15 +6,15 @@ import Layout from '../components/Layout';
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
-    // Dynamically update viewport height for mobile responsiveness
-    const resizeOps = () => {
-      document.documentElement.style.setProperty("--vh", window.innerHeight * 0.01 + "px");
+    const setVH = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
     };
-
-    resizeOps(); // Set on mount
-    window.addEventListener("resize", resizeOps); // Listen for window resize events
-
-    return () => window.removeEventListener("resize", resizeOps); // Cleanup listener
+  
+    setVH();
+    window.addEventListener("resize", setVH);
+  
+    return () => window.removeEventListener("resize", setVH);
   }, []);
 
   return (

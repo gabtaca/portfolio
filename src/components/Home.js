@@ -39,8 +39,7 @@ export default function Home() {
 
   return (
     <main className="main_home">
-      <div className="ctrl_rain">
-        <nav className="nav_main display-flex flex-col py-10 align-center justify-between w-full text-24 ">
+        <nav className="nav_main display-flex flex-col align-center justify-between w-full text-24 ">
           <button ref={btnIdeasRef} className="text-h2-100 text-24 hover-underline font-italiana">
             Ideas
           </button>
@@ -55,11 +54,10 @@ export default function Home() {
             CV
           </button>
         </nav>
-      </div>
       <div className='flex w-100'>
         {showProjectsSlider && (
           <ProjectsSliderMenu
-            ref={sliderRef}  // Référence pour accéder à scrollToProjectIndex
+            ref={sliderRef} 
             setHighlightedIndex={setHighlightedIndex}
             setButtonPositions={setButtonPositions}
           />

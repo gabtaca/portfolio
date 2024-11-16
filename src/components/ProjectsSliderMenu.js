@@ -135,7 +135,7 @@ const ProjectsSliderMenu = forwardRef(
       });
 
       setHighlightedIndexState(closestIndex);
-      setHighlightedIndex(closestIndex); // Mise à jour du parent
+      setHighlightedIndex(closestIndex); 
       lastCenteredIndexRef.current = closestIndex;
     };
 
