@@ -1,23 +1,16 @@
+// src/components/Home.js
+
 import React, { useState, useRef } from 'react';
-import ProjectsSliderMenu from './ProjectsSliderMenu';
-import ProjectDatesFooter from './ProjectsDatesFooter';
-import projectsData from '../jsonFiles/projects.json';
+import 'animate.css';
+import ProjectsSlider from './ProjectsSlider';
 
 export default function Home() {
   const [showProjectsSlider, setShowProjectsSlider] = useState(false);
-  const [highlightedIndex, setHighlightedIndex] = useState(null);
-  const [buttonPositions, setButtonPositions] = useState({});
-  const sliderRef = useRef(null);  // Référence pour le slider
+  const [highlightedDate, setHighlightedDate] = useState('');
+  const sliderRef = useRef(null); // Reference for the slider
   const btnIdeasRef = useRef(null);
   const btnProjectsRef = useRef(null);
   const btnCVRef = useRef(null);
-
-  // Définir scrollToProjectIndex pour recentrer un projet spécifique
-  const scrollToProjectIndex = (index) => {
-    if (sliderRef.current) {
-      sliderRef.current.scrollToProjectIndex(index);
-    }
-  };
 
   const handleProjectsClick = () => {
     const btnIdeas = btnIdeasRef.current;
@@ -36,41 +29,31 @@ export default function Home() {
     btnCV.addEventListener('animationend', handleAnimationEnd);
   };
 
-
   return (
     <main className="main_home">
-        <nav className="nav_main display-flex flex-col align-center justify-between w-full text-24 ">
-          <button ref={btnIdeasRef} className="text-h2-100 text-24 hover-underline font-italiana">
-            Ideas
-          </button>
-          <button
-            ref={btnProjectsRef}
-            className="text-h2-100 text-24 hover-underline font-italiana"
-            onClick={handleProjectsClick}
-          >
-            Projects
-          </button>
-          <button ref={btnCVRef} className="text-h2-100 text-24 hover-underline font-italiana">
-            CV
-          </button>
-        </nav>
+      <nav className="nav_main display-flex flex-col align-center justify-between w-full text-24 ">
+        <button ref={btnIdeasRef} className="text-h2-100 text-24 hover-underline font-italiana">
+          Ideas
+        </button>
+        <button
+          ref={btnProjectsRef}
+          className="text-h2-100 text-24 hover-underline font-italiana"
+          onClick={handleProjectsClick}
+        >
+          Projects
+        </button>
+        <button ref={btnCVRef} className="text-h2-100 text-24 hover-underline font-italiana">
+          CV
+        </button>
+      </nav>
       <div className='flex w-100'>
         {showProjectsSlider && (
-          <ProjectsSliderMenu
-            ref={sliderRef} 
-            setHighlightedIndex={setHighlightedIndex}
-            setButtonPositions={setButtonPositions}
+          <ProjectsSlider
+            ref={sliderRef}
+            setHighlightedDate={setHighlightedDate}
           />
         )}
       </div>
-      {showProjectsSlider && (
-        <ProjectDatesFooter
-          projectsData={projectsData}
-          buttonPositions={buttonPositions}
-          highlightedIndex={highlightedIndex}
-          scrollToProjectIndex={scrollToProjectIndex}
-        />
-      )}
     </main>
   );
 }

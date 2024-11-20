@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import "animate.css";
 
 export default function ProjectDatesFooter({
   projectsData,
@@ -12,15 +11,14 @@ export default function ProjectDatesFooter({
   yOffsetAdjustment = 150,
   visibilityThreshold = 400,
 }) {
-  const [datePositions, setDatePositions] = useState([]);
   const [responsiveArcWidth, setResponsiveArcWidth] = useState(arcWidth);
-  const [responsiveArcHeight, setResponsiveArcHeight] = useState(arcHeight);
   const [responsiveYOffset, setResponsiveYOffset] = useState(yOffsetAdjustment);
 
   useEffect(() => {
     const updateResponsiveValues = () => {
       const width = window.innerWidth;
-      setResponsiveArcWidth(width * 1);
+      setResponsiveArcWidth(width);
+      // Adjust yOffset if needed
     };
 
     updateResponsiveValues();
@@ -28,88 +26,57 @@ export default function ProjectDatesFooter({
     return () => window.removeEventListener("resize", updateResponsiveValues);
   }, []);
 
-  useEffect(() => {
-    const calculatePositions = () => {
-      const calculatedPositions = projectsData.map((_, index) => {
-        const buttonPosX = buttonPositions[index]?.x || 0;
-        const xNormalized =
-          (buttonPosX / window.innerWidth) * responsiveArcWidth;
-        const xPosition = xNormalized;
-        const yPosition =
-          -responsiveArcHeight *
-            (1 -
-              Math.pow(
-                (xNormalized - responsiveArcWidth / 2) /
-                  (responsiveArcWidth / 2),
-                2
-              )) +
-          responsiveYOffset;
+  const datePositions = useMemo(() => {
+    return projectsData.map((_, index) => {
+      const buttonPosX = buttonPositions[index + 2]?.x || 0; // Adjust index
+      const xNormalized = (buttonPosX / window.innerWidth) * responsiveArcWidth;
+      const xPosition = xNormalized;
+      const yPosition =
+        -arcHeight *
+          (1 -
+            Math.pow(
+              (xNormalized - responsiveArcWidth / 2) / (responsiveArcWidth / 2),
+              2
+            )) +
+        responsiveYOffset;
 
-        return {
-          x: xPosition,
-          y: yPosition,
-          isVisible: Math.abs(buttonPosX) < visibilityThreshold,
-        };
-      });
-
-      setDatePositions(calculatedPositions);
-    };
-
-    calculatePositions();
+      return {
+        x: xPosition,
+        y: yPosition,
+        isVisible: Math.abs(buttonPosX) < visibilityThreshold,
+      };
+    });
   }, [
-    projectsData,
+    projectsData.length,
     buttonPositions,
     responsiveArcWidth,
-    responsiveArcHeight,
+    arcHeight,
     responsiveYOffset,
     visibilityThreshold,
   ]);
 
   const handleDateClick = (index) => {
     if (scrollToProjectIndex) {
-      scrollToProjectIndex(index);
+      scrollToProjectIndex(index + 2); // Adjust index
     }
   };
 
   return (
-    <div
-      className="project-dates-footer"
-      style={{
-        overflow: "hidden",
-        width: "100%",
-        padding: "0 0",
-      }}
-    >
+    <div className="project-dates-footer" style={{ overflow: "hidden" }}>
       {highlightedIndex != null && projectsData[highlightedIndex] && (
         <div
           style={{
             position: "absolute",
-            top: responsiveYOffset - responsiveArcHeight / 1 + "px",
-            textAlign: "center",
-            color: "#555",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            top: responsiveYOffset - arcHeight + "px",
           }}
         >
-          <motion.p
-            className="project-type"
-            style={{
-              fontWeight: "bold",
-              fontSize: "24px",
-            }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
+          <motion.p className="project-type">
             {projectsData[highlightedIndex].type}
           </motion.p>
-          <motion.p
-            className="project-name"
-            style={{ fontSize: window.innerWidth > 768 ? "1.6em" : "32px" }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
+          <motion.p className="project-name">
             {projectsData[highlightedIndex].name}
           </motion.p>
         </div>
@@ -117,6 +84,7 @@ export default function ProjectDatesFooter({
 
       {datePositions.map((pos, index) => {
         const project = projectsData[index];
+        if (!project) return null;
 
         return (
           pos.isVisible && (
@@ -131,7 +99,6 @@ export default function ProjectDatesFooter({
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  fontSize: window.innerWidth > 768 ? "1.7em" : "24px",
                 }}
                 onClick={() => handleDateClick(index)}
                 initial={{ opacity: 0 }}

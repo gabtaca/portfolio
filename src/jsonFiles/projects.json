@@ -1,22 +1,5 @@
 [
   {
-    "id": "blank-start",
-    "type": "",
-    "name": "",
-    "date": "Début",
-    "img": "/images/projects/column_end_btn.png",
-    "description": ""
-  },
-  {
-    "id": "blank-start2",
-    "type": "",
-    "name": "",
-    "date": ".",
-    "still": "/images/projects/column_pre-end_btn.png",
-    "img": "/images/projects/column_pre-end_btn.png",
-    "description": ""
-  },
-  {
     "id": "1",
     "name": "Projet 1",
     "still": "/images/projects/project1.jpg",
@@ -130,7 +113,7 @@
   },
   {
     "id": "9",
-    "name": "Projet 8",
+    "name": "Projet 9",
     "still": "/images/projects/project9.jpg",
     "img": "/images/projects/project9.gif",
     "imgAlt": "image du projet 9",
@@ -144,7 +127,7 @@
   },
   {
     "id": "10",
-    "name": "Projet 8",
+    "name": "Projet 10",
     "still": "/images/projects/project10.jpg",
     "img": "/images/projects/project10.gif",
     "imgAlt": "image du projet 10",
@@ -169,22 +152,5 @@
       "github": "https://betterplaceholder.com/"
     },
     "stack": ["HTML", "SASS", "Javascript", "Npm"]
-  },
-  {
-    "id": "blank-end2",
-    "type": "",
-    "name": "",
-    "date": ".",
-    "still": "/images/projects/column_pre-end_btn.png",
-    "img": "/images/projects/column_pre-end_btn.png",
-    "description": ""
-  },
-  {
-    "id": "blank-end",
-    "type": "",
-    "name": "",
-    "date": "Fin",
-    "img": "/images/projects/column_end_btn.png",
-    "description": ""
   }
 ]

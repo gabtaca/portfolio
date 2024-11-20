@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-export default function ProjectsModal({
+import React, { useState, useEffect, useRef } from "react";
+
+export default function ProjectsModalV2({
   project,
   currentIndex,
   onClose,
@@ -9,81 +10,115 @@ export default function ProjectsModal({
 }) {
   if (!project || project.type === "blank") return null;
 
-  const [isInitialOpen, setIsInitialOpen] = useState(true);
-  const [animationClass, setAnimationClass] = useState("");
-  const [hasSwiped, setHasSwiped] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [animationClass, setAnimationClass] = useState("modal-initial-open");
   const [borderSide, setBorderSide] = useState("");
+  const modalRef = useRef(null);
+  const swipeThreshold = 40;
+  const dragLimits = { x: 200, y: 200 };
 
-  const bookendIds = ["blank-start", "blank-start2", "blank-end", "blank-end2"];
+  const validProjects = projectsData.filter((project) => !isNaN(project.id));
+  const validIndex = validProjects.findIndex((p) => p.id === project.id);
 
   useEffect(() => {
-    if (isInitialOpen && !hasSwiped) {
-      setAnimationClass("modal-initial-open");
-    }
     document.body.classList.add("no-scroll");
     return () => {
       document.body.classList.remove("no-scroll");
     };
-  }, [project, isInitialOpen, hasSwiped]);
+  }, []);
 
-  const handleClose = () => {
-    setAnimationClass("modal-close");
-    setTimeout(() => {
-      onClose();
-      setIsInitialOpen(true);
-      setHasSwiped(false);
-    }, 500);
+  const startDrag = (e) => {
+    setIsDragging(true);
+    const startX = e.type === "touchstart" ? e.touches[0].clientX : e.clientX;
+    const startY = e.type === "touchstart" ? e.touches[0].clientY : e.clientY;
+    modalRef.current.startX = startX;
+    modalRef.current.startY = startY;
+    setAnimationClass("");
+  };
+
+  const onDrag = (e) => {
+    if (!isDragging) return;
+
+    const currentX = e.type === "touchmove" ? e.touches[0].clientX : e.clientX;
+    const currentY = e.type === "touchmove" ? e.touches[0].clientY : e.clientY;
+
+    const deltaX = currentX - modalRef.current.startX;
+    const deltaY = currentY - modalRef.current.startY;
+
+    setPosition({
+      x: Math.max(-dragLimits.x, Math.min(deltaX, dragLimits.x)),
+      y: Math.max(-dragLimits.y, Math.min(deltaY, dragLimits.y)),
+    });
+  };
+
+  const endDrag = () => {
+    setIsDragging(false);
+
+    const { x, y } = position;
+
+    if (Math.abs(x) > Math.abs(y)) {
+      if (Math.abs(x) > swipeThreshold) {
+        if (x > 0) {
+          // Swipe Right
+          if (validIndex > 0) {
+            setAnimationClass("modal-swipe-out-right");
+            setTimeout(() => {
+              onPrevious();
+              setAnimationClass("modal-swipe-in-left");
+            }, 500);
+          } else {
+            handleShake("left");
+          }
+        } else {
+          // Swipe Left
+          if (validIndex < validProjects.length - 1) {
+            setAnimationClass("modal-swipe-out-left");
+            setTimeout(() => {
+              onNext();
+              setAnimationClass("modal-swipe-in-right");
+            }, 500);
+          } else {
+            handleShake("right");
+          }
+        }
+      }
+    } else if (Math.abs(y) > swipeThreshold) {
+      if (y > 0) {
+        closeModalWithAnimation();
+      }
+    }
+
+    setPosition({ x: 0, y: 0 });
   };
 
   const handleShake = (direction) => {
     setBorderSide(direction === "left" ? "left" : "right");
-    setAnimationClass("");
-    setTimeout(() => setAnimationClass("modal-shake"), 110);
-
-    // Réinitialiser la bordure après 0.3s
+    setAnimationClass("modal-shake");
     setTimeout(() => {
       setBorderSide("");
-    }, 200);
+      setAnimationClass("");
+    }, 300);
   };
 
-  const handleSwipe = (direction) => {
-    setHasSwiped(true);
+  const closeModalWithAnimation = () => {
+    setAnimationClass("modal-close");
+    setTimeout(onClose, 500);
+  };
 
-    const nextIndex = currentIndex + 1;
-    const prevIndex = currentIndex - 1;
-
+  const handleArrowClick = (direction) => {
     if (direction === "left") {
-      if (
-        nextIndex < projectsData.length &&
-        !bookendIds.includes(projectsData[nextIndex]?.id)
-      ) {
-        setAnimationClass("modal-swipe-out-left");
-        setBorderSide("");
-        setTimeout(() => {
-          onNext();
-          setAnimationClass("modal-swipe-in-right");
-          setIsInitialOpen(false);
-        }, 500);
-      } else {
-        handleShake("right");
-      }
-    } else if (direction === "right") {
-      if (prevIndex >= 0 && !bookendIds.includes(projectsData[prevIndex]?.id)) {
-        setAnimationClass("modal-swipe-out-right");
-        setBorderSide("");
-        setTimeout(() => {
-          onPrevious();
-          setAnimationClass("modal-swipe-in-left");
-          setIsInitialOpen(false);
-        }, 500);
+      if (validIndex > 0) {
+        onPrevious();
       } else {
         handleShake("left");
       }
-    } else if (direction === "up") {
-      window.open(project.lien.github, "_blank");
-      onClose();
-    } else if (direction === "down") {
-      handleClose();
+    } else if (direction === "right") {
+      if (validIndex < validProjects.length - 1) {
+        onNext();
+      } else {
+        handleShake("right");
+      }
     }
   };
 
@@ -102,185 +137,198 @@ export default function ProjectsModal({
         backgroundColor: "rgba(0, 0, 0, 0.5)",
         zIndex: 1000,
       }}
-      onClick={handleClose}
+      onClick={closeModalWithAnimation}
     >
       <div
+        ref={modalRef}
+        className={`modal-content ${animationClass}`}
         style={{
           display: "flex",
-          justifyContent: "center",
+          flexDirection: "column",
           alignItems: "center",
+          justifyContent: "space-between",
+          background: "var(--bgModal)",
+          borderRadius: "10px",
+          textAlign: "center",
           position: "relative",
-          width: "100%",
+          zIndex: 1050,
+          transform: `translate(${position.x}px, ${position.y}px)`,
+          transition: isDragging ? "none" : "transform 0.3s ease",
+          borderLeft: borderSide === "left" ? `4px solid var(--errors)` : "",
+          borderRight: borderSide === "right" ? `4px solid var(--errors)` : "",
         }}
+        onMouseDown={startDrag}
+        onTouchStart={startDrag}
+        onMouseMove={onDrag}
+        onTouchMove={onDrag}
+        onMouseUp={endDrag}
+        onTouchEnd={endDrag}
+        onClick={(e) => e.stopPropagation()}
       >
-        {/* Modal Content */}
+        {/* Close Button and Date */}
         <div
-          className={`modal-content ${animationClass}`}
+          className="date_modal"
           style={{
+            position: "absolute",
+            top: "-32px",
+            zIndex: -10,
+            width: "80%",
             display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "space-evenly",
-            background: "var(--bgModal)",
-            paddingTop: "20px",
-            paddingBottom: "20px",
-            paddingLeft: "20px",
-            paddingRight: "20px",
-            borderRadius: "8px",
+            justifyContent: "center",
+            backgroundColor: "var(--btnBlankEnd)",
+            color: "var(--datesColor)",
             textAlign: "center",
-            position: "relative",
-            zIndex: 50,
-            borderLeft: borderSide === "left" ? `4px solid var(--errors)` : "",
-            borderRight:
-              borderSide === "right" ? `4px solid var(--errors)` : "",
-          }}
-          onClick={(e) => e.stopPropagation()}
-          onTouchStart={(e) => {
-            const startX = e.touches[0].clientX;
-            const startY = e.touches[0].clientY;
-            e.target.startX = startX;
-            e.target.startY = startY;
-          }}
-          onTouchEnd={(e) => {
-            const endX = e.changedTouches[0].clientX;
-            const endY = e.changedTouches[0].clientY;
-            const swipeThreshold = 100;
-
-            if (e.target.startX - endX > swipeThreshold) {
-              handleSwipe("left");
-            } else if (endX - e.target.startX > swipeThreshold) {
-              handleSwipe("right");
-            } else if (e.target.startY - endY > swipeThreshold) {
-              handleSwipe("up");
-            } else if (endY - e.target.startY > swipeThreshold) {
-              handleSwipe("down");
-            }
+            borderRadius: "8px 8px 0 0",
           }}
         >
-          {/* Date Modal - Positioned Behind Content */}
-          <div
-            className="date_modal"
+          <button
+            onClick={closeModalWithAnimation}
             style={{
               position: "absolute",
-              top: "-38px",
-              zIndex: -10,
-              width: "70%",
-              display: "flex",
-              justifyContent: "center",
-              backgroundColor: "var(--btnBlankEnd)",
-              color: "var(--datesColor)",
-              textAlign: "center",
-              paddingTop: "5px",
-              borderRadius: "8px 8px 0 0",
+              top: "-30px",
+              right: "-50px",
+              background: "transparent",
+              color: "var(--bgModal)",
+              border: "none",
+              cursor: "pointer",
+              backgroundImage: `url("/images/close.svg")`,
+              backgroundSize: "contain",
+              backgroundRepeat: "no-repeat",
+              width: "24px",
+              height: "24px",
             }}
-          >
-            <img
-              className="icon_swipe"
-              src="/images/swipe.svg"
-              alt="Swipe icon"
-              style={{
-                position: "absolute",
-                top: "-10px",
-                left: "-50px",
-                width: "24px",
-                height: "24px",
-              }}
-            />
-            <button
-              onClick={handleClose}
-              style={{
-                position: "absolute",
-                top: "-10px",
-                right: "-50px",
-                background: "transparent",
-                color: "var(--bgModal)",
-                border: "none",
-                paddingTop: "3px",
-                paddingBottom: "3px",
-                cursor: "pointer",
-                backgroundImage: `url("/images/close.svg")`,
-                backgroundSize: "contain",
-                backgroundRepeat: "no-repeat",
-                width: "24px",
-                height: "24px",
-              }}
-              aria-label="Bouton fermer le modal"
-            />
-            <p
-              style={{
-                fontFamily: "Jockey One",
-                fontSize: "24px",
-                fontWeight: "200",
-                margin: "0",
-              }}
-            >
-              {project.date}
-            </p>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              fontFamily: "Inter, sans-serif",
-              backgroundColor: "var(--bgImageModal)",
-              borderRadius: "10px",
-              padding: "5px",
-              width: "100%",
-              maxWidth: "100%", maxHeight: "40%" 
-            }}
-          >
-            <img
-              src={project.img}
-              alt={project.imgAlt || "Project Image"}
-              style={{ maxWidth: "100%", maxHeight: "100%", borderRadius: "10px", }}
-            />
-          </div>
+            aria-label="Bouton fermer le modal"
+          />
           <p
             style={{
-              fontFamily: "Inter, sans-serif",
-              color: "var(--textColor)",
-              backgroundColor: "var(--bgTextModal)",
-              borderRadius: "10px",
-              padding: "10px",
+              fontFamily: "Jockey One",
+              fontSize: "24px",
+              fontWeight: "200",
+              margin: "0",
             }}
           >
-            {project.description}
+            {project.date}
           </p>
-          <ul
+        </div>
+        {/* Modal Content */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            maxWidth: "100%",
+            maxHeight: "40%",
+          }}
+        >
+          <img
+            src={project.img}
+            alt={project.imgAlt || "Project Image"}
             style={{
-              listStyleType: "none",
-              padding: 0,
-              gap: 6,
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-              marginTop: "10px",
-              fontFamily: "Inter, sans-serif",
-              fontSize: "14px",
-              color: "var(--datesColor)",
+              maxWidth: "100%",
+              maxHeight: "100%",
+              borderRadius: "10px 10px 0px 0px",
+            }}
+          />
+        </div>
+        <p
+          style={{
+            fontFamily: "Inter, sans-serif",
+            color: "var(--textColor)",
+            borderRadius: "0px 0px 10px 10px",
+          }}
+        >
+          {project.description}
+        </p>
+        <ul
+          style={{
+            listStyleType: "none",
+            padding: 0,
+            gap: 6,
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            marginTop: "10px",
+            fontFamily: "Inter, sans-serif",
+            fontSize: "14px",
+            color: "var(--h2Color)",
+          }}
+        >
+          {project.stack.map((tech, index) => (
+            <li key={index}>{tech}</li>
+          ))}
+        </ul>
+        <div 
+        style={{
+          display:"flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "100%",
+        }}
+        >
+        {/* Scroll Index */}
+        <div
+          className="modal_scrollIndex"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "80%",
+            padding: "20px",
+          }}
+        >
+          <img
+            src="/images/arrow_left_modal.svg"
+            alt="Arrow Left"
+            style={{ cursor: "pointer" }}
+            onClick={() => handleArrowClick("left")}
+          />
+          <div
+            className="modal_scrollIndex-cells"
+            style={{
+              display: "grid",
+              gridTemplateColumns: `repeat(${validProjects.length}, 1fr)`,
+              gap: "0",
+              width: "100%",
             }}
           >
-            {project.stack.map((tech, index) => (
-              <li key={index}>{tech}</li>
+            {validProjects.map((_, index) => (
+              <div
+                key={index}
+                className={`scrollIndex-cell ${
+                  index === validIndex ? "active" : ""
+                }`}
+                style={{
+                  justifySelf: "center",
+                  transition: "all 0.3s ease",
+                  width: index === validIndex ? "20px" : "6px",
+                  height: index === validIndex ? "4px" : "1.5px",
+                }}
+              ></div>
             ))}
-          </ul>
-          <a
-            href={project.lien.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: "flex",
-              padding: "10px 20px",
-              backgroundColor: "#3490dc",
-              color: "#fff",
-              borderRadius: "4px",
-              textDecoration: "none",
-            }}
-          >
-            Visiter
-          </a>
+          </div>
+          <img
+            src="/images/arrow_right_modal.svg"
+            alt="Arrow Right"
+            style={{ cursor: "pointer" }}
+            onClick={() => handleArrowClick("right")}
+          />
+        </div>
+        {/* Project Link */}
+        <a
+          href={project.lien?.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="project-link"
+          onClick={(e) => {
+            e.preventDefault();
+            closeModalWithAnimation();
+            window.open(project.lien?.github, "_blank");
+          }}
+        >
+          Voir le projet
+        </a>
         </div>
       </div>
     </div>
-  );
+  )
 }
+

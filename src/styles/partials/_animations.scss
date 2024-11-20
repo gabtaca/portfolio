@@ -130,15 +130,15 @@
   }
   20% {
     opacity: 1;
-    transform: scale(1.0) scaleX(0.5); /* Ajouter l'effet de ressort */
+    transform: scale(1.0) scaleX(0.5); 
   }
   70% {
     opacity: 1;
-    transform: scale(1.0) scaleX(1); /* Ajouter l'effet de ressort */
+    transform: scale(1.0) scaleX(1); 
   }
   50% {
     opacity: 1;
-    transform: scaleY(1.05); /* Ajouter l'effet de ressort */
+    transform: scaleY(1.05);
   }
   60% {
     transform: scaleY(1);
@@ -290,15 +290,15 @@
     transform: translateX(0);
   }
   25% {
-    transform: translateX(10px);
+    transform: translateX(5px);
   }
   75% {
-    transform: translateX(-10px);
+    transform: translateX(-5px);
   }
 }
 
 .modal-shake {
-  animation: modal-shake 0.3s ease;
+  animation: modal-shake 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 .icon_swipe {
