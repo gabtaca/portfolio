@@ -36,6 +36,32 @@ export default function ProjectsModalV2({
     }
   };
 
+  const closeModalWithAnimation = () => {
+    updateAnimationClass("modal-close");
+    setTimeout(onClose, 500); // Match CSS animation duration
+  };
+
+  const handleArrowClick = (direction) => {
+    if (direction === "left") {
+      if (validIndex > 0) {
+        triggerSwipeAnimation("", () => {
+          onPrevious();
+          updateAnimationClass("");
+        });
+      } else {
+        handleShake("left");
+      }
+    } else if (direction === "right") {
+      if (validIndex < validProjects.length - 1) {
+        triggerSwipeAnimation("", () => {
+          onNext();
+          updateAnimationClass("");
+        });
+      } else {
+        handleShake("right");
+      }
+    }
+  };
   const startDrag = (e) => {
     setIsDragging(true);
     const startX = e.type === "touchstart" ? e.touches[0].clientX : e.clientX;
@@ -70,22 +96,20 @@ export default function ProjectsModalV2({
         if (x > 0) {
           // Swipe Right
           if (validIndex > 0) {
-            updateAnimationClass("modal-swipe-out-right");
-            setTimeout(() => {
+            triggerSwipeAnimation("modal-swipe-out-right", () => {
               onPrevious();
-              updateAnimationClass("");
-            }, 500);
+              updateAnimationClass("modal-swipe-in-left");
+            });
           } else {
             handleShake("left");
           }
         } else {
           // Swipe Left
           if (validIndex < validProjects.length - 1) {
-            updateAnimationClass("modal-swipe-out-left");
-            setTimeout(() => {
+            triggerSwipeAnimation("modal-swipe-out-left", () => {
               onNext();
-              updateAnimationClass("");
-            }, 500);
+              updateAnimationClass("modal-swipe-in-right");
+            });
           } else {
             handleShake("right");
           }
@@ -93,11 +117,19 @@ export default function ProjectsModalV2({
       }
     } else if (Math.abs(y) > swipeThreshold) {
       if (y > 0) {
-        closeModalWithAnimation();
+        triggerSwipeAnimation("modal-close", onClose);
       }
+    } else {
+      setPosition({ x: 0, y: 0 });
     }
+  };
 
+  const triggerSwipeAnimation = (animation, callback) => {
     setPosition({ x: 0, y: 0 });
+    setTimeout(() => {
+      updateAnimationClass(animation);
+      setTimeout(callback, 500);
+    }, 50);
   };
 
   const handleShake = (direction) => {
@@ -107,27 +139,6 @@ export default function ProjectsModalV2({
       setBorderSide("");
       updateAnimationClass("");
     }, 300);
-  };
-
-  const closeModalWithAnimation = () => {
-    updateAnimationClass("modal-close");
-    setTimeout(onClose, 500);
-  };
-
-  const handleArrowClick = (direction) => {
-    if (direction === "left") {
-      if (validIndex > 0) {
-        onPrevious();
-      } else {
-        handleShake("left");
-      }
-    } else if (direction === "right") {
-      if (validIndex < validProjects.length - 1) {
-        onNext();
-      } else {
-        handleShake("right");
-      }
-    }
   };
 
   return (
