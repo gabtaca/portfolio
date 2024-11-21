@@ -10,14 +10,11 @@ export default function ProjectsModalV2({
 }) {
   if (!project || project.type === "blank") return null;
 
-  const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [animationClass, setAnimationClass] = useState("modal-initial-open");
-  const animationClassRef = useRef("modal-initial-open"); // Prevent unnecessary re-renders
-  const [borderSide, setBorderSide] = useState("");
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const modalRef = useRef(null);
-  const swipeThreshold = 40;
-  const dragLimits = { x: 200, y: 200 };
+  const swipeThreshold = 100;
 
   const validProjects = projectsData.filter((project) => !isNaN(project.id));
   const validIndex = validProjects.findIndex((p) => p.id === project.id);
@@ -29,50 +26,18 @@ export default function ProjectsModalV2({
     };
   }, []);
 
-  const updateAnimationClass = (newClass) => {
-    if (animationClassRef.current !== newClass) {
-      animationClassRef.current = newClass;
-      setAnimationClass(newClass);
-    }
-  };
+  const handleDragStart = (e) => {
+    if (isTransitioning) return;
 
-  const closeModalWithAnimation = () => {
-    updateAnimationClass("modal-close");
-    setTimeout(onClose, 500); // Match CSS animation duration
-  };
-
-  const handleArrowClick = (direction) => {
-    if (direction === "left") {
-      if (validIndex > 0) {
-        triggerSwipeAnimation("", () => {
-          onPrevious();
-          updateAnimationClass("");
-        });
-      } else {
-        handleShake("left");
-      }
-    } else if (direction === "right") {
-      if (validIndex < validProjects.length - 1) {
-        triggerSwipeAnimation("", () => {
-          onNext();
-          updateAnimationClass("");
-        });
-      } else {
-        handleShake("right");
-      }
-    }
-  };
-  const startDrag = (e) => {
-    setIsDragging(true);
     const startX = e.type === "touchstart" ? e.touches[0].clientX : e.clientX;
     const startY = e.type === "touchstart" ? e.touches[0].clientY : e.clientY;
-    modalRef.current.startX = startX;
-    modalRef.current.startY = startY;
-    updateAnimationClass(""); // Reset animation during drag
+
+    modalRef.current = { startX, startY };
+    setAnimationClass(""); // Reset animation during drag
   };
 
-  const onDrag = (e) => {
-    if (!isDragging) return;
+  const handleDragMove = (e) => {
+    if (!modalRef.current || isTransitioning) return;
 
     const currentX = e.type === "touchmove" ? e.touches[0].clientX : e.clientX;
     const currentY = e.type === "touchmove" ? e.touches[0].clientY : e.clientY;
@@ -81,64 +46,55 @@ export default function ProjectsModalV2({
     const deltaY = currentY - modalRef.current.startY;
 
     setPosition({
-      x: Math.max(-dragLimits.x, Math.min(deltaX, dragLimits.x)),
-      y: Math.max(-dragLimits.y, Math.min(deltaY, dragLimits.y)),
+      x: Math.max(-200, Math.min(deltaX, 200)),
+      y: Math.max(-200, Math.min(deltaY, 200)),
     });
   };
 
-  const endDrag = () => {
-    setIsDragging(false);
+  const handleDragEnd = () => {
+    if (isTransitioning) return;
 
     const { x, y } = position;
 
     if (Math.abs(x) > Math.abs(y)) {
+      // Horizontal swipe detection
       if (Math.abs(x) > swipeThreshold) {
-        if (x > 0) {
-          // Swipe Right
-          if (validIndex > 0) {
-            triggerSwipeAnimation("modal-swipe-out-right", () => {
-              onPrevious();
-              updateAnimationClass("modal-swipe-in-left");
-            });
-          } else {
-            handleShake("left");
-          }
+        if (x > 0 && validIndex > 0) {
+          triggerSwipeAnimation("modal-swipe-out-right", onPrevious, "modal-swipe-in-left");
+        } else if (x < 0 && validIndex < validProjects.length - 1) {
+          triggerSwipeAnimation("modal-swipe-out-left", onNext, "modal-swipe-in-right");
         } else {
-          // Swipe Left
-          if (validIndex < validProjects.length - 1) {
-            triggerSwipeAnimation("modal-swipe-out-left", () => {
-              onNext();
-              updateAnimationClass("modal-swipe-in-right");
-            });
-          } else {
-            handleShake("right");
-          }
+          handleShake(x > 0 ? "left" : "right");
         }
+      } else {
+        setPosition({ x: 0, y: 0 }); // Reset position for invalid swipe
       }
-    } else if (Math.abs(y) > swipeThreshold) {
-      if (y > 0) {
-        triggerSwipeAnimation("modal-close", onClose);
-      }
+    } else if (Math.abs(y) > swipeThreshold && y > 0) {
+      // Vertical swipe down to close
+      triggerSwipeAnimation("modal-close", onClose);
     } else {
-      setPosition({ x: 0, y: 0 });
+      setPosition({ x: 0, y: 0 }); // Reset position for invalid swipe
     }
   };
 
-  const triggerSwipeAnimation = (animation, callback) => {
-    setPosition({ x: 0, y: 0 });
+  const triggerSwipeAnimation = (outClass, action, inClass = null) => {
+    setIsTransitioning(true);
+    setAnimationClass(outClass);
     setTimeout(() => {
-      updateAnimationClass(animation);
-      setTimeout(callback, 500);
-    }, 50);
+      action();
+      if (inClass) setAnimationClass(inClass);
+      setPosition({ x: 0, y: 0 });
+      setTimeout(() => setIsTransitioning(false), 500); // Match CSS animation duration
+    }, 500);
   };
 
   const handleShake = (direction) => {
-    setBorderSide(direction === "left" ? "left" : "right");
-    updateAnimationClass("modal-shake");
-    setTimeout(() => {
-      setBorderSide("");
-      updateAnimationClass("");
-    }, 300);
+    setAnimationClass("modal-shake");
+    setTimeout(() => setAnimationClass(""), 300); // Match shake animation duration
+  };
+
+  const closeModalWithAnimation = () => {
+    triggerSwipeAnimation("modal-close", onClose);
   };
 
   return (
@@ -159,7 +115,6 @@ export default function ProjectsModalV2({
       onClick={closeModalWithAnimation}
     >
       <div
-        ref={modalRef}
         className={`modal-content ${animationClass}`}
         style={{
           display: "flex",
@@ -172,19 +127,17 @@ export default function ProjectsModalV2({
           position: "relative",
           zIndex: 1050,
           transform: `translate(${position.x}px, ${position.y}px)`,
-          transition: isDragging ? "none" : "transform 0.3s ease",
-          borderLeft: borderSide === "left" ? `4px solid var(--errors)` : "",
-          borderRight: borderSide === "right" ? `4px solid var(--errors)` : "",
+          transition: "transform 0.3s ease",
         }}
-        onMouseDown={startDrag}
-        onTouchStart={startDrag}
-        onMouseMove={onDrag}
-        onTouchMove={onDrag}
-        onMouseUp={endDrag}
-        onTouchEnd={endDrag}
+        onMouseDown={handleDragStart}
+        onTouchStart={handleDragStart}
+        onMouseMove={handleDragMove}
+        onTouchMove={handleDragMove}
+        onMouseUp={handleDragEnd}
+        onTouchEnd={handleDragEnd}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Modal Content */}
+        {/* Close Button and Date */}
         <div
           className="date_modal"
           style={{
@@ -229,6 +182,7 @@ export default function ProjectsModalV2({
             {project.date}
           </p>
         </div>
+        {/* Modal Content */}
         <div
           style={{
             display: "flex",
@@ -297,7 +251,7 @@ export default function ProjectsModalV2({
               src="/images/arrow_left_modal.svg"
               alt="Arrow Left"
               style={{ cursor: "pointer" }}
-              onClick={() => handleArrowClick("left")}
+              onClick={() => onPrevious()}
             />
             <div
               className="modal_scrollIndex-cells"
@@ -327,9 +281,10 @@ export default function ProjectsModalV2({
               src="/images/arrow_right_modal.svg"
               alt="Arrow Right"
               style={{ cursor: "pointer" }}
-              onClick={() => handleArrowClick("right")}
+              onClick={() => onNext()}
             />
           </div>
+          {/* Project Link */}
           <a
             href={project.lien?.github}
             target="_blank"
