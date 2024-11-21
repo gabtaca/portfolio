@@ -65,8 +65,8 @@ export default function ProjectsModalV2({
             setAnimationClass("modal-swipe-out-right");
             setTimeout(() => {
               onPrevious();
-              setAnimationClass("");
-            }, 100);
+              setAnimationClass("modal-swipe-in-left");
+            }, 500);
           } else {
             handleShake("left");
           }
@@ -76,8 +76,8 @@ export default function ProjectsModalV2({
             setAnimationClass("modal-swipe-out-left");
             setTimeout(() => {
               onNext();
-              setAnimationClass("");
-            }, 100);
+              setAnimationClass("modal-swipe-in-right");
+            }, 500);
           } else {
             handleShake("right");
           }
@@ -218,7 +218,6 @@ export default function ProjectsModalV2({
             maxWidth: "100%",
             maxHeight: "40%",
           }}
-
         >
           <img
             src={project.img}
