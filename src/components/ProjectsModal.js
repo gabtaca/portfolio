@@ -13,6 +13,7 @@ export default function ProjectsModalV2({
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [animationClass, setAnimationClass] = useState("modal-initial-open");
+  const animationClassRef = useRef("modal-initial-open"); // Prevent unnecessary re-renders
   const [borderSide, setBorderSide] = useState("");
   const modalRef = useRef(null);
   const swipeThreshold = 40;
@@ -28,13 +29,20 @@ export default function ProjectsModalV2({
     };
   }, []);
 
+  const updateAnimationClass = (newClass) => {
+    if (animationClassRef.current !== newClass) {
+      animationClassRef.current = newClass;
+      setAnimationClass(newClass);
+    }
+  };
+
   const startDrag = (e) => {
     setIsDragging(true);
     const startX = e.type === "touchstart" ? e.touches[0].clientX : e.clientX;
     const startY = e.type === "touchstart" ? e.touches[0].clientY : e.clientY;
     modalRef.current.startX = startX;
     modalRef.current.startY = startY;
-    setAnimationClass("");
+    updateAnimationClass(""); // Reset animation during drag
   };
 
   const onDrag = (e) => {
@@ -62,10 +70,10 @@ export default function ProjectsModalV2({
         if (x > 0) {
           // Swipe Right
           if (validIndex > 0) {
-            setAnimationClass("modal-swipe-out-right");
+            updateAnimationClass("modal-swipe-out-right");
             setTimeout(() => {
               onPrevious();
-              setAnimationClass("modal-swipe-in-left");
+              updateAnimationClass("modal-swipe-in-left");
             }, 500);
           } else {
             handleShake("left");
@@ -73,10 +81,10 @@ export default function ProjectsModalV2({
         } else {
           // Swipe Left
           if (validIndex < validProjects.length - 1) {
-            setAnimationClass("modal-swipe-out-left");
+            updateAnimationClass("modal-swipe-out-left");
             setTimeout(() => {
               onNext();
-              setAnimationClass("modal-swipe-in-right");
+              updateAnimationClass("modal-swipe-in-right");
             }, 500);
           } else {
             handleShake("right");
@@ -94,15 +102,15 @@ export default function ProjectsModalV2({
 
   const handleShake = (direction) => {
     setBorderSide(direction === "left" ? "left" : "right");
-    setAnimationClass("modal-shake");
+    updateAnimationClass("modal-shake");
     setTimeout(() => {
       setBorderSide("");
-      setAnimationClass("");
+      updateAnimationClass("");
     }, 300);
   };
 
   const closeModalWithAnimation = () => {
-    setAnimationClass("modal-close");
+    updateAnimationClass("modal-close");
     setTimeout(onClose, 500);
   };
 
@@ -165,7 +173,7 @@ export default function ProjectsModalV2({
         onTouchEnd={endDrag}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close Button and Date */}
+        {/* Modal Content */}
         <div
           className="date_modal"
           style={{
@@ -210,7 +218,6 @@ export default function ProjectsModalV2({
             {project.date}
           </p>
         </div>
-        {/* Modal Content */}
         <div
           style={{
             display: "flex",
@@ -256,79 +263,77 @@ export default function ProjectsModalV2({
             <li key={index}>{tech}</li>
           ))}
         </ul>
-        <div 
-        style={{
-          display:"flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "100%",
-        }}
-        >
-        {/* Scroll Index */}
         <div
-          className="modal_scrollIndex"
           style={{
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
-            justifyContent: "space-between",
-            width: "80%",
-            padding: "20px",
+            width: "100%",
           }}
         >
-          <img
-            src="/images/arrow_left_modal.svg"
-            alt="Arrow Left"
-            style={{ cursor: "pointer" }}
-            onClick={() => handleArrowClick("left")}
-          />
+          {/* Scroll Index */}
           <div
-            className="modal_scrollIndex-cells"
+            className="modal_scrollIndex"
             style={{
-              display: "grid",
-              gridTemplateColumns: `repeat(${validProjects.length}, 1fr)`,
-              gap: "0",
-              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "80%",
+              padding: "20px",
             }}
           >
-            {validProjects.map((_, index) => (
-              <div
-                key={index}
-                className={`scrollIndex-cell ${
-                  index === validIndex ? "active" : ""
-                }`}
-                style={{
-                  justifySelf: "center",
-                  transition: "all 0.3s ease",
-                  width: index === validIndex ? "20px" : "6px",
-                  height: index === validIndex ? "4px" : "1.5px",
-                }}
-              ></div>
-            ))}
+            <img
+              src="/images/arrow_left_modal.svg"
+              alt="Arrow Left"
+              style={{ cursor: "pointer" }}
+              onClick={() => handleArrowClick("left")}
+            />
+            <div
+              className="modal_scrollIndex-cells"
+              style={{
+                display: "grid",
+                gridTemplateColumns: `repeat(${validProjects.length}, 1fr)`,
+                gap: "0",
+                width: "100%",
+              }}
+            >
+              {validProjects.map((_, index) => (
+                <div
+                  key={index}
+                  className={`scrollIndex-cell ${
+                    index === validIndex ? "active" : ""
+                  }`}
+                  style={{
+                    justifySelf: "center",
+                    transition: "all 0.3s ease",
+                    width: index === validIndex ? "20px" : "6px",
+                    height: index === validIndex ? "4px" : "1.5px",
+                  }}
+                ></div>
+              ))}
+            </div>
+            <img
+              src="/images/arrow_right_modal.svg"
+              alt="Arrow Right"
+              style={{ cursor: "pointer" }}
+              onClick={() => handleArrowClick("right")}
+            />
           </div>
-          <img
-            src="/images/arrow_right_modal.svg"
-            alt="Arrow Right"
-            style={{ cursor: "pointer" }}
-            onClick={() => handleArrowClick("right")}
-          />
-        </div>
-        {/* Project Link */}
-        <a
-          href={project.lien?.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="project-link"
-          onClick={(e) => {
-            e.preventDefault();
-            closeModalWithAnimation();
-            window.open(project.lien?.github, "_blank");
-          }}
-        >
-          Voir le projet
-        </a>
+          <a
+            href={project.lien?.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="project-link"
+            onClick={(e) => {
+              e.preventDefault();
+              closeModalWithAnimation();
+              window.open(project.lien?.github, "_blank");
+            }}
+          >
+            Voir le projet
+          </a>
         </div>
       </div>
     </div>
-  )
+  );
 }
-
