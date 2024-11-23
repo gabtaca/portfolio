@@ -65,7 +65,7 @@ export default function ProjectsModalV2({
             setAnimationClass("modal-swipe-out-right");
             setTimeout(() => {
               onPrevious();
-              setAnimationClass("");
+              setAnimationClass("modal-swipe-in-left");
             }, 500);
           } else {
             handleShake("left");
@@ -76,7 +76,7 @@ export default function ProjectsModalV2({
             setAnimationClass("modal-swipe-out-left");
             setTimeout(() => {
               onNext();
-              setAnimationClass("");
+              setAnimationClass("modal-swipe-in-right");
             }, 500);
           } else {
             handleShake("right");

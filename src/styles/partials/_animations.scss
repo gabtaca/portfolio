@@ -231,15 +231,23 @@
       transform: scale(0.1) scaleX(4)  ;
       opacity: 1;
     }
-    100% {
+    80% {
       transform: translateX(100%) scale(0.05) rotate(-0.5turn);
       opacity: 0;
     }
+    80% {
+      transform: translateX(100%) scale(0.05) rotate(-0.5turn);
+      opacity: 0;
+    } 
+    100% {
+      transform: translateX(0%) scale(0.05) rotate(0turn);
+      opacity: 0;
   }
+}
 
 // Animation pour swipe in depuis la gauche
 .modal-swipe-in-left {
-  animation: swipeInLeft .5s ease-out ;
+  animation: swipeInLeft .3s ease-out ;
 }
 
 @keyframes swipeInLeft {
@@ -263,7 +271,7 @@
 
 // Animation pour swipe in depuis la droite
 .modal-swipe-in-right {
-  animation: swipeInRight 0.5s ease-out forwards;
+  animation: swipeInRight 0.3s ease-out forwards;
 }
 
 @keyframes swipeInRight {
