@@ -200,10 +200,14 @@
     transform: scale(0.1) scaleX(4)  ;
     opacity: 1;
   }
-  100% {
+  80% {
     transform: translateX(-100%) scale(0.05) rotate(0.5turn);
     opacity: 0;
   }
+  100% {
+    transform: translateX(0%) scale(0.05) rotate(0turn);
+    opacity: 0;
+}
 }
 
 // Animation pour swipe vers la droite
@@ -252,7 +256,7 @@
 
 @keyframes swipeInLeft {
   0% {
-    transform: translateX(-100%) scale(0.5);
+    transform: translateX(-100%) scale(1);
     opacity: 0;
   }
   60% {
@@ -276,7 +280,7 @@
 
 @keyframes swipeInRight {
   0% {
-    transform: translateX(100%) scale(0.5);
+    transform: translateX(100%) scale(1);
     opacity: 0;
   }
   60% {
