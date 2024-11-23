@@ -177,7 +177,7 @@
 
 // Animation pour swipe vers la gauche
 .modal-swipe-out-left {
-  animation: swipeOutLeft 0.5s ease-in forwards;
+  animation: swipeOutLeft 0.4s ease-in forwards;
 }
 
 @keyframes swipeOutLeft {
@@ -208,7 +208,7 @@
 
 // Animation pour swipe vers la droite
 .modal-swipe-out-right {
-  animation: swipeOutRight 0.5s ease-in forwards;
+  animation: swipeOutRight 0.4s ease-in forwards;
 }
 
 @keyframes swipeOutRight {
@@ -239,7 +239,7 @@
 
 // Animation pour swipe in depuis la gauche
 .modal-swipe-in-left {
-  animation: swipeInLeft .3s ease-out ;
+  animation: swipeInLeft .5s ease-out ;
 }
 
 @keyframes swipeInLeft {
@@ -263,7 +263,7 @@
 
 // Animation pour swipe in depuis la droite
 .modal-swipe-in-right {
-  animation: swipeInRight 0.2s ease-out forwards;
+  animation: swipeInRight 0.5s ease-out forwards;
 }
 
 @keyframes swipeInRight {
