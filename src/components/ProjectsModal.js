@@ -21,6 +21,15 @@ export default function ProjectsModalV2({
   const validProjects = projectsData.filter((project) => !isNaN(project.id));
   const validIndex = validProjects.findIndex((p) => p.id === project.id);
 
+  const [isModalOpen, setIsModalOpen] = useState(true);
+
+useEffect(() => {
+  if (isModalOpen) {
+    setAnimationClass("modal-initial-open");
+    setIsModalOpen(false); // Prevent re-triggering
+  }
+}, [isModalOpen]);
+
   useEffect(() => {
     document.body.classList.add("no-scroll");
     return () => {
