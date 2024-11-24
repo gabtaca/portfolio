@@ -54,57 +54,75 @@ export default function ProjectsModalV2({
 
   const endDrag = () => {
     setIsDragging(false);
-
+  
     const { x, y } = position;
-
+  
     if (Math.abs(x) > Math.abs(y)) {
       if (Math.abs(x) > swipeThreshold) {
         if (x > 0) {
           // Swipe Right
           if (validIndex > 0) {
+            console.log("Swipe right: Start swipe-out-right animation");
             setAnimationClass("modal-swipe-out-right");
             setTimeout(() => {
+              console.log("Swipe right: Trigger onPrevious and start swipe-in-left animation");
               onPrevious();
               setAnimationClass("modal-swipe-in-left");
             }, 500);
           } else {
+            console.log("Swipe right: No more projects, triggering shake animation");
             handleShake("left");
           }
         } else {
           // Swipe Left
           if (validIndex < validProjects.length - 1) {
+            console.log("Swipe left: Start swipe-out-left animation");
             setAnimationClass("modal-swipe-out-left");
             setTimeout(() => {
+              console.log("Swipe left: Trigger onNext and start swipe-in-right animation");
               onNext();
               setAnimationClass("modal-swipe-in-right");
             }, 500);
           } else {
+            console.log("Swipe left: No more projects, triggering shake animation");
             handleShake("right");
           }
         }
       }
     } else if (Math.abs(y) > swipeThreshold) {
       if (y > 0) {
+        console.log("Swipe down: Closing modal with animation");
         closeModalWithAnimation();
       }
     }
-
+  
     setPosition({ x: 0, y: 0 });
   };
-
+  
   const handleShake = (direction) => {
+    console.log(`Shake animation triggered for direction: ${direction}`);
     setBorderSide(direction === "left" ? "left" : "right");
     setAnimationClass("modal-shake");
     setTimeout(() => {
+      console.log("Shake animation ended");
       setBorderSide("");
       setAnimationClass("");
     }, 300);
   };
-
+  
   const closeModalWithAnimation = () => {
+    console.log("Close modal: Starting close animation");
     setAnimationClass("modal-close");
-    setTimeout(onClose, 500);
+    setTimeout(() => {
+      console.log("Close modal: Animation ended, executing onClose");
+      onClose();
+    }, 500);
   };
+  
+  // Add useEffect to monitor changes in animationClass for unexpected behaviors
+  useEffect(() => {
+    console.log(`Animation class updated to: ${animationClass}`);
+  }, [animationClass]);
 
   const handleArrowClick = (direction) => {
     if (direction === "left") {

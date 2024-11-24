@@ -260,15 +260,15 @@
     opacity: 0;
   }
   60% {
-    transform: translateX(0) skew(5deg, 0deg) scale(1);
+    transform: translateX(0)  scale(1);
     opacity: 1;
   }
   80% {
-    transform:  skew(-2deg, 0deg) scale(1);
+    transform:   scale(1);
     opacity: 1;
   }
   100% {
-    transform: translateX(0) skew(0deg, 0deg) scale(1);
+    transform: translateX(0)  scale(1);
     opacity: 1;
   }
 }
@@ -284,15 +284,15 @@
     opacity: 0;
   }
   60% {
-    transform: translateX(0) skew(-5deg, 0deg) scale(1);
+    transform: translateX(0) scale(1);
     opacity: 1;
   }
   80% {
-    transform:  skew(2deg, 0deg) scale(1);
+    transform:   scale(1);
     opacity: 1;
   }
   100% {
-    transform: translateX(0) skew(0deg, 0deg) scale(1);
+    transform: translateX(0)  scale(1);
     opacity: 1;
   }
 }
