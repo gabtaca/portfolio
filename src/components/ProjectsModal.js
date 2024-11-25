@@ -23,12 +23,12 @@ export default function ProjectsModalV2({
 
   const [isModalOpen, setIsModalOpen] = useState(true);
 
-useEffect(() => {
-  if (isModalOpen) {
-    setAnimationClass("modal-initial-open");
-    setIsModalOpen(false); // Prevent re-triggering
-  }
-}, [isModalOpen]);
+  useEffect(() => {
+    if (isModalOpen) {
+      setAnimationClass("modal-initial-open");
+      setIsModalOpen(false); // Prevent re-triggering
+    }
+  }, [isModalOpen]);
 
   useEffect(() => {
     document.body.classList.add("no-scroll");
@@ -63,9 +63,9 @@ useEffect(() => {
 
   const endDrag = () => {
     setIsDragging(false);
-  
+
     const { x, y } = position;
-  
+
     if (Math.abs(x) > Math.abs(y)) {
       if (Math.abs(x) > swipeThreshold) {
         if (x > 0) {
@@ -74,12 +74,16 @@ useEffect(() => {
             console.log("Swipe right: Start swipe-out-right animation");
             setAnimationClass("modal-swipe-out-right");
             setTimeout(() => {
-              console.log("Swipe right: Trigger onPrevious and start swipe-in-left animation");
+              console.log(
+                "Swipe right: Trigger onPrevious and start swipe-in-left animation"
+              );
               onPrevious();
               setAnimationClass("modal-swipe-in-left");
             }, 500);
           } else {
-            console.log("Swipe right: No more projects, triggering shake animation");
+            console.log(
+              "Swipe right: No more projects, triggering shake animation"
+            );
             handleShake("left");
           }
         } else {
@@ -88,12 +92,16 @@ useEffect(() => {
             console.log("Swipe left: Start swipe-out-left animation");
             setAnimationClass("modal-swipe-out-left");
             setTimeout(() => {
-              console.log("Swipe left: Trigger onNext and start swipe-in-right animation");
+              console.log(
+                "Swipe left: Trigger onNext and start swipe-in-right animation"
+              );
               onNext();
               setAnimationClass("modal-swipe-in-right");
             }, 500);
           } else {
-            console.log("Swipe left: No more projects, triggering shake animation");
+            console.log(
+              "Swipe left: No more projects, triggering shake animation"
+            );
             handleShake("right");
           }
         }
@@ -104,10 +112,10 @@ useEffect(() => {
         closeModalWithAnimation();
       }
     }
-  
+
     setPosition({ x: 0, y: 0 });
   };
-  
+
   const handleShake = (direction) => {
     console.log(`Shake animation triggered for direction: ${direction}`);
     setBorderSide(direction === "left" ? "left" : "right");
@@ -118,7 +126,7 @@ useEffect(() => {
       setAnimationClass("");
     }, 300);
   };
-  
+
   const closeModalWithAnimation = () => {
     console.log("Close modal: Starting close animation");
     setAnimationClass("modal-close");
@@ -127,7 +135,7 @@ useEffect(() => {
       onClose();
     }, 500);
   };
-  
+
   // Add useEffect to monitor changes in animationClass for unexpected behaviors
   useEffect(() => {
     console.log(`Animation class updated to: ${animationClass}`);
@@ -150,39 +158,13 @@ useEffect(() => {
   };
 
   return (
-    <div
-      className="overlay"
-      style={{
-        position: "fixed",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        top: 0,
-        left: 0,
-        width: "100vw",
-        height: "100vh",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        zIndex: 1000,
-      }}
-      onClick={closeModalWithAnimation}
-    >
+    <div className="overlay" onClick={closeModalWithAnimation}>
       <div
         ref={modalRef}
-        className={`modal-content ${animationClass}`}
+        className={`modal ${animationClass}`}
         style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "space-between",
-          background: "var(--bgModal)",
-          borderRadius: "10px",
-          textAlign: "center",
-          position: "relative",
-          zIndex: 1050,
           transform: `translate(${position.x}px, ${position.y}px)`,
           transition: isDragging ? "none" : "transform 0.3s ease",
-          borderLeft: borderSide === "left" ? `4px solid var(--errors)` : "",
-          borderRight: borderSide === "right" ? `4px solid var(--errors)` : "",
         }}
         onMouseDown={startDrag}
         onTouchStart={startDrag}
@@ -192,154 +174,55 @@ useEffect(() => {
         onTouchEnd={endDrag}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close Button and Date */}
-        <div
-          className="date_modal"
-          style={{
-            position: "absolute",
-            top: "-32px",
-            zIndex: -10,
-            width: "80%",
-            display: "flex",
-            justifyContent: "center",
-            backgroundColor: "var(--btnBlankEnd)",
-            color: "var(--datesColor)",
-            textAlign: "center",
-            borderRadius: "8px 8px 0 0",
-          }}
-        >
-          <button
-            onClick={closeModalWithAnimation}
-            style={{
-              position: "absolute",
-              top: "-30px",
-              right: "-50px",
-              background: "transparent",
-              color: "var(--bgModal)",
-              border: "none",
-              cursor: "pointer",
-              backgroundImage: `url("/images/close.svg")`,
-              backgroundSize: "contain",
-              backgroundRepeat: "no-repeat",
-              width: "24px",
-              height: "24px",
-            }}
-            aria-label="Bouton fermer le modal"
-          />
-          <p
-            style={{
-              fontFamily: "Jockey One",
-              fontSize: "24px",
-              fontWeight: "200",
-              margin: "0",
-            }}
-          >
-            {project.date}
-          </p>
+        <button
+          className="close_btn"
+          onClick={closeModalWithAnimation}
+          aria-label="Bouton fermer le modal"
+        />
+        <div className="date_modal">
+          <p>{project.date}</p>
         </div>
-        {/* Modal Content */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            maxWidth: "100%",
-            maxHeight: "40%",
-          }}
-        >
-          <img
-            src={project.img}
-            alt={project.imgAlt || "Project Image"}
-            style={{
-              maxWidth: "100%",
-              maxHeight: "100%",
-              borderRadius: "10px 10px 0px 0px",
-            }}
-          />
-        </div>
-        <p
-          style={{
-            fontFamily: "Inter, sans-serif",
-            color: "var(--textColor)",
-            borderRadius: "0px 0px 10px 10px",
-          }}
-        >
-          {project.description}
-        </p>
-        <ul
-          style={{
-            listStyleType: "none",
-            padding: 0,
-            gap: 6,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            marginTop: "10px",
-            fontFamily: "Inter, sans-serif",
-            fontSize: "14px",
-            color: "var(--h2Color)",
-          }}
-        >
-          {project.stack.map((tech, index) => (
-            <li key={index}>{tech}</li>
-          ))}
-        </ul>
-        <div 
-        style={{
-          display:"flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "100%",
-        }}
-        >
-        {/* Scroll Index */}
-        <div
-          className="modal_scrollIndex"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            width: "80%",
-            padding: "20px",
-          }}
-        >
-          <img
-            src="/images/arrow_left_modal.svg"
-            alt="Arrow Left"
-            style={{ cursor: "pointer" }}
-            onClick={() => handleArrowClick("left")}
-          />
-          <div
-            className="modal_scrollIndex-cells"
-            style={{
-              display: "grid",
-              gridTemplateColumns: `repeat(${validProjects.length}, 1fr)`,
-              gap: "0",
-              width: "100%",
-            }}
-          >
-            {validProjects.map((_, index) => (
-              <div
-                key={index}
-                className={`scrollIndex-cell ${
-                  index === validIndex ? "active" : ""
-                }`}
-                style={{
-                  justifySelf: "center",
-                  transition: "all 0.3s ease",
-                  width: index === validIndex ? "20px" : "6px",
-                  height: index === validIndex ? "4px" : "1.5px",
-                }}
-              ></div>
-            ))}
+        <div className="modal_content">
+          <div className="modal_image-informations">
+            <div className="modal_image-container">
+              <img src={project.img} alt={project.imgAlt || "Project Image"} />
+            </div>
+            <div className="modal_text-informations">
+              <h2 className="modal_project-name">{project.name}</h2>
+              <h3 className="modal_project-type">{project.type}</h3>
+              <p className="modal_description">{project.description}</p>
+              <ul className="modal_tech-stack">
+                {project.stack.map((tech, index) => (
+                  <li key={index}>{tech}</li>
+                ))}
+              </ul>
+            </div>
           </div>
-          <img
-            src="/images/arrow_right_modal.svg"
-            alt="Arrow Right"
-            style={{ cursor: "pointer" }}
-            onClick={() => handleArrowClick("right")}
-          />
+          <div className="modal_footer">
+            <div className="modal_scrollIndex">
+              <img
+                src="/images/arrow_left_modal.svg"
+                alt="Arrow Left"
+                onClick={() => handleArrowClick("left")}
+              />
+              <div className="modal_scrollIndex-cells">
+                {validProjects.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`scrollIndex_cell ${
+                      index === validIndex ? "active" : ""
+                    }`}
+                  ></div>
+                ))}
+              </div>
+              <img
+                src="/images/arrow_right_modal.svg"
+                alt="Arrow Right"
+                onClick={() => handleArrowClick("right")}
+              />
+            </div>
+          </div>
         </div>
-        {/* Project Link */}
         <a
           href={project.lien?.github}
           target="_blank"
@@ -353,9 +236,7 @@ useEffect(() => {
         >
           Voir le projet
         </a>
-        </div>
       </div>
     </div>
-  )
+  );
 }
-

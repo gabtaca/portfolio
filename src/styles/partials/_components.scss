@@ -293,7 +293,7 @@ body.single-toggle .drop:nth-child(10) {
 .date-button {
   font-size: 20px;
   color: #cecdcd;
-  transform: translateY(20px); /* Position initiale pour les dates */
+  transform: translateY(20px); 
   transition: transform 0.3s ease, opacity 0.3s ease;
   font-family: 'Jockey One', sans-serif;
   font-weight: lighter;
@@ -310,65 +310,4 @@ body.single-toggle .drop:nth-child(10) {
   font-size: 35px;
   font-family: "Italiana";
   font-weight: 600;
-}
-
-.modal-content {
-  width: 80vw;
-  height: calc(var(--vh, 1vh) * 70);
-}
-
-.modal_scrollIndex-cells {
-  display: grid;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.scrollIndex-cell {
-  display: flex;
-  background-color: var(--h2Color);
-  height: 2px;
-  border-radius: 2px;
-  transition: all 0.3s ease;
-}
-
-.scrollIndex-cell.active {
-  width: 12px;
-  background-color: var(--h1Icons); 
-}
-
-
-.project-link {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  font-family: "Inter", sans-serif;
-  text-align: center;
-  text-decoration: none;
-  padding: 10px 0;
-  background-color: var(--bgBtnModal, #3f3f3f); 
-  color: #fff;
-  border-radius: 0 0 10px 10px;
-  box-shadow: 
-    inset 2px 0 0 #5b5b5b, 
-    inset -2px 0 0 #1a1a1a, 
-    inset 0 -4px 0 #1a1a1a; 
-
-}
-
-.project-link:hover {
-  background-color: #a1a1a1;
-  box-shadow: 
-  inset 2px 0 0 #5b5b5b,
-  inset -2px 0 0 #5b5b5b, 
-  inset 0 -4px 0 #5b5b5b; 
-  color: #000;
-}
-
-.project-link:active {
-  box-shadow: 
-    inset 2px 0 0 #4a4a4a, 
-    inset -2px 0 0 #0d0d0d, 
-    inset 0 -2px 0 #0d0d0d; 
-  background-color: #292929;
 }
