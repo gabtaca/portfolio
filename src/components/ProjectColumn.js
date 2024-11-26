@@ -19,15 +19,7 @@ export default function ProjectColumn({
   return (
     <div
       className="project-column"
-      style={{
-        minWidth: "55px",
-        height: "350px",
-        zIndex: zIndexValue, // Utiliser le z-index du bouton
-        borderRadius: "2.5px",
-        position: "relative", // Ensure the triangle is positioned relative to this
-        margin: "0 10px",
-        transformOrigin: "bottom",
-      }}
+
       onClick={!isBookend ? onClick : undefined}
     >
       <div className="project-container" style={{ position: 'relative' }}>
@@ -38,13 +30,7 @@ export default function ProjectColumn({
           alt={project.imgAlt || "Project Image"}
           className="project-image"
           style={{
-            height: "345px",
-            width: "60px",
-            border: "0.5px solid #C9D5E1",
-            borderRadius: "2.5px",
-            objectFit: "cover",
-            position: "relative", // Ensures the triangle is positioned relative to the image
-            zIndex: zIndexValue + 1, // Ensure the image is always on top
+
           }}
         />
         {!isHighlighted && (
@@ -59,7 +45,7 @@ export default function ProjectColumn({
               backgroundImage: `url("/images/triangle.svg")`,
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
-              zIndex: triangleZIndex, // Ensure the triangle is behind the image
+              zIndex: triangleZIndex, 
             }}
           />
         )}

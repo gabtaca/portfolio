@@ -11,7 +11,8 @@ import ProjectsModal from "./ProjectsModal";
 import projectsData from "../jsonFiles/projects.json";
 import bookendsData from "../jsonFiles/bookends.json";
 import { AnimatePresence, motion } from "framer-motion";
-import ProjectsDatesFooter from "./ProjectsDatesFooter";
+import ProjectsDatesFooter from "./ProjectsDatesFooterPortrait";
+import ProjectsDatesFooterLandscape from "./ProjectsDatesFooterLandscape";
 
 const ProjectsSlider = forwardRef(({ setHighlightedDate }, ref) => {
   const sliderRef = useRef(null);
@@ -19,6 +20,7 @@ const ProjectsSlider = forwardRef(({ setHighlightedDate }, ref) => {
   const [highlightedIndex, setHighlightedIndex] = useState(null);
   const [selectedProjectIndex, setSelectedProjectIndex] = useState(null);
   const [buttonPositions, setButtonPositions] = useState({});
+  const [isLandscape, setIsLandscape] = useState(window.innerWidth > window.innerHeight);
   const inactivityTimeout = useRef(null);
   const lastCenteredIndexRef = useRef(null);
   const hasInitialized = useRef(false);
@@ -31,25 +33,22 @@ const ProjectsSlider = forwardRef(({ setHighlightedDate }, ref) => {
 
   const startProjectIndex = Math.floor(projectsData.length / 2) + 2;
 
-  const scrollToProjectIndex = useCallback(
-    (index, smooth = true) => {
-      const project = sliderRef.current?.children[index];
-      if (project) {
-        const offset =
-          project.offsetLeft -
-          sliderRef.current.offsetWidth / 2 +
-          project.offsetWidth / 2;
+  const scrollToProjectIndex = useCallback((index, smooth = true) => {
+    const project = sliderRef.current?.children[index];
+    if (project) {
+      const offset =
+        project.offsetLeft -
+        sliderRef.current.offsetWidth / 2 +
+        project.offsetWidth / 2;
 
-        sliderRef.current.scrollTo({
-          left: offset,
-          behavior: smooth ? "smooth" : "auto",
-        });
+      sliderRef.current.scrollTo({
+        left: offset,
+        behavior: smooth ? "smooth" : "auto",
+      });
 
-        lastCenteredIndexRef.current = index;
-      }
-    },
-    []
-  );
+      lastCenteredIndexRef.current = index;
+    }
+  }, []);
 
   useImperativeHandle(ref, () => ({
     scrollToProjectIndex,
@@ -151,6 +150,7 @@ const ProjectsSlider = forwardRef(({ setHighlightedDate }, ref) => {
   ]);
 
   const handleResize = useCallback(() => {
+    setIsLandscape(window.innerWidth > window.innerHeight);
     calculateScalesAndHighlight();
     updateButtonPositions();
   }, [calculateScalesAndHighlight, updateButtonPositions]);
@@ -171,10 +171,6 @@ const ProjectsSlider = forwardRef(({ setHighlightedDate }, ref) => {
         ref={sliderRef}
         className="projects-slider-menu"
         style={{
-          display: "flex",
-          overflowX: "scroll",
-          position: "relative",
-          scrollbarWidth: "none",
           msOverflowStyle: "none",
           WebkitOverflowScrolling: "touch",
         }}
@@ -195,25 +191,23 @@ const ProjectsSlider = forwardRef(({ setHighlightedDate }, ref) => {
               }}
               animate={{
                 scale: scales[index] || 1,
-                transition: { type: "spring", stiffness: 500, damping: 30 },
+                transition: { type: "spring", stiffness: 600, damping: 25 },
               }}
             >
-<ProjectColumn
-  project={project}
-  zIndexValue={buttonZIndex}
-  centerIndex={highlightedIndex}
-  index={index}
-  isHighlighted={isHighlighted}
-  scale={scales[index] || 1}
-  onClick={() => {
-    if (!project.id.startsWith("blank")) {
-      // Scroll to the project index to center the button
-      scrollToProjectIndex(index);
-      // Open the modal after centering
-      setTimeout(() => setSelectedProjectIndex(index - 2), 300); // Adding a slight delay to ensure the scrolling finishes
-    }
-  }}
-/>
+              <ProjectColumn
+                project={project}
+                zIndexValue={buttonZIndex}
+                centerIndex={highlightedIndex}
+                index={index}
+                isHighlighted={isHighlighted}
+                scale={scales[index] || 1}
+                onClick={() => {
+                  if (!project.id.startsWith("blank")) {
+                    scrollToProjectIndex(index);
+                    setTimeout(() => setSelectedProjectIndex(index - 2), 300); 
+                  }
+                }}
+              />
             </motion.div>
           );
         })}
@@ -248,13 +242,20 @@ const ProjectsSlider = forwardRef(({ setHighlightedDate }, ref) => {
           />
         )}
       </AnimatePresence>
-
-      <ProjectsDatesFooter
-        projectsData={projectsData}
-        buttonPositions={buttonPositions}
-        highlightedIndex={highlightedIndex - 2}
-        scrollToProjectIndex={scrollToProjectIndex}
-      />
+{/* change le footer avec l'orientation */}
+{isLandscape ? (
+  <ProjectsDatesFooterLandscape
+    projectsData={combinedData} 
+    buttonPositions={buttonPositions}
+  />
+) : (
+  <ProjectsDatesFooter
+    projectsData={projectsData} 
+    buttonPositions={buttonPositions}
+    highlightedIndex={highlightedIndex - 2}
+    scrollToProjectIndex={scrollToProjectIndex}
+  />
+)}
     </>
   );
 });
