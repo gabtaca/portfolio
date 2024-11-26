@@ -29,6 +29,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  top: -5%;
   justify-content: space-between;
   background: var(--bgModal);
   border-radius: 10px;
@@ -212,7 +213,7 @@
     justify-content: center;
     width: 90vw;
     height: 70vh;
-    top: -10px;
+    top: -1%;
 
     .modal_content {
       display: flex;
