@@ -118,7 +118,7 @@
           display: flex;
           flex-direction: row;
           justify-content: center;
-          margin-top: 10px;
+          margin: 0;
           font-family: "Inter", sans-serif;
           font-size: 14px;
           color: var(--h2Color);
@@ -141,7 +141,7 @@
         align-items: center;
         justify-content: space-between;
         width: 80%;
-        padding: 20px;
+        padding:10px;
 
         .modal_scrollIndex-cells {
           display: grid;
@@ -190,18 +190,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    bottom: -40px;
+    bottom: -39.5px;
     z-index: -10;
-    width: 80%;
-    color: var(--linkColor);
-    background-color: var(--textColor);
+    width: 60%;
+    color: var(--textColor);
+    background-color: var(--bgBtnSeeProject);
     text-decoration: none;
     display: flex;
     font-family: "Inter", sans-serif;
     text-align: center;
     text-decoration: none;
     padding: 10px 0;
-    border-radius: 0 0 10px 10px;
+    border-radius: 0px 0px 10px 10px;
   }
 }
 
@@ -211,7 +211,8 @@
     display: flex;
     justify-content: center;
     width: 90vw;
-    height: 60vh;
+    height: 70vh;
+    top: -10px;
 
     .modal_content {
       display: flex;
@@ -233,7 +234,8 @@
         .modal_image-container {
           display: flex;
           justify-content: flex-start;
-          align-items: flex-start;
+          justify-content: center;
+          align-items: center;
           max-height: 200px;
           width: 100%;
           padding-left: 10px;
@@ -276,7 +278,7 @@
           align-items: center;
           justify-content: space-between;
           width: 80%;
-          padding: 15px;
+          padding: 10px;
 
           .modal_scrollIndex-cells {
             display: grid;
@@ -327,10 +329,12 @@
     }
 
     .project-link {
-      position: absolute;
+      position: relative;
+      bottom: 0;
       width: 35%;
-      bottom: -39.5px;
-      right: 25px;
+      right: 0;
+      color: white;
+      border-radius: 10px 10px 10px 10px;
     }
   }
 }

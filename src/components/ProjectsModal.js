@@ -196,6 +196,19 @@ export default function ProjectsModalV2({
                   <li key={index}>{tech}</li>
                 ))}
               </ul>
+              <a
+          href={project.lien?.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="project-link"
+          onClick={(e) => {
+            e.preventDefault();
+            closeModalWithAnimation();
+            window.open(project.lien?.github, "_blank");
+          }}
+        >
+          Voir le projet
+        </a>
             </div>
           </div>
           <div className="modal_footer">
@@ -223,19 +236,6 @@ export default function ProjectsModalV2({
             </div>
           </div>
         </div>
-        <a
-          href={project.lien?.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="project-link"
-          onClick={(e) => {
-            e.preventDefault();
-            closeModalWithAnimation();
-            window.open(project.lien?.github, "_blank");
-          }}
-        >
-          Voir le projet
-        </a>
       </div>
     </div>
   );
