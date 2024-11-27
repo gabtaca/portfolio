@@ -62,7 +62,7 @@ export default function ProjectsDatesFooterLandscape({ projectsData, buttonPosit
               className="date-group"
               style={{
                 position: "absolute",
-                top: "0px", // Contrôle vertical pour placer le footer
+                top: "15px", // Contrôle vertical pour placer le footer
                 left: `${leftPosition}px`, // Position horizontale basée sur le premier bouton
                 width: `${totalWidth}px`, // Largeur calculée pour couvrir tous les boutons du groupe
                 display: "flex",
