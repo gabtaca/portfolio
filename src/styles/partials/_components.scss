@@ -211,28 +211,28 @@ body.single-toggle .drop:nth-child(10) {
 .projects-dates-footer-landscape {
   position: relative;
   width: 100%;
+  height: 80px;
+  overflow: hidden;
 }
 
 .date-group {
   position: absolute;
-  top: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .date-group div {
-  height: 20px;
+  height: 15px;
   background-color: transparent;
   border-bottom: 1.5px dashed #677684;
-  border-left: 1.5px dashed #677684;
-  border-right: 1.5px dashed #677684;
 }
 
 .date-group p {
   margin-top: 5px;
   font-family: "Jockey One", sans-serif;
-  font-size: 14px;
+  font-size: 20px;
   font-weight: bold;
+  color: var(--datesColor);
   text-align: center;
 }
