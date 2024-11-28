@@ -85,22 +85,16 @@ export default function LightningHeader() {
   }, []);
 
   return (
-    <header className="clouds-container">
+    <div className="lightning-header">
       {/* Navigation */}
-      <nav className="nav_header position-absolute z-30 display-flex justify-center items-center text-white gap-6 w-100 h-100">
-        <button id="Ideas" className="font-italiana text-h2-100 text-24 hover-underline-dashed hover-underline-thin hover-underline-h2">
-          Ideas
-        </button>
-        <button id="Projects" className="font-italiana display-none text-h2-100 text-24 hover-underline-dashed hover-underline-thin hover-underline-h2">
-          Projects
-        </button>
-        <button id="CV" className="font-italiana text-h2-100 text-24 hover-underline-dashed hover-underline-thin hover-underline-h2">
-          CV
+      <nav className="nav_header">
+        <button className='btn_burger-header'>
+          <img src='/images/menu_burger.svg' alt="Menu" />
         </button>
       </nav>
 
       {/* Conteneur des nuages */}
-      <div className="clouds w-full h-full">
+      <div className="clouds">
         <div className="cloud cloud1"></div>
         <div className="cloud cloud2"></div>
         <div className="cloud cloud3"></div>
@@ -109,7 +103,7 @@ export default function LightningHeader() {
         <div className="cloud cloud6"></div>
         <div className="cloud cloud7"></div>
         <div className="cloud cloud8"></div>
-      </div>
-    </header>
+        </div>
+    </div>
   );
 }

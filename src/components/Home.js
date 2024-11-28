@@ -81,7 +81,7 @@ export default function Home() {
   };
 
   return (
-    <main className="main_home">
+    <div className="home_container">
       <nav className="nav_main-home">
         <button
           ref={btnCvRef}
@@ -108,7 +108,7 @@ export default function Home() {
       <div className="content-container">
         {activeSection === "CV" && <Cv />}
         {activeSection === "Projets" && <ProjectsSlider />}
-        {activeSection === "Idées" && <IdeesMobile />} {/* Replace placeholder with the actual component */}
+        {activeSection === "Idées" && <IdeesMobile />} 
       </div>
       <footer ref={footerRef} className="home_footer">
         <a
@@ -130,6 +130,6 @@ export default function Home() {
           <img src="/images/call.svg" alt="Call" className="footer_icon" />
         </a>
       </footer>
-    </main>
+    </div>
   );
 }

@@ -110,12 +110,41 @@ body.single-toggle .drop:nth-child(10) {
   display: block;
 }
 
-/* Composant Clouds */
+/* header Composant Clouds */
 
-.clouds-container {
-  position: relative;
+.lightning-header {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 100px;
+  height: 10vh; 
+  z-index: 1000; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+
+.nav_header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  padding-right: 20px; 
+}
+
+.btn_burger-header img {
+  width: 24px;
+  height: 24px;
+}
+
+.clouds {
+  position: absolute;
+  top: 0; /* Align to the top of the header */
+  left: 0;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
 }
 
@@ -124,10 +153,7 @@ body.single-toggle .drop:nth-child(10) {
   width: 300px;
   height: 150px;
   background-repeat: no-repeat;
-  background-position: center;
   background-size: contain;
-  left: 50%;
-  transform: translateX(-50%);
   animation: animeClouds calc(6s * var(--i)) linear infinite;
 }
 
@@ -189,11 +215,31 @@ body.single-toggle .drop:nth-child(10) {
 
 //home.js
 
-.nav_main-home {
-  color: var(--h2Color);
+.home_ctrl-div {
+  display: flex;
+  width: 100%;
+}
+
+.home_container {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: center; 
+  align-items: center;  
+}
+
+.nav_main-home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content-container {
+  flex: 1;
+  overflow-y: auto;
 }
 
 .btn_cv-main-home {
@@ -220,14 +266,18 @@ body.single-toggle .drop:nth-child(10) {
 
 .body_layout {
   display: flex;
-  height: 100%;
   flex-direction: column;
-  justify-content: space-between;
+  height: 100vh;
 }
 
 .main_layout {
-  overflow-y: auto;
-  height: 100%;
+  flex: 1; /* Allow it to grow and fill the available space */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-top: 10vh;    /* Account for the fixed header height */
+  padding-bottom: 10vh; /* Account for the fixed footer height */
+  box-sizing: border-box;
 }
 
 .projects-dates-footer-landscape {

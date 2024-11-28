@@ -1,10 +1,10 @@
 .cv_container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-family: "Italiana";
   padding: 20px;
+  font-family: "Livvic", sans-serif;
+  overflow-y: auto;
+  max-height: 75vh; // Adjust to prevent overflow
 }
 
 .cv_section {
@@ -170,7 +170,7 @@
 
 .cv_item-skill {
   font-family: "Livvic", sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   margin: 5px 0;
 }
 
@@ -179,7 +179,7 @@
 
 .footer_buffer {
   width: 100%;
-  height: 10rem;
+  height: 10vh;
 }
 
 .cv_footer {
@@ -210,3 +210,153 @@
   width: 40px;
   height: 40px;
 }
+
+
+/*
+.cv-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  font-family: "Livvic", sans-serif;
+  overflow-y: auto;
+  max-height: 80vh; // Adjust to prevent overflow
+}
+
+.cv-section {
+  width: 100%;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.cv-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px 0;
+
+  .cv-section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .cv-section-icon {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s;
+
+    // Rotate icon when section is active
+    &.active {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.cv-section-content {
+  padding: 10px 0;
+
+  .cv-section-item {
+    margin-bottom: 10px;
+
+    .cv-item-title {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+
+    .cv-item-meta {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 5px;
+
+      .cv-item-redDot {
+        margin: 0 5px;
+      }
+    }
+
+    .cv-item-description {
+      font-size: 16px;
+      color: #555;
+    }
+  }
+
+  .cv-item-skill {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 5px;
+  }
+}
+
+.cv-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 0;
+  background-color: #fafafa;
+  border-top: 1px solid #ddd;
+  position: sticky;
+  bottom: 0;
+
+  .cv-footer-download {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+
+    .cv-footer-download-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 8px;
+    }
+
+    span {
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 600px) {
+  .cv-section-header {
+    .cv-section-title {
+      font-size: 18px;
+    }
+
+    .cv-section-icon {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .cv-section-content {
+    .cv-section-item {
+      .cv-item-title {
+        font-size: 16px;
+      }
+
+      .cv-item-description {
+        font-size: 14px;
+      }
+    }
+
+    .cv-item-skill {
+      font-size: 14px;
+    }
+  }
+
+  .cv-footer {
+    .cv-footer-download {
+      .cv-footer-download-icon {
+        width: 20px;
+        height: 20px;
+      }
+
+      span {
+        font-size: 14px;
+      }
+    }
+  }
+}
+*/
