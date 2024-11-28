@@ -2,21 +2,21 @@ import React, { useState, useRef, useEffect } from "react";
 import "animate.css";
 import ProjectsSlider from "./ProjectsSlider";
 import Cv from "./CvMobile";
+import IdeesMobile from "./IdeesMobile"; // Import the Idées component
 
 export default function Home() {
-  const [activeSection, setActiveSection] = useState(null); // Track active section
-  const [footerVisible, setFooterVisible] = useState(true);
+  const [activeSection, setActiveSection] = useState(null); // Track active sections
   const btnIdeasRef = useRef(null);
   const btnProjectsRef = useRef(null);
   const btnCvRef = useRef(null);
   const footerRef = useRef(null);
 
   const resetView = () => {
-    // Reset all animations and buttons
     const btnIdeas = btnIdeasRef.current;
     const btnProjects = btnProjectsRef.current;
     const btnCv = btnCvRef.current;
 
+    // Reset buttons and animations
     btnIdeas.style.display = "block";
     btnProjects.style.display = "block";
     btnCv.style.display = "block";
@@ -48,7 +48,7 @@ export default function Home() {
 
   const handleSectionClick = (section) => {
     if (activeSection === section) {
-      resetView(); // Close section if already active
+      resetView(); // Close the section if it's already active
       return;
     }
 
@@ -108,9 +108,8 @@ export default function Home() {
       <div className="content-container">
         {activeSection === "CV" && <Cv />}
         {activeSection === "Projets" && <ProjectsSlider />}
-        {activeSection === "Idées" && <div>Idées Content Placeholder</div>}
+        {activeSection === "Idées" && <IdeesMobile />} {/* Replace placeholder with the actual component */}
       </div>
-      {/* Footer Section */}
       <footer ref={footerRef} className="home_footer">
         <a
           href="https://www.linkedin.com/in/gabriel-taca-7a65961a/?originalSubdomain=ca"

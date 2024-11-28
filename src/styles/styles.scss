@@ -9,6 +9,7 @@
 @use "partials/projectModal";
 @use "partials/projectsSlider";
 @use "partials/cv";
+@use "partials/ideesMobile";
 
 /* Déclaration de la police Italiana */
 @font-face {
@@ -97,6 +98,13 @@
   font-weight: 600;
   font-style: normal;
   font-display: swap;
+}
+
+/* Déclaration de la police Shadows Into Light (Regular) */
+.shadows-into-light-regular {
+  font-family: "Shadows Into Light", cursive;
+  font-weight: 400;
+  font-style: normal;
 }
 
 
