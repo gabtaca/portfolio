@@ -1,59 +1,136 @@
-// src/components/Home.js
-
-import React, { useState, useRef } from 'react';
-import 'animate.css';
-import ProjectsSlider from './ProjectsSlider';
+import React, { useState, useRef, useEffect } from "react";
+import "animate.css";
+import ProjectsSlider from "./ProjectsSlider";
+import Cv from "./CvMobile";
 
 export default function Home() {
-  const [showProjectsSlider, setShowProjectsSlider] = useState(false);
-  const [highlightedDate, setHighlightedDate] = useState('');
-  const sliderRef = useRef(null); // Reference for the slider
+  const [activeSection, setActiveSection] = useState(null); // Track active section
+  const [footerVisible, setFooterVisible] = useState(true);
   const btnIdeasRef = useRef(null);
   const btnProjectsRef = useRef(null);
-  const btnCVRef = useRef(null);
+  const btnCvRef = useRef(null);
+  const footerRef = useRef(null);
 
-  const handleProjectsClick = () => {
+  const resetView = () => {
+    // Reset all animations and buttons
     const btnIdeas = btnIdeasRef.current;
-    const btnCV = btnCVRef.current;
+    const btnProjects = btnProjectsRef.current;
+    const btnCv = btnCvRef.current;
 
-    btnIdeas.classList.add('animate__animated', 'animate__fadeOutLeft');
-    btnCV.classList.add('animate__animated', 'animate__fadeOutRight');
+    btnIdeas.style.display = "block";
+    btnProjects.style.display = "block";
+    btnCv.style.display = "block";
+
+    btnIdeas.classList.remove("animate__animated", "animate__rotateOutDownLeft");
+    btnProjects.classList.remove(
+      "animate__animated",
+      "animate__rotateOutDownRight",
+      "animate__rotateOutUpRight"
+    );
+    btnCv.classList.remove("animate__animated", "animate__fadeOutRight", "animate__fadeOutUp");
+
+    footerRef.current.classList.add("animate__animated", "animate__backInUp");
+    footerRef.current.style.display = "flex";
+
+    setActiveSection(null); // Reset active section
+  };
+
+  const handleFooterHide = () => {
+    const footer = footerRef.current;
+    footer.classList.add("animate__animated", "animate__fadeOutDown");
+    const handleAnimationEnd = (event) => {
+      footer.style.display = "none";
+      footer.classList.remove("animate__animated", "animate__fadeOutDown");
+      footer.removeEventListener("animationend", handleAnimationEnd);
+    };
+    footer.addEventListener("animationend", handleAnimationEnd);
+  };
+
+  const handleSectionClick = (section) => {
+    if (activeSection === section) {
+      resetView(); // Close section if already active
+      return;
+    }
+
+    const btnIdeas = btnIdeasRef.current;
+    const btnProjects = btnProjectsRef.current;
+    const btnCv = btnCvRef.current;
+
+    handleFooterHide();
+
+    if (section === "CV") {
+      btnIdeas.classList.add("animate__animated", "animate__rotateOutDownLeft");
+      btnProjects.classList.add("animate__animated", "animate__rotateOutDownRight");
+    } else if (section === "Projets") {
+      btnIdeas.classList.add("animate__animated", "animate__fadeOutLeft");
+      btnCv.classList.add("animate__animated", "animate__fadeOutRight");
+    } else if (section === "Idées") {
+      btnCv.classList.add("animate__animated", "animate__fadeOutUp");
+      btnProjects.classList.add("animate__animated", "animate__rotateOutUpRight");
+    }
 
     const handleAnimationEnd = (event) => {
-      event.target.style.display = 'none';
-      event.target.removeEventListener('animationend', handleAnimationEnd);
-      setShowProjectsSlider(true);
+      event.target.style.display = "none";
+      event.target.removeEventListener("animationend", handleAnimationEnd);
+      setActiveSection(section); // Show the selected section after animations end
     };
 
-    btnIdeas.addEventListener('animationend', handleAnimationEnd);
-    btnCV.addEventListener('animationend', handleAnimationEnd);
+    btnIdeas.addEventListener("animationend", handleAnimationEnd);
+    btnProjects.addEventListener("animationend", handleAnimationEnd);
+    btnCv.addEventListener("animationend", handleAnimationEnd);
   };
 
   return (
     <main className="main_home">
-      <nav className="nav_main display-flex flex-col align-center justify-between w-full text-24 ">
-        <button ref={btnIdeasRef} className="text-h2-100 text-24 hover-underline font-italiana">
-          Ideas
+      <nav className="nav_main-home">
+        <button
+          ref={btnCvRef}
+          className="btn_cv-main-home text-h2-100 text-28 hover-underline font-italiana"
+          onClick={() => handleSectionClick("CV")}
+        >
+          CV
         </button>
         <button
           ref={btnProjectsRef}
-          className="text-h2-100 text-24 hover-underline font-italiana"
-          onClick={handleProjectsClick}
+          className="btn_projets-main-home text-h2-100 text-28 hover-underline font-italiana"
+          onClick={() => handleSectionClick("Projets")}
         >
-          Projects
+          Projets
         </button>
-        <button ref={btnCVRef} className="text-h2-100 text-24 hover-underline font-italiana">
-          CV
+        <button
+          ref={btnIdeasRef}
+          className="btn_idees-main-home text-h2-100 text-28 hover-underline font-italiana"
+          onClick={() => handleSectionClick("Idées")}
+        >
+          Idées
         </button>
       </nav>
-      <div className='flex w-100'>
-        {showProjectsSlider && (
-          <ProjectsSlider
-            ref={sliderRef}
-            setHighlightedDate={setHighlightedDate}
-          />
-        )}
+      <div className="content-container">
+        {activeSection === "CV" && <Cv />}
+        {activeSection === "Projets" && <ProjectsSlider />}
+        {activeSection === "Idées" && <div>Idées Content Placeholder</div>}
       </div>
+      {/* Footer Section */}
+      <footer ref={footerRef} className="home_footer">
+        <a
+          href="https://www.linkedin.com/in/gabriel-taca-7a65961a/?originalSubdomain=ca"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="footer_link"
+        >
+          <img
+            src="/images/LinkedIn_icon.svg"
+            alt="LinkedIn"
+            className="footer_icon"
+          />
+        </a>
+        <a href="mailto:gabrieltaca117@gmail.com" className="footer_link">
+          <img src="/images/mail.svg" alt="Email" className="footer_icon" />
+        </a>
+        <a href="tel:+14199303703" className="footer_link">
+          <img src="/images/call.svg" alt="Call" className="footer_icon" />
+        </a>
+      </footer>
     </main>
   );
 }

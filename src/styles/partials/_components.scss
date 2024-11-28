@@ -189,6 +189,28 @@ body.single-toggle .drop:nth-child(10) {
 
 //home.js
 
+.nav_main-home {
+  color: var(--h2Color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.btn_cv-main-home {
+  color: var(--h2Color);
+  padding: 5px;
+}
+
+.btn_projets-main-home {
+  color: var(--h2Color);
+  padding: 5px;
+}
+
+.btn_idees-main-home {
+  color: var(--h2Color);
+  padding: 5px;
+}
+
 .main_home {
   display: flex;
   flex-direction: column;
@@ -235,4 +257,38 @@ body.single-toggle .drop:nth-child(10) {
   font-weight: bold;
   color: var(--datesColor);
   text-align: center;
+}
+
+.fixed-top {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  background-color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.home_footer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #fff;
+  border-top: 1px solid #ddd;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.footer_link {
+  text-decoration: none;
+}
+
+.footer_icon {
+  width: 40px;
+  height: 40px;
 }
