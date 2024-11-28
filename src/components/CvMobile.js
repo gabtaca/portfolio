@@ -78,7 +78,7 @@ export default function CvMobile() {
           </div>
         )
       )}
-    <div className="footer_buffer"></div>
+
       {/* Pied de page avec bouton de téléchargement */}
       {footerVisible && (
         <footer className="cv_footer animate__animated animate__slideInUp">
