@@ -1,9 +1,7 @@
-import LightningHeader from "./LightningHeader";
-
 export default function Layout({ children }) {
   return (
     <div className="body_layout">
-      <LightningHeader />
+      {/* <LightningHeader /> */}
       <main className="main_layout">
         {children}
       </main>

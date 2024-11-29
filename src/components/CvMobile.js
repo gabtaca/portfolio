@@ -4,12 +4,6 @@ import cvInfos from "../jsonFiles/cvInfos.json";
 
 export default function CvMobile() {
   const [activeSection, setActiveSection] = useState(null); // Section actuellement ouverte
-  const [footerVisible, setFooterVisible] = useState(false); // Contrôle de la visibilité du pied de page
-
-  useEffect(() => {
-    // Affiche le footer avec l'animation lorsqu'un composant est monté
-    setFooterVisible(true);
-  }, []);
 
   // Gère l'ouverture et la fermeture des sections
   const toggleSection = (section) => {
@@ -77,23 +71,6 @@ export default function CvMobile() {
             )}
           </div>
         )
-      )}
-
-      {/* Pied de page avec bouton de téléchargement */}
-      {footerVisible && (
-        <footer className="cv_footer animate__animated animate__slideInUp">
-          <a
-            href="/pdf/CV-Gabriel_Taca.pdf"
-            download="CV-Gabriel_Taca.pdf"
-            className="cv_footer-download"
-          >
-            <img
-              src="/images/download.svg"
-              alt="Télécharger le CV"
-              className="cv_footer-download-icon"
-            />
-          </a>
-        </footer>
       )}
     </div>
   );

@@ -8,8 +8,7 @@ nav {
 
 
 html, body, #__next {
-  height: 100%;
-  max-height: calc(var(--vh) * 100);
+  height: calc(var(--vh, 1vh) * 100);
   margin: 0;
 }
 
@@ -33,9 +32,9 @@ button {
   touch-action: none;
 }
 
-.fullscreen-section {
-  height: 100vh; 
-  height: calc(var(--vh) * 100); 
+html, body, #__next {
+  height: calc(var(--vh, 1vh) * 100);
+  margin: 0;
 }
 
 *, *::before, *::after {
@@ -44,3 +43,6 @@ button {
   padding: 0;
 }
 
+.hidden {
+  display: none;
+}
