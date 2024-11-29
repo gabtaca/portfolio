@@ -9,7 +9,7 @@ $colors: (
   'h1Icons': #194967,
   'textColor': #163F59,
   'datesColor': #95A5AF,
-  'bgDetailsodal': #D2DDE8,
+  'bgDetailsModal': #D2DDE8,
   'linkColor': #D2DDE8,
   'btnBlank': #C9D5E1,
   'btnBlankEnd': #EBF1F6,
@@ -21,14 +21,56 @@ $colors: (
   'errors': #ff000082,
 );
 
-:root {
-  @each $name, $value in $colors {
-    --#{$name}: #{$value};
-  }
-}
+$dark-colors: (
+  'background': #121212,
+  'foreground': #1E1E1E,
+  'mainTextColor': #FFFFFF,
+  'h2Color': #A0A0A0,
+  'bgBtnModal': #3A3A3A,
+  'bgBtnSeeProject': #4A90E2,
+  'bgModal': #1E1E1E,
+  'h1Icons': #FFFFFF,
+  'textColor': #E0E0E0,
+  'datesColor': #AAAAAA,
+  'bgDetailsModal': #2A2A2A,
+  'linkColor': #4A90E2,
+  'btnBlank': #3A3A3A,
+  'btnBlankEnd': #2A2A2A,
+  'postItPink': #D81B60,
+  'postItYellow': #FBC02D,
+  'postItBlue': #0288D1,
+  'postItGreen': #388E3C,
+  'postItOrange': #F57C00,
+  'errors': #FF5252,
+);
 
-@media (prefers-color-scheme: dark) {
-  :root {
+$light-colors: $colors;
 
+$dark-colors: (
+  'background': #121212,
+  'foreground': #1E1E1E,
+  'mainTextColor': #FFFFFF,
+  'h2Color': #A0A0A0,
+  'bgBtnModal': #3A3A3A,
+  'bgBtnSeeProject': #4A90E2,
+  'bgModal': #1E1E1E,
+  'h1Icons': #FFFFFF,
+  'textColor': #E0E0E0,
+  'datesColor': #AAAAAA,
+  'bgDetailsModal': #2A2A2A,
+  'linkColor': #4A90E2,
+  'btnBlank': #3A3A3A,
+  'btnBlankEnd': #2A2A2A,
+  'postItPink': #D81B60,
+  'postItYellow': #FBC02D,
+  'postItBlue': #0288D1,
+  'postItGreen': #388E3C,
+  'postItOrange': #F57C00,
+  'errors': #FF5252,
+);
+
+@mixin set-theme($theme-colors) {
+  @each $name, $color in $theme-colors {
+    --#{$name}: #{$color};
   }
 }

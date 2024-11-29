@@ -1,25 +1,21 @@
+/* Styles pour le conteneur principal */
 .idees-container {
+  position: relative;
   font-family: "Livvic", sans-serif;
   padding: 20px;
   text-align: center;
-}
-
-.idees-subtitle {
-  font-family: "Inter";
-  margin-top: 10px;
-  font-size: 14px;
-  color: var(--textColor);
+  overflow: hidden; /* Empêche le débordement horizontal */
 }
 
 .dashed-arrow {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 20px auto;
-  position: relative;
   z-index: 1;
-  transform-origin: bottom;
-  color: var(--h2Color);
 }
 
 .dashed-arrow-line {
@@ -33,6 +29,7 @@
     transparent 20px
   );
   animation: expandArrow 1s forwards;
+  transform-origin: bottom;
 }
 
 @keyframes expandArrow {
@@ -45,14 +42,15 @@
 }
 
 .dashed-arrow-head {
-  margin-top: -10px;
+  margin-bottom: -10px;
 }
 
+/* Styles pour le conteneur des catégories */
 .categories-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transform-origin: bottom;
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 150px); /* Ajuste cette valeur selon tes besoins */
+  overflow-y: auto; /* Permet le défilement vertical */
 }
 
 .category-section {
@@ -73,44 +71,35 @@
   animation: appearButton 0.5s ease forwards;
 }
 
-.category-button.visible {
-  opacity: 1;
-  transform: translateY(0);
+/* Styles pour le slider des catégories */
+.categories_slider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .hidden {
   display: none;
 }
 
-@keyframes appearButton {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes rotateInDownLeft {
+@keyframes leafOpenLeft {
   0% {
-    transform: rotate(-90deg);
+    transform: rotate(-90deg) translateY(20px);
     opacity: 0;
   }
   100% {
-    transform: rotate(0deg);
+    transform: rotate(0deg) translateY(0);
     opacity: 1;
   }
 }
 
-@keyframes rotateInDownRight {
+@keyframes leafOpenRight {
   0% {
-    transform: rotate(90deg);
+    transform: rotate(90deg) translateY(20px);
     opacity: 0;
   }
   100% {
-    transform: rotate(0deg);
+    transform: rotate(0deg) translateY(0);
     opacity: 1;
   }
 }
@@ -257,4 +246,30 @@
   border-color: var(--post-it-color) transparent transparent
     var(--post-it-color);
   border-radius: 0 0 0 5px;
+}
+.leaf-idea {
+  width: 200px;
+  height: 50px;
+  background-color: #D3D3D3;
+  color: #000;
+  font-size: 16px;
+  font-family: "Italiana", serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  opacity: 0;
+  animation: unfoldLeaf 0.5s forwards ease-in-out;
+}
+
+@keyframes unfoldLeaf {
+  0% {
+    clip-path: polygon(50% 0%, 50% 0%, 50% 0%);
+    opacity: 0;
+  }
+  100% {
+    clip-path: polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%);
+    opacity: 1;
+  }
 }

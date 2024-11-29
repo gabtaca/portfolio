@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { getRandomFoldClass } from "../hooks/foldedCorner";
 import ideesData from "../jsonFiles/ideesData.json"; // Import the JSON file
 
+
 const categories = Object.keys(ideesData); // Get the categories from the JSON keys
 
 const IdeesMobile = () => {
@@ -63,17 +64,32 @@ const IdeesMobile = () => {
         mais un bel endroit pour relancer l'inspiration en cas de besoin !
       </p>
 
+      {/* Flèche en bas */}
+      <div className="dashed-arrow">
+        <img
+          src="/images/arrow_up.svg"
+          alt="image de fleche par en haut"
+          className="dashed-arrow-head"
+        />
+        <div
+          className="dashed-arrow-line"
+          onAnimationEnd={handleArrowAnimationEnd}
+        ></div>
+      </div>
+
+      {/* Conteneur des catégories au-dessus de la flèche */}
       <div className="categories-container">
+        <div></div>
         {categories.map((category, index) => (
           <div key={category} className="category-section">
             <button
-              className={`category-button animate-leaf ${
+              className={`category-button ${
                 visibleCategories.includes(category) ? "visible" : "hidden"
               }`}
               style={{
                 animationDelay: `${index * 0.3}s`,
                 animationName:
-                  index % 2 === 0 ? "rotateInDownLeft" : "rotateInDownRight",
+                  index % 2 === 0 ? "leafOpenLeft" : "leafOpenRight",
               }}
               onClick={() => toggleCategory(category)}
             >
@@ -111,19 +127,8 @@ const IdeesMobile = () => {
               </div>
             )}
           </div>
+          
         ))}
-      </div>
-
-      <div className="dashed-arrow">
-        <img
-          src="/images/arrow_up.svg"
-          alt="image de fleche par en haut"
-          className="dashed-arrow-head"
-        />
-        <div
-          className="dashed-arrow-line"
-          onAnimationEnd={handleArrowAnimationEnd}
-        ></div>
       </div>
     </div>
   );

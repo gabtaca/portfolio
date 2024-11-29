@@ -10,6 +10,7 @@
 @use "partials/projectsSlider";
 @use "partials/cv";
 @use "partials/ideesMobile";
+@use "partials/LightningHeader"; 
 
 /* Déclaration de la police Italiana */
 @font-face {
@@ -110,4 +111,16 @@
 
 nav {
   margin: 0;
+}
+
+:root {
+  @include set-theme($light-colors);
+}
+
+// Dark theme
+body.dark-mode {
+  @include set-theme($dark-colors);
+}
+@function theme-color($name) {
+  @return var(--#{$name});
 }

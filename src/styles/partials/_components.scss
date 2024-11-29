@@ -122,7 +122,7 @@ body.single-toggle .drop:nth-child(10) {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .nav_header {
@@ -131,11 +131,13 @@ body.single-toggle .drop:nth-child(10) {
   justify-content: flex-end;
   height: 100%;
   padding-right: 20px;
+  z-index: 1005;
 }
 
 .btn_burger-header img {
   width: 24px;
   height: 24px;
+  z-index: 1010;
 }
 
 .clouds {
@@ -227,6 +229,7 @@ body.single-toggle .drop:nth-child(10) {
   align-items: center;
   padding-top: 10vh;
   padding-bottom: 10vh;
+  z-index: 1;
 }
 
 .nav_main-home {
@@ -239,6 +242,7 @@ body.single-toggle .drop:nth-child(10) {
 .content-container {
   width: 100%;
   overflow-y: auto;
+  padding-bottom: 60px;
 }
 
 .btn_cv-main-home {
@@ -318,14 +322,15 @@ body.single-toggle .drop:nth-child(10) {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.home_footer {
+.home_footer,
+.cv_footer {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 10px 0;
   position: fixed;
   bottom: 0;
   width: 100%;
+  height: 60px;
   background-color: #fff;
   border-top: 1px solid #ddd;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
@@ -338,4 +343,46 @@ body.single-toggle .drop:nth-child(10) {
 .footer_icon {
   width: 40px;
   height: 40px;
+}
+
+// Speech bubble
+
+.comic_bubble {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  bottom: 60px;
+  right: 0;
+  z-index: 1;
+  -webkit-box-shadow: 5px 4px 4px 1px rgba(0, 0, 0, 0.58);
+  box-shadow: 5px 4px 4px 1px rgba(0, 0, 0, 0.3);
+}
+
+.comic_bubble:after {
+  content: "";
+  position: absolute;
+  box-shadow: rgba(0, 0, 0, 0.3) 5px 5px 4px;
+  -moz-transform: rotate(35deg);
+  -webkit-transform: rotate(35deg);
+  bottom: -8px;
+  right: 13px;
+  border-width: 15px;
+  border-style: solid;
+  border-color: #fff;
+}
+
+.comic_bubble p {
+  padding-bottom: 15px;
+  font-size: 25px;
+  font-weight: bold;
+  font-family: "Livvic";
+  color: var(--h1Icons);
+}
+
+.comic_bubble a {
+  font-family: "Inter";
+  color: var(--textColor);
+  text-decoration: none;
 }

@@ -1,7 +1,8 @@
 // src/components/Home.js
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "animate.css";
+import { motion, AnimatePresence } from "framer-motion"; // Importation de Framer Motion
 import ProjectsSlider from "./ProjectsSlider";
 import CvMobile from "./CvMobile";
 import IdeesMobile from "./IdeesMobile";
@@ -9,15 +10,28 @@ import LightningHeader from "./LightningHeader";
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState(null);
+
+  // État pour gérer la visibilité de la bulle de dialogue
+  const [isBubbleVisible, setIsBubbleVisible] = useState(false);
+
+  // Références pour les boutons
   const btnIdeasRef = useRef(null);
   const btnProjectsRef = useRef(null);
   const btnCvRef = useRef(null);
+
+  // Référence pour le footer de la page d'accueil
   const homeFooterRef = useRef(null);
+
+  // Référence pour le footer du CV
   const cvFooterRef = useRef(null);
 
-  // Function to show the home_footer with entrance animation
+  // Références pour la bulle et l'icône du téléphone
+  const bubbleRef = useRef(null);
+  const phoneIconRef = useRef(null);
+
+  // Fonction pour afficher le home_footer avec animation d'entrée
   const showHomeFooter = () => {
-    if (homeFooterRef.current) {
+    if (homeFooterRef.current && homeFooterRef.current.style.display !== "flex") {
       homeFooterRef.current.style.display = "flex";
       homeFooterRef.current.classList.add(
         "animate__animated",
@@ -39,98 +53,109 @@ export default function Home() {
     }
   };
 
-  // Function to hide the home_footer with exit animation
-  const hideHomeFooter = () => {
-    if (homeFooterRef.current) {
-      homeFooterRef.current.classList.add(
-        "animate__animated",
-        "animate__backOutDown"
-      );
-      const handleAnimationEnd = () => {
-        if (homeFooterRef.current) {
-          homeFooterRef.current.style.display = "none";
-          homeFooterRef.current.classList.remove(
-            "animate__animated",
-            "animate__backOutDown"
-          );
-          homeFooterRef.current.removeEventListener(
-            "animationend",
-            handleAnimationEnd
-          );
-        }
-      };
-      homeFooterRef.current.addEventListener("animationend", handleAnimationEnd);
+  // Fonction pour cacher le home_footer avec option d'immédiateté
+  const hideHomeFooter = (immediate = false) => {
+    if (homeFooterRef.current && homeFooterRef.current.style.display !== "none") {
+      if (immediate) {
+        // Cacher immédiatement sans animation
+        homeFooterRef.current.style.display = "none";
+        homeFooterRef.current.classList.remove(
+          "animate__animated",
+          "animate__backInUp",
+          "animate__backOutDown"
+        );
+      } else {
+        // Cacher avec animation
+        homeFooterRef.current.classList.add(
+          "animate__animated",
+          "animate__backOutDown"
+        );
+        const handleAnimationEnd = () => {
+          if (homeFooterRef.current) {
+            homeFooterRef.current.style.display = "none";
+            homeFooterRef.current.classList.remove(
+              "animate__animated",
+              "animate__backOutDown"
+            );
+            homeFooterRef.current.removeEventListener(
+              "animationend",
+              handleAnimationEnd
+            );
+          }
+        };
+        homeFooterRef.current.addEventListener("animationend", handleAnimationEnd);
+      }
     }
   };
 
-  // Function to show the cv_footer with entrance animation
-  const showCvFooter = () => {
-    if (cvFooterRef.current) {
-      cvFooterRef.current.style.display = "flex";
-      cvFooterRef.current.classList.add(
-        "animate__animated",
-        "animate__slideInUp"
-      );
-      const handleAnimationEnd = () => {
-        if (cvFooterRef.current) {
-          cvFooterRef.current.classList.remove(
-            "animate__animated",
-            "animate__slideInUp"
-          );
-          cvFooterRef.current.removeEventListener(
-            "animationend",
-            handleAnimationEnd
-          );
+  // Utiliser useEffect pour détecter quand la section CV est active
+  useEffect(() => {
+    if (activeSection === "CV") {
+      // Ajouter l'animation "slideInUp" au cv_footer
+      if (cvFooterRef.current) {
+        cvFooterRef.current.classList.add(
+          "animate__animated",
+          "animate__slideInUp"
+        );
+
+        // Supprimer l'animation après qu'elle ait joué une fois
+        const handleAnimationEnd = () => {
+          if (cvFooterRef.current) {
+            cvFooterRef.current.classList.remove(
+              "animate__animated",
+              "animate__slideInUp"
+            );
+            cvFooterRef.current.removeEventListener(
+              "animationend",
+              handleAnimationEnd
+            );
+          }
+        };
+        cvFooterRef.current.addEventListener("animationend", handleAnimationEnd);
+      }
+    }
+  }, [activeSection]);
+
+  // Utiliser useEffect pour gérer le clic en dehors de la bulle
+  useEffect(() => {
+    if (isBubbleVisible) {
+      const handleClickOutside = (event) => {
+        if (
+          bubbleRef.current &&
+          !bubbleRef.current.contains(event.target) &&
+          phoneIconRef.current &&
+          !phoneIconRef.current.contains(event.target)
+        ) {
+          setIsBubbleVisible(false);
         }
       };
-      cvFooterRef.current.addEventListener("animationend", handleAnimationEnd);
-    }
-  };
 
-  // Function to hide the cv_footer with exit animation
-  const hideCvFooter = () => {
-    if (cvFooterRef.current) {
-      cvFooterRef.current.classList.add(
-        "animate__animated",
-        "animate__slideOutDown"
-      );
-      const handleAnimationEnd = () => {
-        if (cvFooterRef.current) {
-          cvFooterRef.current.style.display = "none";
-          cvFooterRef.current.classList.remove(
-            "animate__animated",
-            "animate__slideOutDown"
-          );
-          cvFooterRef.current.removeEventListener(
-            "animationend",
-            handleAnimationEnd
-          );
-        }
+      document.addEventListener("mousedown", handleClickOutside);
+
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
       };
-      cvFooterRef.current.addEventListener("animationend", handleAnimationEnd);
     }
-  };
+  }, [isBubbleVisible]);
 
-  // Handle section button clicks
+  // Gérer le clic sur les boutons des sections
   const handleSectionClick = (section) => {
     if (activeSection === section) {
       resetView();
       return;
     }
 
-    // Manage footers based on the section
+    // Cacher les footers en fonction de la section
     if (section === "CV") {
-      hideHomeFooter();
+      // On ouvre la section CV
+      hideHomeFooter(); // Cacher le home_footer avec animation
     } else {
-      if (activeSection === "CV") {
-        hideCvFooter();
-        showHomeFooter();
-      } else {
-        hideHomeFooter();
-      }
+      // On ouvre Projets ou Idées
+      // Cacher le home_footer immédiatement sans animation
+      hideHomeFooter(true);
     }
 
-    // Animate buttons out based on the selected section
+    // Animer les boutons en fonction de la section sélectionnée
     if (section === "CV") {
       btnIdeasRef.current.classList.add(
         "animate__animated",
@@ -160,16 +185,13 @@ export default function Home() {
       );
     }
 
-    // After animations end, hide buttons and show the section
+    // Après les animations, cacher les boutons et afficher la section
     const handleAnimationEnd = (event) => {
       event.target.style.display = "none";
       event.target.removeEventListener("animationend", handleAnimationEnd);
-      setActiveSection(section);
 
-      // Show the cv_footer if the CV section is active
-      if (section === "CV") {
-        showCvFooter();
-      }
+      // Mettre à jour la section active
+      setActiveSection(section);
     };
 
     btnIdeasRef.current.addEventListener("animationend", handleAnimationEnd);
@@ -177,16 +199,17 @@ export default function Home() {
     btnCvRef.current.addEventListener("animationend", handleAnimationEnd);
   };
 
-  // Reset the view to the initial state
+  // Réinitialiser la vue à l'état initial
   const resetView = () => {
-    // Reset buttons
+    // Réinitialiser les boutons
     btnIdeasRef.current.style.display = "block";
     btnProjectsRef.current.style.display = "block";
     btnCvRef.current.style.display = "block";
 
     btnIdeasRef.current.classList.remove(
       "animate__animated",
-      "animate__rotateOutDownLeft"
+      "animate__rotateOutDownLeft",
+      "animate__fadeOutLeft"
     );
     btnProjectsRef.current.classList.remove(
       "animate__animated",
@@ -199,13 +222,22 @@ export default function Home() {
       "animate__fadeOutUp"
     );
 
-    // Show the home_footer with entrance animation
+    // Afficher le home_footer avec animation
     showHomeFooter();
 
-    // Hide the cv_footer with exit animation
-    hideCvFooter();
-
+    // Mettre la section active à null
     setActiveSection(null);
+  };
+
+  // Fonction pour copier le numéro de téléphone dans le presse-papiers
+  const copyPhoneNumber = () => {
+    navigator.clipboard.writeText("+1 (418) 930-3703");
+    alert("Numéro copié dans le presse-papiers !");
+  };
+
+  // Fonction pour gérer le clic sur l'icône du téléphone
+  const handlePhoneClick = () => {
+    setIsBubbleVisible(!isBubbleVisible);
   };
 
   return (
@@ -242,45 +274,102 @@ export default function Home() {
           {activeSection === "Idées" && <IdeesMobile />}
         </div>
 
-        {/* Always render both footers */}
-        <footer ref={homeFooterRef} className="home_footer">
-          <a
-            href="https://www.linkedin.com/in/gabriel-taca-7a65961a/?originalSubdomain=ca"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="footer_link"
-          >
-            <img
-              src="/images/LinkedIn_icon.svg"
-              alt="LinkedIn"
-              className="footer_icon"
-            />
-          </a>
-          <a href="mailto:gabrieltaca117@gmail.com" className="footer_link">
-            <img src="/images/mail.svg" alt="Email" className="footer_icon" />
-          </a>
-          <a href="tel:+14199303703" className="footer_link">
-            <img src="/images/call.svg" alt="Call" className="footer_icon" />
-          </a>
-        </footer>
+        {/* Afficher le home_footer seulement si aucune section n'est active */}
+        {!activeSection && (
+          <footer ref={homeFooterRef} className="home_footer">
+            {/* Contenu du home_footer */}
+            <a
+              href="https://www.linkedin.com/in/gabriel-taca-7a65961a/?originalSubdomain=ca"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer_link"
+            >
+              <img
+                src="/images/LinkedIn_icon.svg"
+                alt="LinkedIn"
+                className="footer_icon"
+              />
+            </a>
+            <a
+              href="mailto:gabrieltaca117@gmail.com"
+              className="footer_link"
+            >
+              <img
+                src="/images/mail.svg"
+                alt="Email"
+                className="footer_icon"
+              />
+            </a>
+            {/* Modifier l'icône du téléphone pour ajouter l'événement onClick */}
+            <div className="footer_link" style={{ position: "relative" }}>
+              <img
+                src="/images/call.svg"
+                alt="Call"
+                className="footer_icon"
+                onClick={handlePhoneClick} // Gérer le clic pour afficher la bulle
+                style={{ cursor: "pointer" }}
+                ref={phoneIconRef}
+              />
+              {/* Utiliser AnimatePresence pour l'animation de la bulle */}
+              <AnimatePresence>
+                {isBubbleVisible && (
+                  <motion.div
+                    ref={bubbleRef}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    transition={{ duration: 0.3 }}
+                    className="comic_bubble"
+                    style={{
+                      position: "absolute",
+                      bottom: "80px",
+                      right: "0",
+                      background: "#fff",
+                      borderRadius: "30px",
+                      padding: "10px",
+                      paddingBottom: "25px",
+                      zIndex: 1,
+                      width: "290px",
+                    }}
+                  >
+                    <p style={{ margin: 0, fontWeight: "600" }}>Gabriel Taca</p>
+                    <div style={{ display: "flex", alignItems: "center", marginTop: "5px" }}>
+                      <a
+                        href="tel:+14189303703"
+                        style={{ textDecoration: "none", flexGrow: 1 }}
+                      >
+                        +1 (418) 930-3703
+                      </a>
+                      <img
+                        src="/images/content_copy.svg"
+                        alt="Copy"
+                        onClick={copyPhoneNumber}
+                        style={{ cursor: "pointer", marginLeft: "10px" }}
+                      />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </footer>
+        )}
 
-        <footer
-          ref={cvFooterRef}
-          className="cv_footer"
-          style={{ display: "none" }}
-        >
-          <a
-            href="/pdf/CV-Gabriel_Taca.pdf"
-            download="CV-Gabriel_Taca.pdf"
-            className="cv_footer-download"
-          >
-            <img
-              src="/images/download.svg"
-              alt="Télécharger le CV"
-              className="cv_footer-download-icon"
-            />
-          </a>
-        </footer>
+        {/* Afficher le cv_footer seulement dans la section CV */}
+        {activeSection === "CV" && (
+          <footer ref={cvFooterRef} className="cv_footer">
+            <a
+              href="/pdf/CV-Gabriel_Taca.pdf"
+              download="CV-Gabriel_Taca.pdf"
+              className="cv_footer-download"
+            >
+              <img
+                src="/images/download.svg"
+                alt="Télécharger le CV"
+                className="cv_footer-download-icon"
+              />
+            </a>
+          </footer>
+        )}
       </div>
     </>
   );
