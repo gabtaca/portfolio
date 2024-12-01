@@ -1,23 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { useAnimate, stagger, motion } from 'framer-motion';
+// src/components/LightningHeader.jsx
 
+import React, { useState, useEffect, useRef } from 'react';
+import { useAnimate, stagger, motion } from 'framer-motion';
+import useTheme from '../hooks/useTheme';
+import classNames from 'classnames';
 
 export default function LightningHeader() {
+  const { isDarkMode, toggleDarkMode, animationsEnabled, toggleAnimations } = useTheme(); // Accès au thème via le hook
   const [open, setOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
-  const [animationsEnabled, setAnimationsEnabled] = useState(true);
   const [scope, animate] = useAnimate();
 
-  // Charger les préférences depuis localStorage
-  useEffect(() => {
-    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-    const savedAnimationsEnabled = localStorage.getItem('animationsEnabled') !== 'false';
-    setDarkMode(savedDarkMode);
-    setAnimationsEnabled(savedAnimationsEnabled);
+  const dropdownRef = useRef(null);
+  const burgerButtonRef = useRef(null); // Référence pour le bouton burger
 
-    if (savedDarkMode) {
-      document.body.classList.add('dark-mode');
-    }
+  // Charger les préférences depuis localStorage (déjà géré dans ThemeContext)
+  useEffect(() => {
+    // Ce code peut être redondant si les préférences sont déjà chargées dans ThemeContext
   }, []);
 
   // Effet pour les animations du menu
@@ -47,29 +45,9 @@ export default function LightningHeader() {
         delay: open ? staggerMenuItems : 0
       }
     );
-  }, [open, animationsEnabled]);
+  }, [open, animationsEnabled, animate]);
 
-  // Gestion du mode sombre
-  const handleDarkModeToggle = () => {
-    const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
-    localStorage.setItem('darkMode', newDarkMode);
-
-    if (newDarkMode) {
-      document.body.classList.add('dark-mode');
-    } else {
-      document.body.classList.remove('dark-mode');
-    }
-  };
-
-  // Gestion de l'activation des animations
-  const handleAnimationsToggle = () => {
-    const newAnimationsEnabled = !animationsEnabled;
-    setAnimationsEnabled(newAnimationsEnabled);
-    localStorage.setItem('animationsEnabled', newAnimationsEnabled);
-  };
-
-  // Effet pour les éclairs
+  // Effet pour les éclairs (inchangé)
   useEffect(() => {
     let clouds = [];
     let interval;
@@ -138,24 +116,64 @@ export default function LightningHeader() {
     };
   }, [animationsEnabled]);
 
+  // Effet pour gérer les clics en dehors du menu déroulant
+  useEffect(() => {
+    // Fonction pour gérer les clics en dehors du dropdown
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        !burgerButtonRef.current.contains(event.target)
+      ) {
+        setOpen(false);
+      }
+    };
+
+    // Ajouter l'écouteur d'événement si le menu est ouvert
+    if (open) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    // Nettoyer l'écouteur d'événement lorsque le menu est fermé
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [open]);
+
   return (
     <div className="lightning-header" ref={scope}>
       {/* Navigation */}
       <nav className="nav_header">
-        <button className='btn_burger-header' onClick={() => setOpen(!open)}>
-          <img src='/images/menu_burger.svg' alt="Menu" />
+      <button
+          className={classNames("btn_burger-header", {
+            "dark-mode": isDarkMode,
+            "light-mode": !isDarkMode,
+          })}
+          onClick={() => setOpen(!open)}
+          ref={burgerButtonRef} // Attacher la référence au bouton burger
+          style={{ cursor: "pointer", background: "none", border: "none", padding: 0 }}
+        >
+          {/* Utiliser un SVG ou une image comme icône de burger */}
+          <img
+            src={isDarkMode ? '/images/menu_burgerDarkMode.svg' : '/images/menu_burger.svg'}
+            alt="Menu"
+            className="burger-icon"
+          />
         </button>
       </nav>
 
       {/* Menu déroulant */}
-      <motion.div className="dropdown-menu">
+      <motion.div
+        className="dropdown-menu"
+        ref={dropdownRef} 
+      >
         <div className="dropdown-item">
           <span>Mode Sombre</span>
           <label className="switch">
             <input
               type="checkbox"
-              checked={darkMode}
-              onChange={handleDarkModeToggle}
+              checked={isDarkMode}
+              onChange={toggleDarkMode} // Utiliser la fonction toggleDarkMode du contexte
             />
             <span className="slider round"></span>
           </label>
@@ -166,7 +184,7 @@ export default function LightningHeader() {
             <input
               type="checkbox"
               checked={animationsEnabled}
-              onChange={handleAnimationsToggle}
+              onChange={toggleAnimations} // Utiliser la fonction toggleAnimations du contexte
             />
             <span className="slider round"></span>
           </label>

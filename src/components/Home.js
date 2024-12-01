@@ -7,8 +7,11 @@ import ProjectsSlider from "./ProjectsSlider";
 import CvMobile from "./CvMobile";
 import IdeesMobile from "./IdeesMobile";
 import LightningHeader from "./LightningHeader";
+import classNames from "classnames";
+import useTheme from "../hooks/useTheme";
 
 export default function Home() {
+  const { isDarkMode } = useTheme();
   const [activeSection, setActiveSection] = useState(null);
 
   // État pour gérer la visibilité de la bulle de dialogue
@@ -31,7 +34,10 @@ export default function Home() {
 
   // Fonction pour afficher le home_footer avec animation d'entrée
   const showHomeFooter = () => {
-    if (homeFooterRef.current && homeFooterRef.current.style.display !== "flex") {
+    if (
+      homeFooterRef.current &&
+      homeFooterRef.current.style.display !== "flex"
+    ) {
       homeFooterRef.current.style.display = "flex";
       homeFooterRef.current.classList.add(
         "animate__animated",
@@ -49,13 +55,19 @@ export default function Home() {
           );
         }
       };
-      homeFooterRef.current.addEventListener("animationend", handleAnimationEnd);
+      homeFooterRef.current.addEventListener(
+        "animationend",
+        handleAnimationEnd
+      );
     }
   };
 
   // Fonction pour cacher le home_footer avec option d'immédiateté
   const hideHomeFooter = (immediate = false) => {
-    if (homeFooterRef.current && homeFooterRef.current.style.display !== "none") {
+    if (
+      homeFooterRef.current &&
+      homeFooterRef.current.style.display !== "none"
+    ) {
       if (immediate) {
         // Cacher immédiatement sans animation
         homeFooterRef.current.style.display = "none";
@@ -83,7 +95,10 @@ export default function Home() {
             );
           }
         };
-        homeFooterRef.current.addEventListener("animationend", handleAnimationEnd);
+        homeFooterRef.current.addEventListener(
+          "animationend",
+          handleAnimationEnd
+        );
       }
     }
   };
@@ -111,7 +126,10 @@ export default function Home() {
             );
           }
         };
-        cvFooterRef.current.addEventListener("animationend", handleAnimationEnd);
+        cvFooterRef.current.addEventListener(
+          "animationend",
+          handleAnimationEnd
+        );
       }
     }
   }, [activeSection]);
@@ -175,10 +193,7 @@ export default function Home() {
         "animate__fadeOutRight"
       );
     } else if (section === "Idées") {
-      btnCvRef.current.classList.add(
-        "animate__animated",
-        "animate__fadeOutUp"
-      );
+      btnCvRef.current.classList.add("animate__animated", "animate__fadeOutUp");
       btnProjectsRef.current.classList.add(
         "animate__animated",
         "animate__rotateOutUpRight"
@@ -278,38 +293,42 @@ export default function Home() {
         {!activeSection && (
           <footer ref={homeFooterRef} className="home_footer">
             {/* Contenu du home_footer */}
-            <a
-              href="https://www.linkedin.com/in/gabriel-taca-7a65961a/?originalSubdomain=ca"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="footer_link"
-            >
-              <img
-                src="/images/LinkedIn_icon.svg"
-                alt="LinkedIn"
-                className="footer_icon"
-              />
-            </a>
-            <a
-              href="mailto:gabrieltaca117@gmail.com"
-              className="footer_link"
-            >
-              <img
-                src="/images/mail.svg"
-                alt="Email"
-                className="footer_icon"
-              />
-            </a>
+            <button
+              className={classNames("svg-icon home-linkedin", {
+                "dark-mode": isDarkMode,
+                "light-mode": !isDarkMode,
+              })}
+              title="LinkedIn"
+              onClick={() =>
+                window.open(
+                  "https://www.linkedin.com/in/gabriel-taca-7a65961a/?originalSubdomain=ca",
+                  "_blank"
+                )
+              }
+              style={{ cursor: "pointer", marginRight: "10px" }}
+            ></button>
+            <button
+              className={classNames("svg-icon home-mail", {
+                "dark-mode": isDarkMode,
+                "light-mode": !isDarkMode,
+              })}
+              title="Email"
+              onClick={() =>
+                (window.location.href = "mailto:gabrieltaca117@gmail.com")
+              }
+              style={{ cursor: "pointer" }}
+            ></button>
+
             {/* Modifier l'icône du téléphone pour ajouter l'événement onClick */}
-            <div className="footer_link" style={{ position: "relative" }}>
-              <img
-                src="/images/call.svg"
-                alt="Call"
-                className="footer_icon"
-                onClick={handlePhoneClick} // Gérer le clic pour afficher la bulle
-                style={{ cursor: "pointer" }}
-                ref={phoneIconRef}
-              />
+            <button
+              className={classNames("svg-icon home-call", {
+                "dark-mode": isDarkMode,
+                "light-mode": !isDarkMode,
+              })}
+              onClick={handlePhoneClick}
+              style={{ cursor: "pointer" }}
+              ref={phoneIconRef}
+            >
               {/* Utiliser AnimatePresence pour l'animation de la bulle */}
               <AnimatePresence>
                 {isBubbleVisible && (
@@ -323,8 +342,8 @@ export default function Home() {
                     style={{
                       position: "absolute",
                       bottom: "80px",
-                      right: "0",
-                      background: "#fff",
+                      right: "10%",
+                      background: "var(--btnBlankEnd)",
                       borderRadius: "30px",
                       padding: "10px",
                       paddingBottom: "25px",
@@ -333,16 +352,25 @@ export default function Home() {
                     }}
                   >
                     <p style={{ margin: 0, fontWeight: "600" }}>Gabriel Taca</p>
-                    <div style={{ display: "flex", alignItems: "center", marginTop: "5px" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        marginTop: "5px",
+                      }}
+                    >
                       <a
                         href="tel:+14189303703"
                         style={{ textDecoration: "none", flexGrow: 1 }}
                       >
                         +1 (418) 930-3703
                       </a>
-                      <img
-                        src="/images/content_copy.svg"
-                        alt="Copy"
+                      <div
+                        className={classNames("svg-icon home-copy-call", {
+                          "dark-mode": isDarkMode,
+                          "light-mode": !isDarkMode,
+                        })}
+                        title="Copy"
                         onClick={copyPhoneNumber}
                         style={{ cursor: "pointer", marginLeft: "10px" }}
                       />
@@ -350,24 +378,19 @@ export default function Home() {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+            </button>
           </footer>
         )}
 
         {/* Afficher le cv_footer seulement dans la section CV */}
         {activeSection === "CV" && (
           <footer ref={cvFooterRef} className="cv_footer">
-            <a
+            <button
               href="/pdf/CV-Gabriel_Taca.pdf"
               download="CV-Gabriel_Taca.pdf"
               className="cv_footer-download"
             >
-              <img
-                src="/images/download.svg"
-                alt="Télécharger le CV"
-                className="cv_footer-download-icon"
-              />
-            </a>
+            </button>
           </footer>
         )}
       </div>

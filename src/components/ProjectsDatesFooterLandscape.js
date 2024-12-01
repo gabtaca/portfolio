@@ -76,9 +76,9 @@ export default function ProjectsDatesFooterLandscape({ projectsData, buttonPosit
                   width: "100%",
                   height: "15px",
                   backgroundColor: "transparent",
-                  borderBottom: "1.5px dashed #677684",
-                  borderLeft: groupIndex === 0 ? "1.5px dashed #677684" : "none", // Bordure à gauche seulement pour le premier groupe avec la même date
-                  borderRight: "1.5px dashed #677684", // Bordure à droite pour tous les groupes générés apres le premier
+                  borderBottom: "1.5px dashed var(--h2Color)",
+                  borderLeft: groupIndex === 0 ? "1.5px dashed var(--h2Color)" : "none", // Bordure à gauche seulement pour le premier groupe avec la même date
+                  borderRight: "1.5px dashed var(--h2Color)", // Bordure à droite pour tous les groupes générés apres le premier
                 }}
               ></div>
               {/* date */}

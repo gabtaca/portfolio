@@ -1,8 +1,7 @@
-// src/pages/_app.js
-import '../styles/styles.scss'; // Import global styles
+import '../styles/styles.scss'; // Import des styles globaux
 import { useEffect } from 'react';
 import Layout from '../components/Layout';
-
+import { ThemeProvider } from '../context/ThemeContext'; // Import du ThemeProvider
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
@@ -18,9 +17,11 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
+    <ThemeProvider>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </ThemeProvider>
   );
 }
 

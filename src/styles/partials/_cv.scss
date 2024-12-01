@@ -135,12 +135,13 @@
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 5px;
+  color: var(--mainTextColor);
   margin: 0;
 }
 
 .cv_item-meta {
   font-family: "Livvic", sans-serif;
-  color: #555;
+  color: var(--h2Color);
   font-size: 14px;
   margin-bottom: 10px;
 }
@@ -159,19 +160,20 @@
 }
 
 .cv_item-period {
-  color: #777;
+  color: var(--datesColor);
 }
 
 .cv_item-description {
   font-family: "Livvic", sans-serif;
   font-size: 16px;
-  color: #333;
+  color: var(--textColor);
 }
 
 .cv_item-skill {
   font-family: "Livvic", sans-serif;
   font-size: 16px;
   margin: 5px 0;
+  color: var(--textColor);
 }
 
 

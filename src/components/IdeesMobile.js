@@ -64,19 +64,6 @@ const IdeesMobile = () => {
         mais un bel endroit pour relancer l'inspiration en cas de besoin !
       </p>
 
-      {/* Flèche en bas */}
-      <div className="dashed-arrow">
-        <img
-          src="/images/arrow_up.svg"
-          alt="image de fleche par en haut"
-          className="dashed-arrow-head"
-        />
-        <div
-          className="dashed-arrow-line"
-          onAnimationEnd={handleArrowAnimationEnd}
-        ></div>
-      </div>
-
       {/* Conteneur des catégories au-dessus de la flèche */}
       <div className="categories-container">
         <div></div>
@@ -129,13 +116,26 @@ const IdeesMobile = () => {
           </div>
           
         ))}
+        
+      </div>
+            {/* Flèche en bas */}
+            <div className="dashed-arrow">
+        <img
+          src="/images/arrow_up.svg"
+          alt="image de fleche par en haut"
+          className="dashed-arrow-head"
+        />
+        <div
+          className="dashed-arrow-line"
+          onAnimationEnd={handleArrowAnimationEnd}
+        ></div>
       </div>
     </div>
   );
 };
 
 const getRandomPostItColor = () => {
-  const colors = ["#FFA9D0", "#FFFFB2", "#C5FEFF", "#C8F06E", "#FFC551"];
+  const colors = ["var(--postItPink)", "var(--postItYellow)", "var(--postItGreen)", "var(--postItBlue)", "var(--postItOrange)"];
   return colors[Math.floor(Math.random() * colors.length)];
 };
 

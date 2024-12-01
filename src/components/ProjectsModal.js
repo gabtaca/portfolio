@@ -1,3 +1,5 @@
+// src/components/ProjectsModalV2.jsx
+
 import React, { useState, useEffect, useRef } from "react";
 
 export default function ProjectsModalV2({
@@ -25,6 +27,7 @@ export default function ProjectsModalV2({
 
   useEffect(() => {
     if (isModalOpen) {
+      console.log("Modal is opening with 'modal-initial-open' animation.");
       setAnimationClass("modal-initial-open");
       setIsModalOpen(false); // Prevent re-triggering
     }
@@ -44,6 +47,7 @@ export default function ProjectsModalV2({
     modalRef.current.startX = startX;
     modalRef.current.startY = startY;
     setAnimationClass("");
+    console.log("Drag started:", { startX, startY });
   };
 
   const onDrag = (e) => {
@@ -55,16 +59,23 @@ export default function ProjectsModalV2({
     const deltaX = currentX - modalRef.current.startX;
     const deltaY = currentY - modalRef.current.startY;
 
+    const newX = Math.max(-dragLimits.x, Math.min(deltaX, dragLimits.x));
+    const newY = Math.max(-dragLimits.y, Math.min(deltaY, dragLimits.y));
+
     setPosition({
-      x: Math.max(-dragLimits.x, Math.min(deltaX, dragLimits.x)),
-      y: Math.max(-dragLimits.y, Math.min(deltaY, dragLimits.y)),
+      x: newX,
+      y: newY,
     });
+
+    console.log("Dragging:", { currentX, currentY, deltaX, deltaY, newX, newY });
   };
 
   const endDrag = () => {
     setIsDragging(false);
 
     const { x, y } = position;
+
+    console.log("Drag ended with position:", { x, y });
 
     if (Math.abs(x) > Math.abs(y)) {
       if (Math.abs(x) > swipeThreshold) {
@@ -136,10 +147,61 @@ export default function ProjectsModalV2({
     }, 500);
   };
 
-  // Add useEffect to monitor changes in animationClass for unexpected behaviors
+  // Fonction pour loguer les transformations actuelles
+  const logTransformations = () => {
+    if (modalRef.current) {
+      const computedStyle = window.getComputedStyle(modalRef.current);
+      const transform = computedStyle.getPropertyValue("transform");
+      console.log("Current Transform:", transform);
+    }
+  };
+
+  // Appeler logTransformations après chaque mise à jour de position ou d'animationClass
   useEffect(() => {
-    console.log(`Animation class updated to: ${animationClass}`);
-  }, [animationClass]);
+    logTransformations();
+  }, [position, animationClass]);
+
+  // Écouteur pour réinitialiser l'état après l'animation et ajouter des logs
+  useEffect(() => {
+    const modalElement = modalRef.current;
+
+    const handleAnimationStart = (e) => {
+      console.log(`Animation started: ${e.animationName}`);
+    };
+
+    const handleAnimationIteration = (e) => {
+      console.log(`Animation iteration: ${e.animationName}`);
+    };
+
+    const handleAnimationEnd = (e) => {
+      console.log(`Animation ended: ${e.animationName}`);
+      // Vérifiez quelle animation s'est terminée
+      if (
+        e.animationName === "modalOpenAndSpring" ||
+        e.animationName === "swipeInLeft" ||
+        e.animationName === "swipeInRight"
+      ) {
+        // Réinitialiser la classe d'animation si nécessaire
+        setAnimationClass("");
+        setPosition({ x: 0, y: 0 });
+        console.log("Reset animation class and position after animation end.");
+      }
+    };
+
+    if (modalElement) {
+      modalElement.addEventListener("animationstart", handleAnimationStart);
+      modalElement.addEventListener("animationiteration", handleAnimationIteration);
+      modalElement.addEventListener("animationend", handleAnimationEnd);
+    }
+
+    return () => {
+      if (modalElement) {
+        modalElement.removeEventListener("animationstart", handleAnimationStart);
+        modalElement.removeEventListener("animationiteration", handleAnimationIteration);
+        modalElement.removeEventListener("animationend", handleAnimationEnd);
+      }
+    };
+  }, []);
 
   const handleArrowClick = (direction) => {
     if (direction === "left") {
@@ -159,9 +221,9 @@ export default function ProjectsModalV2({
 
   return (
     <div className="overlay" onClick={closeModalWithAnimation}>
+      {/* Wrapper pour gérer les transformations de dragging */}
       <div
-        ref={modalRef}
-        className={`modal ${animationClass}`}
+        className="modal-wrapper"
         style={{
           transform: `translate(${position.x}px, ${position.y}px)`,
           transition: isDragging ? "none" : "transform 0.3s ease",
@@ -172,67 +234,73 @@ export default function ProjectsModalV2({
         onTouchMove={onDrag}
         onMouseUp={endDrag}
         onTouchEnd={endDrag}
-        onClick={(e) => e.stopPropagation()}
       >
-        <button
-          className="close_btn"
-          onClick={closeModalWithAnimation}
-          aria-label="Bouton fermer le modal"
-        />
-        <div className="date_modal">
-          <p>{project.date}</p>
-        </div>
-        <div className="modal_content">
-          <div className="modal_image-informations">
-            <div className="modal_image-container">
-              <img src={project.img} alt={project.imgAlt || "Project Image"} />
-            </div>
-            <div className="modal_text-informations">
-              <h2 className="modal_project-name">{project.name}</h2>
-              <h3 className="modal_project-type">{project.type}</h3>
-              <p className="modal_description">{project.description}</p>
-              <ul className="modal_tech-stack">
-                {project.stack.map((tech, index) => (
-                  <li key={index}>{tech}</li>
-                ))}
-              </ul>
-              <a
-          href={project.lien?.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="project-link"
-          onClick={(e) => {
-            e.preventDefault();
-            closeModalWithAnimation();
-            window.open(project.lien?.github, "_blank");
-          }}
+        {/* Modal avec les animations */}
+        <div
+          ref={modalRef}
+          className={`modal ${animationClass}`}
+          onClick={(e) => e.stopPropagation()}
         >
-          Voir le projet
-        </a>
-            </div>
+          <button
+            className="close_btn"
+            onClick={closeModalWithAnimation}
+            aria-label="Bouton fermer le modal"
+          />
+          <div className="date_modal">
+            <p>{project.date}</p>
           </div>
-          <div className="modal_footer">
-            <div className="modal_scrollIndex">
-              <img
-                src="/images/arrow_left_modal.svg"
-                alt="Arrow Left"
-                onClick={() => handleArrowClick("left")}
-              />
-              <div className="modal_scrollIndex-cells">
-                {validProjects.map((_, index) => (
-                  <div
-                    key={index}
-                    className={`scrollIndex_cell ${
-                      index === validIndex ? "active" : ""
-                    }`}
-                  ></div>
-                ))}
+          <div className="modal_content">
+            <div className="modal_image-informations">
+              <div className="modal_image-container">
+                <img src={project.img} alt={project.imgAlt || "Project Image"} />
               </div>
-              <img
-                src="/images/arrow_right_modal.svg"
-                alt="Arrow Right"
-                onClick={() => handleArrowClick("right")}
-              />
+              <div className="modal_text-informations">
+                <h2 className="modal_project-name">{project.name}</h2>
+                <h3 className="modal_project-type">{project.type}</h3>
+                <p className="modal_description">{project.description}</p>
+                <ul className="modal_tech-stack">
+                  {project.stack.map((tech, index) => (
+                    <li key={index}>{tech}</li>
+                  ))}
+                </ul>
+                <a
+                  href={project.lien?.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="project-link"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    closeModalWithAnimation();
+                    window.open(project.lien?.github, "_blank");
+                  }}
+                >
+                  Voir le projet
+                </a>
+              </div>
+            </div>
+            <div className="modal_footer">
+              <div className="modal_scrollIndex">
+                <img
+                  src="/images/arrow_left_modal.svg"
+                  alt="Arrow Left"
+                  onClick={() => handleArrowClick("left")}
+                />
+                <div className="modal_scrollIndex-cells">
+                  {validProjects.map((_, index) => (
+                    <div
+                      key={index}
+                      className={`scrollIndex_cell ${
+                        index === validIndex ? "active" : ""
+                      }`}
+                    ></div>
+                  ))}
+                </div>
+                <img
+                  src="/images/arrow_right_modal.svg"
+                  alt="Arrow Right"
+                  onClick={() => handleArrowClick("right")}
+                />
+              </div>
             </div>
           </div>
         </div>

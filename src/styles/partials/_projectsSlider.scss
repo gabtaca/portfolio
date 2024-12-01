@@ -28,7 +28,7 @@
     border-radius: 2.5px;
     object-fit: cover;
     position: relative;
-    border: 0.5px solid #c9d5e1;
+    border: 0.5px solid var(--btnBlank);
     border-radius: 2.5px;
     
   }
@@ -53,6 +53,16 @@
 
 .triangle-right {
   right: -49px; /* Adjust for alignment if needed */
+}
+
+/* Mode Sombre */
+.triangle.dark-mode {
+  background-image: url("/images/triangleDarkMode.svg");
+}
+
+/* Mode Clair */
+.triangle.light-mode {
+  background-image: url("/images/triangle.svg");
 }
 
 // Slider
@@ -101,13 +111,13 @@
 }
 
 .project-type {
-  color: #aeaeae;
+  color: var(--h2Color);
   font-size: 25px;
   font-family: "Italiana";
 }
 
 .project-name {
-  color: map-get($colors, "h2");
+  color: var(--h2Color);
   font-size: 35px;
   font-family: "Italiana";
   font-weight: 600;
@@ -140,7 +150,7 @@
           border-radius: 2.5px;
           object-fit: cover;
           position: relative;
-          border: 0.5px solid #c9d5e1;
+          border: 0.5px solid var(--btnBlank);
           border-radius: 100%;
         }
       }

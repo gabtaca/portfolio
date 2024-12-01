@@ -13,7 +13,7 @@
 
 .close_btn {
   position: absolute;
-  top: -55px;
+  top: -48px;
   right: -20px;
   background: transparent;
   border: none;
@@ -23,6 +23,12 @@
   background-repeat: no-repeat;
   width: 24px;
   height: 24px;
+  z-index: 501;
+}
+
+.modal-wrapper {
+  position: absolute;
+  top: 10%;
 }
 
 .modal {
@@ -38,6 +44,8 @@
   z-index: 1050;
   width: 80vw;
   height: calc(var(--vh, 1vh) * 70);
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
 
   .date_modal {
     position: absolute;
