@@ -4,8 +4,8 @@
   flex-direction: column;
   position: relative;
   font-family: "Livvic", sans-serif;
-  padding: 20px;
   text-align: center;
+  padding: 20px;
 }
 
 .idees-subtitle {
@@ -51,13 +51,53 @@
 /* Styles pour le conteneur des catégories */
 .categories-container {
 display: grid;
+height: auto;
 grid-column: 1;
-grid-row: auto;
-overflow-y: auto;
+overflow-y: scroll;
 }
 
 .category-section {
   width: 100%;
+}
+
+.categoryButton {
+  position: relative; /* Pour positionner le SVG absolument à l'intérieur */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Italiana", serif;
+  color: var(--h2Color);
+  width: 100%;
+  font-size: 24px;
+  margin: 5px 0;
+  background: rgba(0, 0, 0, 0.05); /* Couleur de fond légère */
+  border: none;
+  border-radius: 10px; /* Coins arrondis */
+  cursor: pointer;
+  padding: 20px; /* Padding pour agrandir la zone cliquable */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  overflow: hidden; /* Masquer tout débordement du SVG */
+}
+
+.categoryButton:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  transform: scale(1.05); /* Effet de zoom au survol */
+}
+
+/* Styles pour le SVG à l'intérieur des boutons */
+.svgAnimation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Permettre de cliquer sur le bouton même si SVG est dessus */
+}
+
+.animatedText {
+  fill: #000; /* Couleur du texte */
+  font-family: "Italiana", serif; /* Assurez-vous que la police est chargée */
+  pointer-events: none; /* Permettre de cliquer sur le bouton même si le texte est dessus */
 }
 
 .category-button {
@@ -85,27 +125,6 @@ overflow-y: auto;
   display: none;
 }
 
-@keyframes leafOpenLeft {
-  0% {
-    transform: rotate(-90deg) translateY(20px);
-    opacity: 0;
-  }
-  100% {
-    transform: rotate(0deg) translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes leafOpenRight {
-  0% {
-    transform: rotate(90deg) translateY(20px);
-    opacity: 0;
-  }
-  100% {
-    transform: rotate(0deg) translateY(0);
-    opacity: 1;
-  }
-}
 
 .post-it-container {
   display: grid;

@@ -1,7 +1,6 @@
 // src/components/Home.js
 
 import React, { useState, useRef, useEffect } from "react";
-import "animate.css";
 import { motion, AnimatePresence } from "framer-motion"; // Importation de Framer Motion
 import ProjectsSlider from "./ProjectsSlider";
 import CvMobile from "./CvMobile";
@@ -9,130 +8,206 @@ import IdeesMobile from "./IdeesMobile";
 import LightningHeader from "./LightningHeader";
 import classNames from "classnames";
 import useTheme from "../hooks/useTheme";
+import "animate.css"; // Importer Animate.css
 
 export default function Home() {
-  const { isDarkMode } = useTheme();
+  const { isDarkMode, toggleDarkMode, animationsEnabled, toggleAnimations } =
+    useTheme();
   const [activeSection, setActiveSection] = useState(null);
-
-  // État pour gérer la visibilité de la bulle de dialogue
   const [isBubbleVisible, setIsBubbleVisible] = useState(false);
-
-  // Références pour les boutons
-  const btnIdeasRef = useRef(null);
-  const btnProjectsRef = useRef(null);
-  const btnCvRef = useRef(null);
-
-  // Référence pour le footer de la page d'accueil
-  const homeFooterRef = useRef(null);
-
-  // Référence pour le footer du CV
-  const cvFooterRef = useRef(null);
 
   // Références pour la bulle et l'icône du téléphone
   const bubbleRef = useRef(null);
   const phoneIconRef = useRef(null);
 
-  // Fonction pour afficher le home_footer avec animation d'entrée
-  const showHomeFooter = () => {
-    if (
-      homeFooterRef.current &&
-      homeFooterRef.current.style.display !== "flex"
-    ) {
-      homeFooterRef.current.style.display = "flex";
-      homeFooterRef.current.classList.add(
-        "animate__animated",
-        "animate__backInUp"
-      );
-      const handleAnimationEnd = () => {
-        if (homeFooterRef.current) {
-          homeFooterRef.current.classList.remove(
-            "animate__animated",
-            "animate__backInUp"
-          );
-          homeFooterRef.current.removeEventListener(
-            "animationend",
-            handleAnimationEnd
-          );
-        }
-      };
-      homeFooterRef.current.addEventListener(
-        "animationend",
-        handleAnimationEnd
-      );
-    }
-  };
+  // Références pour les boutons de navigation
+  const btnCvRef = useRef(null);
+  const btnProjectsRef = useRef(null);
+  const btnIdeasRef = useRef(null);
 
-  // Fonction pour cacher le home_footer avec option d'immédiateté
-  const hideHomeFooter = (immediate = false) => {
-    if (
-      homeFooterRef.current &&
-      homeFooterRef.current.style.display !== "none"
-    ) {
-      if (immediate) {
-        // Cacher immédiatement sans animation
-        homeFooterRef.current.style.display = "none";
-        homeFooterRef.current.classList.remove(
+  // Fonction pour naviguer vers une section spécifique avec animations
+  const handleSectionClick = (section) => {
+    console.log(`handleSectionClick called with section: ${section}`);
+
+    if (activeSection === section) {
+      console.log("Resetting view to home.");
+      resetView();
+      return;
+    }
+
+    console.log(`Setting activeSection to: ${section}`);
+
+    // Appliquer les animations en fonction de la section cible
+    if (section === "CV") {
+      // Animer les boutons Projets et Idées pour sortir
+      if (btnIdeasRef.current) {
+        btnIdeasRef.current.classList.add(
           "animate__animated",
-          "animate__backInUp",
-          "animate__backOutDown"
+          "animate__rotateOutDownLeft"
         );
-      } else {
-        // Cacher avec animation
-        homeFooterRef.current.classList.add(
-          "animate__animated",
-          "animate__backOutDown"
-        );
-        const handleAnimationEnd = () => {
-          if (homeFooterRef.current) {
-            homeFooterRef.current.style.display = "none";
-            homeFooterRef.current.classList.remove(
-              "animate__animated",
-              "animate__backOutDown"
-            );
-            homeFooterRef.current.removeEventListener(
-              "animationend",
-              handleAnimationEnd
-            );
-          }
-        };
-        homeFooterRef.current.addEventListener(
+        btnIdeasRef.current.addEventListener(
           "animationend",
-          handleAnimationEnd
+          () => {
+            btnIdeasRef.current.classList.remove(
+              "animate__animated",
+              "animate__rotateOutDownLeft"
+            );
+          },
+          { once: true }
+        );
+      }
+      if (btnProjectsRef.current) {
+        btnProjectsRef.current.classList.add(
+          "animate__animated",
+          "animate__rotateOutDownRight"
+        );
+        btnProjectsRef.current.addEventListener(
+          "animationend",
+          () => {
+            btnProjectsRef.current.classList.remove(
+              "animate__animated",
+              "animate__rotateOutDownRight"
+            );
+          },
+          { once: true }
+        );
+      }
+    } else if (section === "Projets") {
+      // Animer les boutons CV et Idées pour sortir
+      if (btnIdeasRef.current) {
+        btnIdeasRef.current.classList.add(
+          "animate__animated",
+          "animate__fadeOutLeft"
+        );
+        btnIdeasRef.current.addEventListener(
+          "animationend",
+          () => {
+            btnIdeasRef.current.classList.remove(
+              "animate__animated",
+              "animate__fadeOutLeft"
+            );
+          },
+          { once: true }
+        );
+      }
+      if (btnCvRef.current) {
+        btnCvRef.current.classList.add(
+          "animate__animated",
+          "animate__fadeOutRight"
+        );
+        btnCvRef.current.addEventListener(
+          "animationend",
+          () => {
+            btnCvRef.current.classList.remove(
+              "animate__animated",
+              "animate__fadeOutRight"
+            );
+          },
+          { once: true }
+        );
+      }
+    } else if (section === "Idées") {
+      // Animer les boutons CV et Projets pour sortir
+      if (btnCvRef.current) {
+        btnCvRef.current.classList.add(
+          "animate__animated",
+          "animate__fadeOutUp"
+        );
+        btnCvRef.current.addEventListener(
+          "animationend",
+          () => {
+            btnCvRef.current.classList.remove(
+              "animate__animated",
+              "animate__fadeOutUp"
+            );
+          },
+          { once: true }
+        );
+      }
+      if (btnProjectsRef.current) {
+        btnProjectsRef.current.classList.add(
+          "animate__animated",
+          "animate__rotateOutUpRight"
+        );
+        btnProjectsRef.current.addEventListener(
+          "animationend",
+          () => {
+            btnProjectsRef.current.classList.remove(
+              "animate__animated",
+              "animate__rotateOutUpRight"
+            );
+          },
+          { once: true }
         );
       }
     }
-  };
 
-  // Utiliser useEffect pour détecter quand la section CV est active
-  useEffect(() => {
-    if (activeSection === "CV") {
-      // Ajouter l'animation "slideInUp" au cv_footer
-      if (cvFooterRef.current) {
-        cvFooterRef.current.classList.add(
-          "animate__animated",
-          "animate__slideInUp"
-        );
+    // Définir la nouvelle section active après un court délai pour permettre l'animation
+    setTimeout(() => {
+      setActiveSection(section);
 
-        // Supprimer l'animation après qu'elle ait joué une fois
-        const handleAnimationEnd = () => {
-          if (cvFooterRef.current) {
-            cvFooterRef.current.classList.remove(
-              "animate__animated",
-              "animate__slideInUp"
-            );
-            cvFooterRef.current.removeEventListener(
-              "animationend",
-              handleAnimationEnd
-            );
-          }
-        };
-        cvFooterRef.current.addEventListener(
+      // Ajouter l'animation d'entrée pour le bouton correspondant
+      if (section === "CV" && btnCvRef.current) {
+        btnCvRef.current.classList.add("animate__animated", "animate__fadeIn");
+        btnCvRef.current.addEventListener(
           "animationend",
-          handleAnimationEnd
+          () => {
+            btnCvRef.current.classList.remove(
+              "animate__animated",
+              "animate__fadeIn"
+            );
+          },
+          { once: true }
+        );
+      } else if (section === "Projets" && btnProjectsRef.current) {
+        btnProjectsRef.current.classList.add(
+          "animate__animated",
+          "animate__fadeIn"
+        );
+        btnProjectsRef.current.addEventListener(
+          "animationend",
+          () => {
+            btnProjectsRef.current.classList.remove(
+              "animate__animated",
+              "animate__fadeIn"
+            );
+          },
+          { once: true }
+        );
+      } else if (section === "Idées" && btnIdeasRef.current) {
+        btnIdeasRef.current.classList.add(
+          "animate__animated",
+          "animate__fadeIn"
+        );
+        btnIdeasRef.current.addEventListener(
+          "animationend",
+          () => {
+            btnIdeasRef.current.classList.remove(
+              "animate__animated",
+              "animate__fadeIn"
+            );
+          },
+          { once: true }
         );
       }
-    }
-  }, [activeSection]);
+    }, 500); // Ajustez ce délai selon la durée de vos animations
+  };
+
+  // Réinitialiser la vue à l'état initial
+  const resetView = () => {
+    setActiveSection(null);
+  };
+
+  // Fonction pour copier le numéro de téléphone dans le presse-papiers
+  const copyPhoneNumber = () => {
+    navigator.clipboard.writeText("+1 (418) 930-3703");
+    alert("Numéro copié dans le presse-papiers !");
+  };
+
+  // Fonction pour gérer le clic sur l'icône du téléphone
+  const handlePhoneClick = () => {
+    setIsBubbleVisible(!isBubbleVisible);
+  };
 
   // Utiliser useEffect pour gérer le clic en dehors de la bulle
   useEffect(() => {
@@ -156,143 +231,135 @@ export default function Home() {
     }
   }, [isBubbleVisible]);
 
-  // Gérer le clic sur les boutons des sections
-  const handleSectionClick = (section) => {
-    if (activeSection === section) {
-      resetView();
-      return;
-    }
-
-    // Cacher les footers en fonction de la section
-    if (section === "CV") {
-      // On ouvre la section CV
-      hideHomeFooter(); // Cacher le home_footer avec animation
-    } else {
-      // On ouvre Projets ou Idées
-      // Cacher le home_footer immédiatement sans animation
-      hideHomeFooter(true);
-    }
-
-    // Animer les boutons en fonction de la section sélectionnée
-    if (section === "CV") {
-      btnIdeasRef.current.classList.add(
-        "animate__animated",
-        "animate__rotateOutDownLeft"
-      );
-      btnProjectsRef.current.classList.add(
-        "animate__animated",
-        "animate__rotateOutDownRight"
-      );
-    } else if (section === "Projets") {
-      btnIdeasRef.current.classList.add(
-        "animate__animated",
-        "animate__fadeOutLeft"
-      );
-      btnCvRef.current.classList.add(
-        "animate__animated",
-        "animate__fadeOutRight"
-      );
-    } else if (section === "Idées") {
-      btnCvRef.current.classList.add("animate__animated", "animate__fadeOutUp");
-      btnProjectsRef.current.classList.add(
-        "animate__animated",
-        "animate__rotateOutUpRight"
-      );
-    }
-
-    // Après les animations, cacher les boutons et afficher la section
-    const handleAnimationEnd = (event) => {
-      event.target.style.display = "none";
-      event.target.removeEventListener("animationend", handleAnimationEnd);
-
-      // Mettre à jour la section active
-      setActiveSection(section);
-    };
-
-    btnIdeasRef.current.addEventListener("animationend", handleAnimationEnd);
-    btnProjectsRef.current.addEventListener("animationend", handleAnimationEnd);
-    btnCvRef.current.addEventListener("animationend", handleAnimationEnd);
+  // Variants pour les animations de Framer Motion
+  const buttonVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 },
   };
 
-  // Réinitialiser la vue à l'état initial
-  const resetView = () => {
-    // Réinitialiser les boutons
-    btnIdeasRef.current.style.display = "block";
-    btnProjectsRef.current.style.display = "block";
-    btnCvRef.current.style.display = "block";
-
-    btnIdeasRef.current.classList.remove(
-      "animate__animated",
-      "animate__rotateOutDownLeft",
-      "animate__fadeOutLeft"
-    );
-    btnProjectsRef.current.classList.remove(
-      "animate__animated",
-      "animate__rotateOutDownRight",
-      "animate__rotateOutUpRight"
-    );
-    btnCvRef.current.classList.remove(
-      "animate__animated",
-      "animate__fadeOutRight",
-      "animate__fadeOutUp"
-    );
-
-    // Afficher le home_footer avec animation
-    showHomeFooter();
-
-    // Mettre la section active à null
-    setActiveSection(null);
-  };
-
-  // Fonction pour copier le numéro de téléphone dans le presse-papiers
-  const copyPhoneNumber = () => {
-    navigator.clipboard.writeText("+1 (418) 930-3703");
-    alert("Numéro copié dans le presse-papiers !");
-  };
-
-  // Fonction pour gérer le clic sur l'icône du téléphone
-  const handlePhoneClick = () => {
-    setIsBubbleVisible(!isBubbleVisible);
+  const sectionVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+    exit: { opacity: 0 },
   };
 
   return (
     <>
-      <LightningHeader />
+      {/* Passer handleSectionClick en tant que prop navigateTo */}
+      <LightningHeader navigateTo={handleSectionClick} />
       <div className="home_container">
         <nav className="nav_main-home">
-          <button
-            ref={btnCvRef}
-            className="btn_cv-main-home text-h2-100 text-28 hover-underline font-italiana"
-            onClick={() => handleSectionClick("CV")}
+
+          {/* Afficher les boutons de navigation en fonction de la section active */}
+          <motion.div
+            className="nav_buttons"
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={buttonVariants}
+            transition={{ duration: 0.5 }}
           >
-            CV
-          </button>
-          <button
-            ref={btnProjectsRef}
-            className="btn_projets-main-home text-h2-100 text-28 hover-underline font-italiana"
-            onClick={() => handleSectionClick("Projets")}
-          >
-            Projets
-          </button>
-          <button
-            ref={btnIdeasRef}
-            className="btn_idees-main-home text-h2-100 text-28 hover-underline font-italiana"
-            onClick={() => handleSectionClick("Idées")}
-          >
-            Idées
-          </button>
+            {activeSection === null && (
+              <>
+                <button
+                  ref={btnCvRef}
+                  className="btn_cv-main-home text-h2-100 text-28 hover-underline font-italiana"
+                  onClick={() => handleSectionClick("CV")}
+                >
+                  CV
+                </button>
+                <button
+                  ref={btnProjectsRef}
+                  className="btn_projets-main-home text-h2-100 text-28 hover-underline font-italiana"
+                  onClick={() => handleSectionClick("Projets")}
+                >
+                  Projets
+                </button>
+                <button
+                  ref={btnIdeasRef}
+                  className="btn_idees-main-home text-h2-100 text-28 hover-underline font-italiana"
+                  onClick={() => handleSectionClick("Idées")}
+                >
+                  Idées
+                </button>
+              </>
+            )}
+            {activeSection === "CV" && (
+              <button
+                ref={btnCvRef}
+                className="btn_cv-main-home text-h2-100 text-28 hover-underline font-italiana"
+                onClick={() => handleSectionClick("CV")}
+              >
+                CV
+              </button>
+            )}
+            {activeSection === "Projets" && (
+              <button
+                ref={btnProjectsRef}
+                className="btn_projets-main-home text-h2-100 text-28 hover-underline font-italiana"
+                onClick={() => handleSectionClick("Projets")}
+              >
+                Projets
+              </button>
+            )}
+            {activeSection === "Idées" && (
+              <button
+                ref={btnIdeasRef}
+                className="btn_idees-main-home text-h2-100 text-28 hover-underline font-italiana"
+                onClick={() => handleSectionClick("Idées")}
+              >
+                Idées
+              </button>
+            )}
+          </motion.div>
         </nav>
 
         <div className="content-container">
-          {activeSection === "CV" && <CvMobile />}
-          {activeSection === "Projets" && <ProjectsSlider />}
-          {activeSection === "Idées" && <IdeesMobile />}
+          <AnimatePresence mode="wait">
+            {activeSection === "CV" && (
+              <motion.div
+                key="cv"
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                variants={sectionVariants}
+                transition={{ duration: 0.5 }}
+              >
+                <CvMobile />
+              </motion.div>
+            )}
+            {activeSection === "Projets" && (
+              <motion.div
+                key="projets"
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                variants={sectionVariants}
+                transition={{ duration: 0.5 }}
+              >
+                <ProjectsSlider />
+              </motion.div>
+            )}
+            {activeSection === "Idées" && (
+              <motion.div
+                key="idees"
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                variants={sectionVariants}
+                transition={{ duration: 0.5 }}
+              >
+                <IdeesMobile />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Afficher le home_footer seulement si aucune section n'est active */}
         {!activeSection && (
-          <footer ref={homeFooterRef} className="home_footer">
-            {/* Contenu du home_footer */}
+          <footer className="home_footer">
+            {/* LinkedIn */}
             <button
               className={classNames("svg-icon home-linkedin", {
                 "dark-mode": isDarkMode,
@@ -307,6 +374,7 @@ export default function Home() {
               }
               style={{ cursor: "pointer", marginRight: "10px" }}
             ></button>
+            {/* Email */}
             <button
               className={classNames("svg-icon home-mail", {
                 "dark-mode": isDarkMode,
@@ -319,17 +387,19 @@ export default function Home() {
               style={{ cursor: "pointer" }}
             ></button>
 
-            {/* Modifier l'icône du téléphone pour ajouter l'événement onClick */}
-            <button
-              className={classNames("svg-icon home-call", {
-                "dark-mode": isDarkMode,
-                "light-mode": !isDarkMode,
-              })}
-              onClick={handlePhoneClick}
-              style={{ cursor: "pointer" }}
-              ref={phoneIconRef}
-            >
-              {/* Utiliser AnimatePresence pour l'animation de la bulle */}
+            {/* Icône du téléphone et Bulle de Dialogue */}
+            <div className="phone-container" style={{ position: "relative" }}>
+              <button
+                className={classNames("svg-icon home-call", {
+                  "dark-mode": isDarkMode,
+                  "light-mode": !isDarkMode,
+                })}
+                onClick={handlePhoneClick}
+                style={{ cursor: "pointer" }}
+                ref={phoneIconRef}
+              ></button>
+
+              {/* Bulle de Dialogue */}
               <AnimatePresence>
                 {isBubbleVisible && (
                   <motion.div
@@ -339,17 +409,6 @@ export default function Home() {
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.3 }}
                     className="comic_bubble"
-                    style={{
-                      position: "absolute",
-                      bottom: "80px",
-                      right: "10%",
-                      background: "var(--btnBlankEnd)",
-                      borderRadius: "30px",
-                      padding: "10px",
-                      paddingBottom: "25px",
-                      zIndex: 1,
-                      width: "290px",
-                    }}
                   >
                     <p style={{ margin: 0, fontWeight: "600" }}>Gabriel Taca</p>
                     <div
@@ -365,7 +424,7 @@ export default function Home() {
                       >
                         +1 (418) 930-3703
                       </a>
-                      <div
+                      <button
                         className={classNames("svg-icon home-copy-call", {
                           "dark-mode": isDarkMode,
                           "light-mode": !isDarkMode,
@@ -373,24 +432,32 @@ export default function Home() {
                         title="Copy"
                         onClick={copyPhoneNumber}
                         style={{ cursor: "pointer", marginLeft: "10px" }}
-                      />
+                      ></button>
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
-            </button>
+            </div>
           </footer>
         )}
 
         {/* Afficher le cv_footer seulement dans la section CV */}
         {activeSection === "CV" && (
-          <footer ref={cvFooterRef} className="cv_footer">
-            <button
+          <footer className="cv_footer">
+            <a
               href="/pdf/CV-Gabriel_Taca.pdf"
               download="CV-Gabriel_Taca.pdf"
               className="cv_footer-download"
             >
-            </button>
+              <button
+                className={classNames("svg-icon cv_footer-download", {
+                  "dark-mode": isDarkMode,
+                  "light-mode": !isDarkMode,
+                })}
+                title="Télécharger le CV"
+                style={{ cursor: "pointer" }}
+              ></button>
+            </a>
           </footer>
         )}
       </div>

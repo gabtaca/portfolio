@@ -16,6 +16,7 @@ function MyApp({ Component, pageProps }) {
     return () => window.removeEventListener("resize", setVH);
   }, []);
 
+
   return (
     <ThemeProvider>
       <Layout>

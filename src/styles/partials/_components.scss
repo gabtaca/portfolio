@@ -238,6 +238,12 @@ body.single-toggle .drop:nth-child(10) {
   flex-direction: column;
   align-items: center;
   width: 100%;
+  justify-content: center;
+
+  .nav_buttons {
+  display: flex;
+  flex-direction: column;
+  }
 }
 
 .content-container {
@@ -248,17 +254,17 @@ body.single-toggle .drop:nth-child(10) {
 
 .btn_cv-main-home {
   color: var(--h2Color);
-  padding: 5px;
+  padding: 7px;
 }
 
 .btn_projets-main-home {
   color: var(--h2Color);
-  padding: 5px;
+  padding: 7px;
 }
 
 .btn_idees-main-home {
   color: var(--h2Color);
-  padding: 5px;
+  padding: 7px;
 }
 
 .main_home {
@@ -332,7 +338,7 @@ body.single-toggle .drop:nth-child(10) {
   bottom: 0;
   width: 100%;
   height: 60px;
-  background-color:  var(--bgBody);
+  background-color: var(--bgBody);
   border-top: 1px solid #ddd;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -347,12 +353,12 @@ body.single-toggle .drop:nth-child(10) {
 }
 
 .svg-icon {
-  width: 40px; 
+  width: 40px;
   height: 40px;
-  background-size: contain; 
+  background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  transition: background-image 0.3s ease; 
+  transition: background-image 0.3s ease;
 }
 
 /* Mode Sombre */
@@ -395,6 +401,15 @@ body.single-toggle .drop:nth-child(10) {
   background-image: url("/images/content_copy.svg"); /* Remplacez par votre SVG clair */
 }
 
+/* Mode Sombre */
+.cv_footer-download.dark-mode {
+  background-image: url("/images/downloadDarkMode.svg"); /* Remplacez par votre SVG sombre */
+}
+
+/* Mode Clair */
+.cv_footer-download.light-mode {
+  background-image: url("/images/download.svg"); /* Remplacez par votre SVG clair */
+}
 // Speech bubble
 
 .comic_bubble {
@@ -405,7 +420,7 @@ body.single-toggle .drop:nth-child(10) {
   align-items: center;
   bottom: 60px;
   z-index: 1;
-    border-color: var(--btnBlankEnd);
+  border-color: var(--btnBlankEnd);
   -webkit-box-shadow: 5px 4px 4px 1px var(--boxShadow);
   box-shadow: 5px 4px 4px 1px var(--boxShadow);
 }
@@ -413,7 +428,7 @@ body.single-toggle .drop:nth-child(10) {
 .comic_bubble:after {
   content: "";
   position: absolute;
-  box-shadow: var(--boxShadow)  5px 5px 4px 0px;
+  box-shadow: var(--boxShadow) 5px 5px 4px 0px;
   -moz-transform: rotate(35deg);
   -webkit-transform: rotate(35deg);
   bottom: -8px;
@@ -436,5 +451,4 @@ body.single-toggle .drop:nth-child(10) {
   color: var(--textColor);
   text-decoration: none;
   background-color: var(--btnBlankEnd);
-
 }

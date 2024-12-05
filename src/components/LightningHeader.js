@@ -1,124 +1,20 @@
 // src/components/LightningHeader.jsx
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useAnimate, stagger, motion } from 'framer-motion';
+import { motion, AnimatePresence, stagger } from 'framer-motion';
 import useTheme from '../hooks/useTheme';
 import classNames from 'classnames';
 
-export default function LightningHeader() {
+
+export default function LightningHeader({ navigateTo }) { // Recevoir navigateTo en prop
   const { isDarkMode, toggleDarkMode, animationsEnabled, toggleAnimations } = useTheme(); // Accès au thème via le hook
   const [open, setOpen] = useState(false);
-  const [scope, animate] = useAnimate();
 
   const dropdownRef = useRef(null);
   const burgerButtonRef = useRef(null); // Référence pour le bouton burger
 
-  // Charger les préférences depuis localStorage (déjà géré dans ThemeContext)
-  useEffect(() => {
-    // Ce code peut être redondant si les préférences sont déjà chargées dans ThemeContext
-  }, []);
-
-  // Effet pour les animations du menu
-  useEffect(() => {
-    const staggerMenuItems = stagger(0.1, { startDelay: 0.25 });
-
-    animate(
-      ".dropdown-menu",
-      {
-        height: open ? 'auto' : 0,
-        opacity: open ? 1 : 0
-      },
-      {
-        type: "spring",
-        bounce: 0,
-        duration: animationsEnabled ? 0.4 : 0
-      }
-    );
-
-    animate(
-      ".dropdown-item",
-      open
-        ? { opacity: 1, scale: 1, x: 0 }
-        : { opacity: 0, scale: 0.3, x: -50 },
-      {
-        duration: animationsEnabled ? 0.2 : 0,
-        delay: open ? staggerMenuItems : 0
-      }
-    );
-  }, [open, animationsEnabled, animate]);
-
-  // Effet pour les éclairs (inchangé)
-  useEffect(() => {
-    let clouds = [];
-    let interval;
-
-    function handleResize() {
-      clouds.forEach((cloud) => {
-        positionCloud(cloud);
-      });
-    }
-
-    function positionCloud(cloud) {
-      const parentWidth = cloud.parentElement.clientWidth;
-      const cloudWidth = cloud.clientWidth || 300;
-      const maxOffset = (parentWidth - cloudWidth) / 2;
-      const minOffset = -maxOffset;
-      const randomOffset = Math.random() * (maxOffset - minOffset) + minOffset;
-      cloud.style.setProperty('--random-x', `${randomOffset}px`);
-    }
-
-    if (typeof window !== 'undefined' && animationsEnabled) {
-      clouds = document.querySelectorAll('.cloud');
-
-      clouds.forEach((cloud) => {
-        positionCloud(cloud);
-      });
-
-      window.addEventListener('resize', handleResize);
-
-      let lastHueRotation = null;
-
-      function getRandomHueRotation() {
-        return Math.floor(Math.random() * 360);
-      }
-
-      function flashLightning(hueRotation) {
-        const randomCloud = clouds[Math.floor(Math.random() * clouds.length)];
-
-        if (randomCloud) {
-          randomCloud.style.filter = `brightness(1.2) contrast(1.2) sepia(0.6) saturate(1.7) hue-rotate(${hueRotation}deg)`;
-
-          setTimeout(() => {
-            randomCloud.style.filter = 'none';
-          }, 300);
-        }
-      }
-
-      function triggerLightning() {
-        const hueRotation = getRandomHueRotation();
-        lastHueRotation = hueRotation;
-
-        flashLightning(hueRotation);
-
-        if (Math.random() < 0.3) {
-          setTimeout(() => flashLightning(lastHueRotation), 200);
-        }
-      }
-
-      interval = setInterval(triggerLightning, Math.random() * 5000 + 1000);
-    }
-
-    return () => {
-      if (interval) clearInterval(interval);
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('resize', handleResize);
-      }
-    };
-  }, [animationsEnabled]);
-
   // Effet pour gérer les clics en dehors du menu déroulant
   useEffect(() => {
-    // Fonction pour gérer les clics en dehors du dropdown
     const handleClickOutside = (event) => {
       if (
         dropdownRef.current &&
@@ -129,22 +25,42 @@ export default function LightningHeader() {
       }
     };
 
-    // Ajouter l'écouteur d'événement si le menu est ouvert
     if (open) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
-    // Nettoyer l'écouteur d'événement lorsque le menu est fermé
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [open]);
 
+  // Variants pour les animations de Framer Motion
+  const menuVariants = {
+    hidden: { height: 0, opacity: 0 },
+    visible: { height: 'auto', opacity: 1 },
+    exit: { height: 0, opacity: 0 },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -10 },
+  };
+
+  const listVariants = {
+    visible: {
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+    hidden: {},
+  };
+
   return (
-    <div className="lightning-header" ref={scope}>
+    <div className="lightning-header">
       {/* Navigation */}
       <nav className="nav_header">
-      <button
+        <button
           className={classNames("btn_burger-header", {
             "dark-mode": isDarkMode,
             "light-mode": !isDarkMode,
@@ -163,33 +79,172 @@ export default function LightningHeader() {
       </nav>
 
       {/* Menu déroulant */}
-      <motion.div
-        className="dropdown-menu"
-        ref={dropdownRef} 
-      >
-        <div className="dropdown-item">
-          <span>Mode Sombre</span>
-          <label className="switch">
-            <input
-              type="checkbox"
-              checked={isDarkMode}
-              onChange={toggleDarkMode} // Utiliser la fonction toggleDarkMode du contexte
-            />
-            <span className="slider round"></span>
-          </label>
-        </div>
-        <div className="dropdown-item">
-          <span>Animations</span>
-          <label className="switch">
-            <input
-              type="checkbox"
-              checked={animationsEnabled}
-              onChange={toggleAnimations} // Utiliser la fonction toggleAnimations du contexte
-            />
-            <span className="slider round"></span>
-          </label>
-        </div>
-      </motion.div>
+      <AnimatePresence mode="wait">
+        {open && (
+          <motion.div
+            className="dropdown-menu"
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={menuVariants}
+            transition={{ duration: 0.4, ease: 'easeInOut' }}
+            ref={dropdownRef}
+          >
+            {/* Liste des items avec stagger */}
+            <motion.div
+              className="dropdown-list"
+              variants={listVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+            >
+              {/* Bouton Accueil */}
+              <motion.div
+                className="dropdown-item"
+                variants={itemVariants}
+                onClick={() => {
+                  navigateTo(null, "dropdown"); // Réinitialiser à l'accueil
+                  setOpen(false); // Fermer le menu déroulant
+                }}
+              >
+                <button
+                  className={classNames("svg-icon home-accueil", {
+                    "dark-mode": isDarkMode,
+                    "light-mode": !isDarkMode,
+                  })}
+                  title="Accueil"
+                  style={{ cursor: "pointer", marginRight: "10px" }}
+                ></button>
+                <span
+                  onClick={() => {
+                    navigateTo(null, "dropdown"); // Réinitialiser à l'accueil
+                    setOpen(false); // Fermer le menu déroulant
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  Accueil
+                </span>
+              </motion.div>
+
+              {/* Lien vers CV */}
+              <motion.div
+                className="dropdown-item"
+                variants={itemVariants}
+                onClick={() => {
+                  navigateTo("CV", "dropdown");
+                  setOpen(false); // Fermer le menu déroulant
+                }}
+              >
+                <button
+                  className={classNames("svg-icon home-cv", { // Utiliser "home-cv" pour correspondre au SCSS
+                    "dark-mode": isDarkMode,
+                    "light-mode": !isDarkMode,
+                  })}
+                  title="CV"
+                  style={{ cursor: "pointer", marginRight: "10px" }}
+                ></button>
+                <span
+                  onClick={() => {
+                    navigateTo("CV", "dropdown");
+                    setOpen(false); // Fermer le menu déroulant
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  CV
+                </span>
+              </motion.div>
+
+              {/* Lien vers Projets */}
+              <motion.div
+                className="dropdown-item"
+                variants={itemVariants}
+                onClick={() => {
+                  navigateTo("Projets", "dropdown");
+                  setOpen(false); // Fermer le menu déroulant
+                }}
+              >
+                <button
+                  className={classNames("svg-icon home-projects", { // Utiliser "home-projects" pour correspondre au SCSS
+                    "dark-mode": isDarkMode,
+                    "light-mode": !isDarkMode,
+                  })}
+                  title="Projets"
+                  style={{ cursor: "pointer", marginRight: "10px" }}
+                ></button>
+                <span
+                  onClick={() => {
+                    navigateTo("Projets", "dropdown");
+                    setOpen(false); // Fermer le menu déroulant
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  Projets
+                </span>
+              </motion.div>
+
+              {/* Lien vers Idées */}
+              <motion.div
+                className="dropdown-item"
+                variants={itemVariants}
+                onClick={() => {
+                  navigateTo("Idées", "dropdown");
+                  setOpen(false); // Fermer le menu déroulant
+                }}
+              >
+                <button
+                  className={classNames("svg-icon home-ideas", { // Utiliser "home-ideas" pour correspondre au SCSS
+                    "dark-mode": isDarkMode,
+                    "light-mode": !isDarkMode,
+                  })}
+                  title="Idées"
+                  style={{ cursor: "pointer", marginRight: "10px" }}
+                ></button>
+                <span
+                  onClick={() => {
+                    navigateTo("Idées", "dropdown");
+                    setOpen(false); // Fermer le menu déroulant
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  Idées
+                </span>
+              </motion.div>
+
+              {/* Toggle Mode Sombre */}
+              <motion.div
+                className="dropdown-item"
+                variants={itemVariants}
+              >
+                <span>Mode Sombre</span>
+                <label className="switch">
+                  <input
+                    type="checkbox"
+                    checked={isDarkMode}
+                    onChange={toggleDarkMode} // Utiliser la fonction toggleDarkMode du contexte
+                  />
+                  <span className="slider round"></span>
+                </label>
+              </motion.div>
+
+              {/* Toggle Animations */}
+              <motion.div
+                className="dropdown-item"
+                variants={itemVariants}
+              >
+                <span>Animations</span>
+                <label className="switch">
+                  <input
+                    type="checkbox"
+                    checked={animationsEnabled}
+                    onChange={toggleAnimations} // Utiliser la fonction toggleAnimations du contexte
+                  />
+                  <span className="slider round"></span>
+                </label>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Conteneur des nuages */}
       <div className="clouds">
