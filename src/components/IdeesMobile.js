@@ -1,11 +1,11 @@
-// src/components/IdeesMobile.js
+// src/components/IdeesMobile.jsx
 
-import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion"; // Import Framer Motion
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { getRandomFoldClass } from "../hooks/foldedCorner";
-import ideesData from "../jsonFiles/ideesData.json"; // Import du fichier JSON
+import ideesData from "../jsonFiles/ideesData.json"; // Importer les données JSON
+import CategoryButton from "./CategoryButton"; // Assurez-vous d'avoir ce composant
 
-const categories = Object.keys(ideesData); // Obtenir les catégories depuis les clés JSON
 
 const IdeesMobile = () => {
   const [activeCategory, setActiveCategory] = useState(null);
@@ -14,16 +14,25 @@ const IdeesMobile = () => {
   const containerRef = useRef(null);
   const ideesContainerRef = useRef(null);
 
+  // Mémoriser les catégories
+  const categories = useMemo(() => Object.keys(ideesData), [ideesData]);
+
+  // Debugging : Réduire les logs pour éviter la surcharge
   useEffect(() => {
-    // Rendre les catégories visibles après l'animation de la flèche
-    if (arrowExpanded) {
+    console.log("ideesData:", ideesData);
+    console.log("categories:", categories);
+  }, [categories, ideesData]);
+
+  useEffect(() => {
+    // Afficher les catégories après l'expansion de la flèche
+    if (arrowExpanded && visibleCategories.length === 0) { // Ajouter une condition pour éviter les ajouts répétés
       categories.forEach((category, index) => {
         setTimeout(() => {
           setVisibleCategories((prev) => [...prev, category]);
         }, index * 300); // Ajustez le délai selon vos besoins
       });
     }
-  }, [arrowExpanded]);
+  }, [arrowExpanded, categories, visibleCategories.length]);
 
   // Gérer la fermeture de la catégorie active lors d'un clic en dehors
   useEffect(() => {
@@ -56,20 +65,8 @@ const IdeesMobile = () => {
   };
 
   const handleArrowAnimationEnd = () => {
-    setArrowExpanded(true);
-  };
-
-  // Définir les positions initiales pour la forme en V
-  const getInitialPosition = (index, total) => {
-    const middle = Math.floor(total / 2);
-    if (total % 2 === 1) { // nombre impair de boutons
-      if (index < middle) return { x: -50, y: -50, rotate: -45 };
-      if (index > middle) return { x: 50, y: -50, rotate: 45 };
-      return { x: 0, y: -50, rotate: 0 };
-    } else { // nombre pair de boutons
-      if (index < total / 2 - 1) return { x: -100, y: -50, rotate: -45 };
-      if (index >= total / 2) return { x: 100, y: -50, rotate: 45 };
-      return { x: 0, y: -50, rotate: 0 };
+    if (!arrowExpanded) { // S'assurer que arrowExpanded n'est pas déjà true
+      setArrowExpanded(true);
     }
   };
 
@@ -82,29 +79,20 @@ const IdeesMobile = () => {
 
       {/* Conteneur des catégories au-dessus de la flèche */}
       <div className="categories-container">
-        <div></div>
         {categories.map((category, index) => {
           const isVisible = visibleCategories.includes(category);
           const total = categories.length;
-          const initialPos = getInitialPosition(index, total);
+          const initialPos = { x: 0, y: 0, rotate: 0 }; // Vous pouvez ajuster cela si nécessaire
           return (
             <div key={category} className="category-section">
               <AnimatePresence>
                 {isVisible && (
-                  <motion.button
-                    className="category-button"
+                  <CategoryButton
+                    category={category}
+                    index={index}
                     onClick={() => toggleCategory(category)}
-                    custom={initialPos}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                    variants={buttonVariants}
-                    transition={{ delay: index * 0.2, duration: 0.5 }}
-                  >
-                    {category}
-                  </motion.button>
+                  />
                 )}
-                
               </AnimatePresence>
               {activeCategory === category && (
                 <div className="post-it-container" ref={containerRef}>
@@ -118,7 +106,7 @@ const IdeesMobile = () => {
                         style={{
                           backgroundColor: postItColor,
                           "--post-it-color": postItColor,
-                          transform: `rotate(${randomRotation}deg)`, // Apply random rotation
+                          transform: `rotate(${randomRotation}deg)`,
                         }}
                       >
                         <div className="post-it-content">
