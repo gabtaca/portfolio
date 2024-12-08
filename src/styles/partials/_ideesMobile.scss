@@ -25,7 +25,7 @@
 
 .dashed-arrow-line {
   width: 2px;
-  height: 120px;
+  height: 130px;
   background: repeating-linear-gradient(
     0deg,
     #677684,
@@ -42,7 +42,7 @@
     height: 0;
   }
   to {
-    height: 120px;
+    height: 130px;
   }
 }
 
@@ -51,43 +51,72 @@
 }
 
 /* Styles pour le conteneur des catégories */
-.buttons-container {
+.categories-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
-  gap: 20px;
-  padding: 20px;
   flex-direction: column;
 }
 
+.category-section {
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+overflow: visible;
+width: 100%;
+}
+
+.category-button {
+  display: none; 
+  overflow: visible;
+
+  &.visible {
+    display: block; 
+
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInSlideDown 0.5s forwards;
+    overflow: visible;
+  }
+}
+
+@keyframes fadeInSlideDown {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 /* Style SVGs to fit their content without stretching */
 .svg-animation {
   width: 100%;
-  height: 55px;
+  height: 40px;
   overflow: visible;
 }
 
 
 /* Style the text within SVGs */
 .text {
-  font-size: 24px; /* Taille de police fixe */
+  font-size: 40px; /* Taille de police fixe */
   fill: var(--h2Color);
   dominant-baseline: middle; /* Centrer verticalement le texte */
   text-anchor: middle; /* Centrer horizontalement le texte */
   font-family: "Italiana";
-  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3)); /* Ombre subtile pour la lisibilité */
+  overflow: visible;
 }
 
 /* Path styling */
 .animatedPath {
   fill: transparent;
+  overflow: visible;
 }
 
 /* Style textPath elements */
 .textPathRef {
   text-anchor: middle; /* Centrer le texte sur le chemin */
+  overflow: visible;
 }
 
 
@@ -103,7 +132,9 @@
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 15px;
   margin-top: 20px;
+  margin-bottom: 30px;
   justify-items: center;
+  width: 100%;
 }
 
 .post-it {
@@ -266,4 +297,21 @@
     clip-path: polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%);
     opacity: 1;
   }
+}
+
+@media (orientation: landscape) {
+  .idees-container {
+    padding-top: 0;
+  }
+
+  .category-button {
+    border-bottom: 1px solid var(--h2Color);
+  }
+
+.idees-subtitle {
+  display: none;
+}
+.dashed-arrow {
+  display: none;
+}
 }

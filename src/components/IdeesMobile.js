@@ -1,40 +1,40 @@
 // src/components/IdeesMobile.jsx
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { getRandomFoldClass } from "../hooks/foldedCorner";
-import ideesData from "../jsonFiles/ideesData.json"; // Importer les données JSON
-import CategoryButton from "./CategoryButton"; // Assurez-vous d'avoir ce composant
-
+import ideesData from "../jsonFiles/ideesData.json"; // Import JSON data
+import CategoryButton from "./CategoryButton"; // Ensure correct import
+import DashedArrow from "./DashedArrow"; // Correct import
 
 const IdeesMobile = () => {
   const [activeCategory, setActiveCategory] = useState(null);
   const [arrowExpanded, setArrowExpanded] = useState(false);
-  const [visibleCategories, setVisibleCategories] = useState([]); // Contrôle des catégories visibles
+  const [visibleCategories, setVisibleCategories] = useState([]); // Controls visible categories
   const containerRef = useRef(null);
   const ideesContainerRef = useRef(null);
 
-  // Mémoriser les catégories
+  // Memorize categories
   const categories = useMemo(() => Object.keys(ideesData), [ideesData]);
 
-  // Debugging : Réduire les logs pour éviter la surcharge
+  // Debugging: Reduce logs to avoid overload
   useEffect(() => {
     console.log("ideesData:", ideesData);
     console.log("categories:", categories);
   }, [categories, ideesData]);
 
   useEffect(() => {
-    // Afficher les catégories après l'expansion de la flèche
-    if (arrowExpanded && visibleCategories.length === 0) { // Ajouter une condition pour éviter les ajouts répétés
+    // Display categories after arrow expansion
+    if (arrowExpanded && visibleCategories.length === 0) { // Prevent repeated additions
       categories.forEach((category, index) => {
         setTimeout(() => {
           setVisibleCategories((prev) => [...prev, category]);
-        }, index * 300); // Ajustez le délai selon vos besoins
+        }, index * 300); // Adjust delay as needed
       });
     }
   }, [arrowExpanded, categories, visibleCategories.length]);
 
-  // Gérer la fermeture de la catégorie active lors d'un clic en dehors
+  // Handle closing active category when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       const isOutsidePostIts =
@@ -44,7 +44,7 @@ const IdeesMobile = () => {
         !ideesContainerRef.current.contains(event.target);
 
       if (isOutsidePostIts && isOutsideCategories) {
-        setActiveCategory(null); // Fermer la catégorie si clic en dehors des deux
+        setActiveCategory(null); // Close category if clicking outside both
       }
     };
 
@@ -60,12 +60,13 @@ const IdeesMobile = () => {
   }, [activeCategory]);
 
   const toggleCategory = (category) => {
-    // Fermer la catégorie active si c'est la même; ouvrir une nouvelle sinon
+    // Close active category if same; open new otherwise
     setActiveCategory((prev) => (prev === category ? null : category));
   };
 
   const handleArrowAnimationEnd = () => {
-    if (!arrowExpanded) { // S'assurer que arrowExpanded n'est pas déjà true
+    if (!arrowExpanded) { // Ensure arrowExpanded is not already true
+      console.log("Arrow animation completed.");
       setArrowExpanded(true);
     }
   };
@@ -77,12 +78,10 @@ const IdeesMobile = () => {
         mais un bel endroit pour relancer l'inspiration en cas de besoin !
       </p>
 
-      {/* Conteneur des catégories au-dessus de la flèche */}
+      {/* Container for categories above the arrow */}
       <div className="categories-container">
         {categories.map((category, index) => {
           const isVisible = visibleCategories.includes(category);
-          const total = categories.length;
-          const initialPos = { x: 0, y: 0, rotate: 0 }; // Vous pouvez ajuster cela si nécessaire
           return (
             <div key={category} className="category-section">
               <AnimatePresence>
@@ -90,6 +89,7 @@ const IdeesMobile = () => {
                   <CategoryButton
                     category={category}
                     index={index}
+                    angle={80} // Provide angle as needed, or make it dynamic
                     onClick={() => toggleCategory(category)}
                   />
                 )}
@@ -128,59 +128,13 @@ const IdeesMobile = () => {
         })}
       </div>
 
-      {/* Flèche en pointillés qui pointe en haut */}
-      <motion.div
-        className="dashed-arrow"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 1 }}
-      >
-        <img
-          src="/images/arrow_up.svg"
-          alt="image de flèche pointant en haut"
-          className="dashed-arrow-head"
-        />
-        <motion.div
-          className="dashed-arrow-line"
-          onAnimationEnd={handleArrowAnimationEnd}
-          initial={{ height: 0 }}
-          animate={{ height: 120 }}
-          transition={{ duration: 1 }}
-        ></motion.div>
-      </motion.div>
+      {/* Dashed Arrow Component */}
+      <DashedArrow onAnimationComplete={handleArrowAnimationEnd} />
     </div>
   );
 };
 
-const buttonVariants = {
-  hidden: (custom) => ({
-    rotate: custom.rotate,
-    opacity: 0,
-    y: custom.y,
-    x: custom.x,
-  }),
-  visible: {
-    rotate: 0,
-    opacity: 1,
-    y: 0,
-    x: 0,
-    transition: {
-      type: "spring",
-      stiffness: 300,
-      damping: 20,
-    },
-  },
-  exit: (custom) => ({
-    rotate: custom.rotate,
-    opacity: 0,
-    y: custom.y,
-    x: custom.x,
-    transition: {
-      duration: 0.3,
-    },
-  }),
-};
-
+// Utility functions
 const getRandomPostItColor = () => {
   const colors = [
     "var(--postItPink)",
@@ -193,7 +147,7 @@ const getRandomPostItColor = () => {
 };
 
 const getRandomRotation = () => {
-  // Générer un angle aléatoire entre -5 et 5 degrés
+  // Generate a random angle between -5 and 5 degrees
   return Math.random() * 10 - 5;
 };
 
