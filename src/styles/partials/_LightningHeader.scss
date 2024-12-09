@@ -82,3 +82,10 @@ input:checked + .slider:before {
 .dropdown-item:not(:last-child) {
   border-bottom: 1px solid #ccc;
 }
+
+
+@media (orientation: landscape) {
+  .dropdown-menu {
+    top: 30px;
+  }
+}

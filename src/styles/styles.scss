@@ -100,6 +100,15 @@
   font-display: swap;
 }
 
+/* Déclaration de la police Livvic (SemiBold) */
+@font-face {
+  font-family: "PlaywriteCA";
+  src: url("/fonts/PlaywriteCA-VariableFont_wght.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Déclaration de la police Shadows Into Light (Regular) */
 .shadows-into-light-regular {
   font-family: "Shadows Into Light", cursive;
