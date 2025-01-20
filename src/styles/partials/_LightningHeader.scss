@@ -56,8 +56,8 @@ input:checked + .slider:before {
   display: flex;
   justify-content: center;
   position: absolute;
-  top: 60px; 
-  left: 10px;
+  top: 50px;
+  left: 50px;
   background-color: var(--btnBlankEnd);
   overflow: hidden;
   width: 200px;
@@ -86,6 +86,6 @@ input:checked + .slider:before {
 
 @media (orientation: landscape) {
   .dropdown-menu {
-    top: 30px;
+    top: 10px;
   }
 }

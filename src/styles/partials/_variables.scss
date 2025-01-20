@@ -23,6 +23,12 @@ $colors: (
   'boxShadow': rgba(0, 0, 0, 0.3),
   'gradientStart': #C9D5E1,
   'gradientEnd': white,
+  'bgH1Desktop': #A3DAFE, 
+  'bgCvDesktop': #c1e3fa,
+  'bgProjectsDesktop': #def0fd,
+  'bgIdeesDesktop': #ebf6fd,
+  'desktopPcolor': #5C5A4E, 
+  'desktopBtnCloseColor': #c32148, 
 );
 
 
@@ -52,7 +58,12 @@ $dark-colors: (
   'errors': #5a2222,
   'boxShadow': rgba(255, 255, 255, 0.2),
   'gradientStart': #2C3E50, 
-  'gradientEnd': rgba(44, 62, 80, 0.8)
+  'gradientEnd': rgba(44, 62, 80, 0.8),
+  'bgH1Desktop': #2b3a42,
+  'bgCvDesktop': #606a70,
+  'bgProjectsDesktop': #7a8792,
+  'bgIdeesDesktop': #8a9ca8,
+  'desktopBtnCloseColor': #e0c6cc,
 );
 
 @mixin set-theme($theme-colors) {
